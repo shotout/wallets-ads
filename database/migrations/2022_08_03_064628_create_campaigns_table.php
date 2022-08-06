@@ -25,7 +25,13 @@ class CreateCampaignsTable extends Migration
 
         Schema::create('campaigns', function (Blueprint $table) {
             $table->id();
+            $table->integer('user_id')->nullable();
+
             $table->string('name')->nullable();
+
+            // type 1,2,3
+            $table->tinyInteger('type')->nullable();
+
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->timestamps();
@@ -35,6 +41,7 @@ class CreateCampaignsTable extends Migration
             $table->id();
             $table->integer('campaign_id')->nullable();
             $table->integer('ads_id')->nullable();
+            $table->integer('price')->nullable();
             $table->timestamps();
         });
 
@@ -139,7 +146,7 @@ class CreateCampaignsTable extends Migration
                 $table->integer('amount_transaction')->nullable();
                 $table->integer('trading_volume')->nullable();
                 $table->integer('available_credit_wallet')->nullable();
-                $table->integer('nft_purchases')->nullable();
+                $table->text('nft_purchases')->nullable();
 
                 $table->timestamps();
             });
