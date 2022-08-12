@@ -14,19 +14,16 @@ class Campaign extends Model
 
     public function audiences()
     {
-        return $this->hasMany('\App\Models\Audience', 'id', 'campaign_id')
-            ->with('optimizeTarget','balanceTarget','detailTarget');
+        return $this->hasMany('\App\Models\Audience')->with('optimizeTarget','balanceTarget','detailTarget');
     }
 
     public function adsPage()
     {
-        return $this->hasOne('\App\Models\AdsPage', 'id', 'campaign_id')
-            ->with('images');
+        return $this->hasOne('\App\Models\AdsPage')->with('images');
     }
 
     public function ads()
     {
-        return $this->hasMany('\App\Models\Ads', 'id', 'campaign_id')
-            ->with('image');
+        return $this->hasMany('\App\Models\Ads')->with('image');
     }
 }

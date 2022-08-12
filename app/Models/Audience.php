@@ -14,16 +14,16 @@ class Audience extends Model
 
     public function optimizeTarget()
     {
-        return $this->hasOne('\App\Models\OptimizeTarget', 'id', 'audience_id');
+        return $this->hasOne('\App\Models\OptimizeTarget');
     }
 
     public function balanceTarget()
     {
-        return $this->hasOne('\App\Models\BalanceTarget', 'id', 'audience_id');
+        return $this->hasOne('\App\Models\BalanceTarget');
     }
 
     public function detailTarget()
     {
-        return $this->hasOne('\App\Models\DetailTarget', 'id', 'audience_id');
+        return $this->hasOne('\App\Models\DetailTarget');
     }
 }
