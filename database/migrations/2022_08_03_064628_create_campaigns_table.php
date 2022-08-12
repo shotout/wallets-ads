@@ -19,6 +19,7 @@ class CreateCampaignsTable extends Migration
 
             // ['ads_logo', 'ads_banner', 'ads_nft']
             $table->string('type')->nullable();
+            $table->string('name')->nullable();
             $table->string('url')->nullable();
             $table->timestamps();
         });
@@ -41,6 +42,7 @@ class CreateCampaignsTable extends Migration
             $table->id();
             $table->integer('campaign_id')->nullable();
             $table->integer('ads_id')->nullable();
+            $table->integer('fe_id')->nullable();
             $table->integer('price')->nullable();
             $table->timestamps();
         });
