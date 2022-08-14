@@ -14,7 +14,7 @@ class Ads extends Model
 
     public function image()
     {
-        return $this->hasOne('\App\Models\Media', 'id', 'owner_id')
+        return $this->hasOne('\App\Models\Media', 'owner_id')
             ->where('type', 'ads_nft');
     }
 }

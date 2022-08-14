@@ -14,7 +14,7 @@ class AdsPage extends Model
 
     public function images()
     {
-        return $this->hasMany('\App\Models\Media', 'id', 'owner_id')
+        return $this->hasMany('\App\Models\Media', 'owner_id')
             ->whereIn('type', ['ads_logo','ads_banner']);
     }
 }

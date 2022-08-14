@@ -41,6 +41,8 @@ Route::group(
     function() {
         Route::get('/', [CampaignController::class, 'index'])->name('index');
         Route::post('/', [CampaignController::class, 'store'])->name('store');
+        Route::get('/{id}', [CampaignController::class, 'show'])->name('show');
+        Route::patch('/{id}', [CampaignController::class, 'update'])->name('update');
     }
 );
 
