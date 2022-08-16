@@ -113,7 +113,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "1|5gVwNlcbF2FybJaeSWKyN0O3nbvpFSE3hnYHQdvy",
+									"value": "1|3m5IwNkJhh7399jnYNX2BpOAXMmcE5iVjV9AJX3t",
 									"type": "string"
 								}
 							]
@@ -146,7 +146,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "1|5gVwNlcbF2FybJaeSWKyN0O3nbvpFSE3hnYHQdvy",
+									"value": "1|OzJaEoFskPSy8TZ7tN3BYyQDUFkOk3J9bxyfJqyf",
 									"type": "string"
 								}
 							]
@@ -175,6 +175,49 @@
 							],
 							"path": [
 								"campaigns"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|2k7PMWnqBd10hatTtzvf7lLETRttG2khkqMA1Ce4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"campaign_name\": \"Mekaverse Edit\",\n    \"campaign_start_date\": \"2022-08-16\",\n    \"campaign_end_date_type\": 1,\n    \"campaign_end_date\": \"\",\n\n    \"campaign_audiences\": [\n        {\n            \"id\": 1,\n            \"price\": 600,\n\n            \"optimized_targeting_price\": 0.06,\n            \"optimized_targeting_description\": \"The audience consists of a broad mix of users, optimized by our algorithm.\",\n\n            \"balanced_targeting_price\": 0.02,\n            \"balanced_targeting_description\": \"Select more detailed targeting options to reach your audience\",\n            \"balanced_targeting_cryptocurrency\": 1,\n            \"balanced_targeting_year\": 1,\n            \"balanced_targeting_month\": 2,\n            \"balanced_targeting_day\": 30,\n            \"balanced_targeting_airdrops\": 1,\n            \"balanced_targeting_wallet\": 1,\n            \"balanced_targeting_location\": 1,\n\n            \"detailed_targeting_price\": 0.02,\n            \"detailed_targeting_description\": \"Select more detailed targeting options to reach your audience\",\n            \"detailed_targeting_amount_transaction\": 1,\n            \"detailed_targeting_trading_volume\": 1,\n            \"detailed_targeting_available_credit_wallet\": 1,\n            \"detailed_targeting_nft_purchases\": \"Creator 1, Creator 2, Creator 3\"\n        },\n\n        {\n            \"id\": 2,\n            \"price\": 1000,\n\n            \"optimized_targeting_price\": 0.06,\n            \"optimized_targeting_description\": \"The audience consists of a broad mix of users, optimized by our algorithm.\",\n\n            \"balanced_targeting_price\": 0.02,\n            \"balanced_targeting_description\": \"Select more detailed targeting options to reach your audience\",\n            \"balanced_targeting_cryptocurrency\": 1,\n            \"balanced_targeting_year\": 1,\n            \"balanced_targeting_month\": 2,\n            \"balanced_targeting_day\": 30,\n            \"balanced_targeting_airdrops\": 1,\n            \"balanced_targeting_wallet\": 1,\n            \"balanced_targeting_location\": 1,\n\n            \"detailed_targeting_price\": 0.02,\n            \"detailed_targeting_description\": \"Select more detailed targeting options to reach your audience\",\n            \"detailed_targeting_amount_transaction\": 1,\n            \"detailed_targeting_trading_volume\": 1,\n            \"detailed_targeting_available_credit_wallet\": 1,\n            \"detailed_targeting_nft_purchases\": \"Creator 1, Creator 2, Creator 3\"\n        },\n\n        {\n            \"id\": 3,\n            \"price\": 1500,\n\n            \"optimized_targeting_price\": 0.06,\n            \"optimized_targeting_description\": \"The audience consists of a broad mix of users, optimized by our algorithm. edit\",\n\n            \"balanced_targeting_price\": 0.02,\n            \"balanced_targeting_description\": \"Select more detailed targeting options to reach your audience\",\n            \"balanced_targeting_cryptocurrency\": 1,\n            \"balanced_targeting_year\": 1,\n            \"balanced_targeting_month\": 2,\n            \"balanced_targeting_day\": 30,\n            \"balanced_targeting_airdrops\": 1,\n            \"balanced_targeting_wallet\": 1,\n            \"balanced_targeting_location\": 1,\n\n            \"detailed_targeting_price\": 0.02,\n            \"detailed_targeting_description\": \"Select more detailed targeting options to reach your audience\",\n            \"detailed_targeting_amount_transaction\": 1,\n            \"detailed_targeting_trading_volume\": 1,\n            \"detailed_targeting_available_credit_wallet\": 1,\n            \"detailed_targeting_nft_purchases\": \"Creator 1, Creator 2, Creator 3\"\n        }\n    ],\n\n    \"ads_page_name\": \"Title Page Mekaverse Edit\",\n    \"ads_page_description\": \"Description Page Mekaverse\",\n    \"ads_page_website\": \"https://google.com\",\n    \"ads_page_discord\": \"https://discord.com\",\n    \"ads_page_twitter\": \"https://twitter.com\",\n    \"ads_page_instagram\": \"https://instagram.com\",\n    \"ads_page_medium\": \"https://medium.com\",\n    \"ads_page_facebook\": \"https://facebook.com\",\n    \"ads_page_external_page\": \"https://external.com\",\n\n    \"campaign_ads\": [\n        {\n            \"id\": 1,\n            \"name\": \"Name Ads 1 Edit\",\n            \"description\": \"Desc Ads 1\",\n            \"audience_id\": [1,2]\n        },\n        {\n            \"id\": 2,\n            \"name\": \"Name Ads 2\",\n            \"description\": \"Desc Ads 2\",\n            \"audience_id\": [3]\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/campaigns/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"campaigns",
+								"1"
 							]
 						}
 					},
@@ -298,6 +341,137 @@
 							],
 							"path": [
 								"campaigns"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update2",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|MyD1lKZHrjGb3hoG8d1mZ9zPhBtf4aYvWQYPbCE3",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "campaign_name",
+									"value": "Mekaverse",
+									"type": "text"
+								},
+								{
+									"key": "campaign_start_date",
+									"value": "2022-08-12",
+									"type": "text"
+								},
+								{
+									"key": "campaign_end_date_type",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "campaign_end_date",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "campaign_audiences",
+									"value": "[\n        {\n            \"fe_id\": 1,\n            \"price\": 500,\n\n            \"optimized_targeting_price\": 0.06,\n            \"optimized_targeting_description\": \"The audience consists of a broad mix of users, optimized by our algorithm.\",\n\n            \"balanced_targeting_price\": 0.02,\n            \"balanced_targeting_description\": \"Select more detailed targeting options to reach your audience\",\n            \"balanced_targeting_cryptocurrency\": 1,\n            \"balanced_targeting_year\": 1,\n            \"balanced_targeting_month\": 2,\n            \"balanced_targeting_day\": 30,\n            \"balanced_targeting_airdrops\": 1,\n            \"balanced_targeting_wallet\": 1,\n            \"balanced_targeting_location\": 1,\n\n            \"detailed_targeting_price\": 0.02,\n            \"detailed_targeting_description\": \"Select more detailed targeting options to reach your audience\",\n            \"detailed_targeting_amount_transaction\": 1,\n            \"detailed_targeting_trading_volume\": 1,\n            \"detailed_targeting_available_credit_wallet\": 1,\n            \"detailed_targeting_nft_purchases\": \"Creator 1, Creator 2, Creator 3\"\n        },\n\n        {\n            \"fe_id\": 2,\n            \"price\": 1000,\n\n            \"optimized_targeting_price\": 0.06,\n            \"optimized_targeting_description\": \"The audience consists of a broad mix of users, optimized by our algorithm.\",\n\n            \"balanced_targeting_price\": 0.02,\n            \"balanced_targeting_description\": \"Select more detailed targeting options to reach your audience\",\n            \"balanced_targeting_cryptocurrency\": 1,\n            \"balanced_targeting_year\": 1,\n            \"balanced_targeting_month\": 2,\n            \"balanced_targeting_day\": 30,\n            \"balanced_targeting_airdrops\": 1,\n            \"balanced_targeting_wallet\": 1,\n            \"balanced_targeting_location\": 1,\n\n            \"detailed_targeting_price\": 0.02,\n            \"detailed_targeting_description\": \"Select more detailed targeting options to reach your audience\",\n            \"detailed_targeting_amount_transaction\": 1,\n            \"detailed_targeting_trading_volume\": 1,\n            \"detailed_targeting_available_credit_wallet\": 1,\n            \"detailed_targeting_nft_purchases\": \"Creator 1, Creator 2, Creator 3\"\n        },\n\n        {\n            \"fe_id\": 3,\n            \"price\": 1500,\n\n            \"optimized_targeting_price\": 0.06,\n            \"optimized_targeting_description\": \"The audience consists of a broad mix of users, optimized by our algorithm.\",\n\n            \"balanced_targeting_price\": 0.02,\n            \"balanced_targeting_description\": \"Select more detailed targeting options to reach your audience\",\n            \"balanced_targeting_cryptocurrency\": 1,\n            \"balanced_targeting_year\": 1,\n            \"balanced_targeting_month\": 2,\n            \"balanced_targeting_day\": 30,\n            \"balanced_targeting_airdrops\": 1,\n            \"balanced_targeting_wallet\": 1,\n            \"balanced_targeting_location\": 1,\n\n            \"detailed_targeting_price\": 0.02,\n            \"detailed_targeting_description\": \"Select more detailed targeting options to reach your audience\",\n            \"detailed_targeting_amount_transaction\": 1,\n            \"detailed_targeting_trading_volume\": 1,\n            \"detailed_targeting_available_credit_wallet\": 1,\n            \"detailed_targeting_nft_purchases\": \"Creator 1, Creator 2, Creator 3\"\n        }\n    ]",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "ads_page_name",
+									"value": "Title Page Mekaverse",
+									"type": "text"
+								},
+								{
+									"key": "ads_page_description",
+									"value": "Description Page Mekaverse",
+									"type": "text"
+								},
+								{
+									"key": "ads_page_website",
+									"value": "https://google.com",
+									"type": "text"
+								},
+								{
+									"key": "ads_page_discord",
+									"value": "https://discord.com",
+									"type": "text"
+								},
+								{
+									"key": "ads_page_twitter",
+									"value": "https://twitter.com",
+									"type": "text"
+								},
+								{
+									"key": "ads_page_instagram",
+									"value": "https://instagram.com",
+									"type": "text"
+								},
+								{
+									"key": "ads_page_medium",
+									"value": "https://medium.com",
+									"type": "text"
+								},
+								{
+									"key": "ads_page_facebook",
+									"value": "https://facebook.com",
+									"type": "text"
+								},
+								{
+									"key": "ads_page_external_page",
+									"value": "https://external.com",
+									"type": "text"
+								},
+								{
+									"key": "campaign_ads",
+									"value": "[\n        {\n            \"name\": \"Name Ads 1\",\n            \"description\": \"Desc Ads 1\",\n            \"fe_id\": [1,2]\n        },\n        {\n            \"name\": \"Name Ads 2\",\n            \"description\": \"Desc Ads 2\",\n            \"fe_id\": [3]\n        }\n    ]",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "ads_page_logo",
+									"type": "file",
+									"src": "/home/julian/Downloads/eth.png"
+								},
+								{
+									"key": "ads_page_banner",
+									"type": "file",
+									"src": "/home/julian/Downloads/297816758_1881486275576392_4061729302311740004_n.jpg"
+								},
+								{
+									"key": "_method",
+									"value": "PATCH",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/campaigns/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"campaigns",
+								"1"
 							]
 						}
 					},

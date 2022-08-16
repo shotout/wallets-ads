@@ -219,7 +219,7 @@ class CampaignController extends Controller
                 foreach ($request->campaign_audiences as $audience) {
                     $audience = (object) $audience;
 
-                    if ($audience->fe_id && $audience->fe_id != '') {
+                    if (isset($audience->fe_id) && $audience->fe_id != '') {
                         $adc = new Audience;
                         $adc->fe_id = $audience->fe_id;
                     } else {
@@ -230,7 +230,7 @@ class CampaignController extends Controller
                     $adc->price = $audience->price;
                     $adc->save();
 
-                    if ($audience->fe_id && $audience->fe_id != '') {
+                    if (isset($audience->fe_id) && $audience->fe_id != '') {
                         $optimizeTarget = new OptimizeTarget;
                         $optimizeTarget->audience_id = $adc->id;
                     } else {
@@ -240,7 +240,7 @@ class CampaignController extends Controller
                     $optimizeTarget->description = $audience->optimized_targeting_description;
                     $optimizeTarget->save();
 
-                    if ($audience->fe_id && $audience->fe_id != '') {
+                    if (isset($audience->fe_id) && $audience->fe_id != '') {
                         $balanceTarget = new BalanceTarget;
                         $balanceTarget->audience_id = $adc->id;
                     } else {
@@ -257,7 +257,7 @@ class CampaignController extends Controller
                     $balanceTarget->location = $audience->balanced_targeting_location;
                     $balanceTarget->save();
 
-                    if ($audience->fe_id && $audience->fe_id != '') {
+                    if (isset($audience->fe_id) && $audience->fe_id != '') {
                         $detailTarget = new DetailTarget;
                         $detailTarget->audience_id = $adc->id;
                     } else {
@@ -273,7 +273,7 @@ class CampaignController extends Controller
                 }
             }
 
-            $adsPage = AdsPage::where('campaign_id', $campaign->id)->fisrt();
+            $adsPage = AdsPage::where('campaign_id', $campaign->id)->first();
             $adsPage->name = $request->ads_page_name;
             $adsPage->description = $request->ads_page_description;
             $adsPage->website = $request->ads_page_website;
@@ -321,29 +321,45 @@ class CampaignController extends Controller
                 foreach ($request->campaign_ads as $ads) {
                     $ads = (object) $ads;
 
-                    $newAds = Ads::find($ads->id);
-                    $newAds->name = $ads->name;
-                    $newAds->description = $ads->description;
-                    $newAds->save();
+                    if (isset($ads->id)) {
+                        $oldAds = Ads::find($ads->id);
+                    } else {
+                        $oldAds = new Ads;
+                        $oldAds->campaign_id = $campaign->id;
+                    }
+                    
+                    $oldAds->name = $ads->name;
+                    $oldAds->description = $ads->description;
+                    $oldAds->save();
 
-                    if (count($ads->fe_id) > 0) {
+                    if (isset($ads->audience_id) && count($ads->audience_id) > 0) {
+                        foreach ($ads->audience_id as $adc_id) {
+                            $audience = Audience::find($adc_id);
+                            $audience->ads_id = $oldAds->id;
+                            $audience->update();
+                        }
+                    }
+
+                    if (isset($ads->fe_id) && count($ads->fe_id) > 0) {
                         foreach ($ads->fe_id as $fe_id) {
                             $audience = Audience::where('fe_id', $fe_id)->first();
-                            $audience->ads_id = $newAds->id;
+                            $audience->ads_id = $oldAds->id;
                             $audience->fe_id = null;
                             $audience->update();
                         }
                     }
 
                     if (isset($ads->image)) {
+                        $media = Media::where('owner_id', $oldAds->id)->where('type', 'ads_nft')->first();
+                        if ($media) {
+                            unlink(public_path().$media->url);
+                        }
+
                         $filename = uniqid();
                         $fileExt = $ads->image->getClientOriginalExtension();
                         $fileNameToStore = $filename.'_'.time().'.'.$fileExt;
                         $ads->image->move(public_path().'/assets/images/nft/', $fileNameToStore);
-        
-                        $media = new Media;
-                        $media->owner_id = $newAds->id;
-                        $media->type = "ads_nft";
+            
                         $media->name = $fileNameToStore;
                         $media->url = "/assets/images/nft/$fileNameToStore";
                         $media->save();
