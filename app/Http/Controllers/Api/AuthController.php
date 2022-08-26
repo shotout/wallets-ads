@@ -115,6 +115,9 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
     
         if ($user) {
+            $user->remember_token = Str::random(16);
+            $user->update();
+
             SendResetEmail::dispatch($user)->onQueue('apiCampaign');
         }
 
@@ -124,8 +127,50 @@ class AuthController extends Controller
         ]);
     }
 
+    public function checkToken(Request $request)
+    {
+        $request->validate([
+            'token' => 'required|string|max:100',
+        ]);
+
+        $user = User::where('remember_token', $request->token)->first();
+    
+        if (!$user) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'token expired',
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $user,
+        ]);
+    }
+
     public function resetPassword(Request $request)
     {
+        $request->validate([
+            'token' => 'required|string|max:100',
+            'password' => 'required|confirmed|min:8|max:100',
+        ]);
 
+        $user = User::where('remember_token', $request->token)->first();
+    
+        if (!$user) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'token expired',
+            ]);
+        }
+
+        $user->password = bcrypt($request->password);
+        $user->remember_token = null;
+        $user->update();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $user,
+        ]);
     }
 }
