@@ -25,7 +25,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Padli Yulian\",\n    \"email\": \"padliyulian@gmail.com\",\n    \"password\": \"padliyulian@gmail.com\",\n    \"password_confirmation\": \"padliyulian@gmail.com\"\n}",
+							"raw": "{\n    \"company_name\": \"PT ABC\",\n    \"tax_id\": \"123\",\n    \"first_name\": \"Padli\",\n    \"last_name\": \"Yulian\",\n    \"street\": \"Jalan 123\",\n    \"post_code\": \"35362\",\n    \"city\": \"Bandar Lampung, Indonesia\",\n    \"phone\": \"123\",\n    \"email\": \"padliyulian@gmail.com\",\n    \"password\": \"padliyulian@gmail.com\",\n    \"password_confirmation\": \"padliyulian@gmail.com\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -82,19 +82,127 @@
 					"response": []
 				},
 				{
+					"name": "check-email",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\" : \"padliyulian@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/check-email",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"check-email"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "check-token",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\" : \"RXpm83CidvPeTLv5\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/check-token",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"check-token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reset-password",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\" : \"RXpm83CidvPeTLv5\",\n    \"password\": \"padliyulian@gmail.com\",\n    \"password_confirmation\": \"padliyulian@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/reset-password",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"reset-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "verify",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/auth/verify/vtmeMV2XCJZ4mnt7",
+							"raw": "{{base_url}}/auth/verify/ErGci4MMJcHH5qaL",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"auth",
 								"verify",
-								"vtmeMV2XCJZ4mnt7"
+								"ErGci4MMJcHH5qaL"
 							]
 						}
 					},
@@ -113,7 +221,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "1|3m5IwNkJhh7399jnYNX2BpOAXMmcE5iVjV9AJX3t",
+									"value": "1|WLtn3mVjGqSDdnr3vr9amjjeydjQV6qNu4UHbrfX",
 									"type": "string"
 								}
 							]
@@ -146,7 +254,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "1|OzJaEoFskPSy8TZ7tN3BYyQDUFkOk3J9bxyfJqyf",
+									"value": "1|WLtn3mVjGqSDdnr3vr9amjjeydjQV6qNu4UHbrfX",
 									"type": "string"
 								}
 							]
@@ -472,6 +580,153 @@
 							"path": [
 								"campaigns",
 								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "show",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|GbwOaBXdcQ2GJ9ua7RSmybqcpH15Z9jVxfIwp1TF",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/user",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|GbwOaBXdcQ2GJ9ua7RSmybqcpH15Z9jVxfIwp1TF",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "company_name",
+									"value": "PT STBE",
+									"type": "text"
+								},
+								{
+									"key": "tax_id",
+									"value": "234",
+									"type": "text"
+								},
+								{
+									"key": "first_name",
+									"value": "Julian",
+									"type": "text"
+								},
+								{
+									"key": "last_name",
+									"value": "Padli",
+									"type": "text"
+								},
+								{
+									"key": "street",
+									"value": "Jalan 234",
+									"type": "text"
+								},
+								{
+									"key": "post_code",
+									"value": "35222",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "Jakarta",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "padliyulian@ymail.com",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "234",
+									"type": "text"
+								},
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "/home/julian/Downloads/297816758_1881486275576392_4061729302311740004_n.jpg"
+								},
+								{
+									"key": "password",
+									"value": "kmzway87AA",
+									"type": "text"
+								},
+								{
+									"key": "password_confirmation",
+									"value": "kmzway87AA",
+									"type": "text"
+								},
+								{
+									"key": "_method",
+									"value": "PATCH",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/user",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user"
 							]
 						}
 					},

@@ -35,6 +35,11 @@ class CreateCampaignsTable extends Migration
 
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
+
+            $table->integer('count_click')->nullable();
+            $table->integer('count_airdrop')->nullable();
+            $table->integer('count_mint')->nullable();
+            $table->tinyInteger('status')->nullable();
             $table->timestamps();
         });
 

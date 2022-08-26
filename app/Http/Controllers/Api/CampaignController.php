@@ -17,15 +17,53 @@ use App\Http\Controllers\Controller;
 
 class CampaignController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $campaigns = Campaign::where('user_id', auth('sanctum')->user()->id)
+        if ($request->has('length') && $request->input('length') != '') {
+            $length = $request->input('length');
+        } else {
+            $length = 10;
+        }
+
+        if ($request->has('column') && $request->input('column') != '') {
+            $column = $request->input('column');
+        } else {
+            $column = 'id';
+        }
+
+        if ($request->has('dir') && $request->input('dir') != '') {
+            $dir = $request->input('dir');
+        } else {
+            $dir = 'desc';
+        }
+
+        $query = Campaign::where('user_id', auth('sanctum')->user()->id)
             ->with('audiences','adsPage','ads')
-            ->paginate(10);
+            ->orderBy($column, $dir);
+
+        if ($request->has('status') && $request->input('status') != '') {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->has('search') && $request->input('search') != '') {
+            $query->where(function($q) use($request) {
+                $q->where('field1', 'like', '%' . $request->input('search') . '%')
+                    ->orWhere('field2', 'like', '%' . $request->input('search') . '%');
+            });
+        }
+
+        $campaigns = $query->paginate($length);
+
+        $counter = (object) array(
+            "airdrop" => Campaign::where('user_id', auth('sanctum')->user()->id)->sum('count_airdrop'),
+            "click" => Campaign::where('user_id', auth('sanctum')->user()->id)->sum('count_click'),
+            "mint" => Campaign::where('user_id', auth('sanctum')->user()->id)->sum('count_mint'),
+        );
 
         return response()->json([
             'status' => 'success',
-            'data' => $campaigns
+            'data' => $campaigns,
+            'counter' => $counter,
         ]);    
     }
 
