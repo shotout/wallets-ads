@@ -35,9 +35,10 @@ class SendConfirmEmail implements ShouldQueue
      */
     public function handle()
     {
-        // send email verification
         if ($this->flag === 'register') {
             $this->user->email_message = 'NFT Daily Account Activation';
+            $this->user->name = $this->user->first_name ." ".$this->user->last_name;
+
             Mail::send('email.confirm', ['user' => $this->user, 'flag' => $this->flag], function($message) {
                 $message->to($this->user->email, $this->user->name)->subject($this->user->email_message);
                 $message->from(env('MAIL_FROM_ADDRESS'));

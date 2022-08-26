@@ -102,19 +102,19 @@
                                     <div style="Margin-left:20px;Margin-right:20px">
                                         @if ($flag === 'register')
                                             <div style="Margin-bottom:20px;text-align:center">
-                                                <a href="{{env('DEEP_URL')}}/auth/verify/{{$user->remember_token}}" style="border-radius:4px;display:inline-block;font-size:14px;font-weight:bold;line-height:24px;padding:12px 54px;text-align:center;text-decoration:none!important;color:#ffffff!important;background-color:#7856ff;font-family:sans-serif;text-transform: uppercase;"
+                                                <a href="{{env('BE_URL')}}/auth/verify/{{$user->remember_token}}" style="border-radius:4px;display:inline-block;font-size:14px;font-weight:bold;line-height:24px;padding:12px 54px;text-align:center;text-decoration:none!important;color:#ffffff!important;background-color:#7856ff;font-family:sans-serif;text-transform: uppercase;"
                                                     target="_blank">Activate Account</a>
                                             </div>
                                         @endif
                                         @if ($flag === 'login')
                                             <div style="Margin-bottom:20px;text-align:center">
-                                                <a href="{{env('DEEP_URL')}}/auth/verify/{{$user->remember_token}}" style="border-radius:4px;display:inline-block;font-size:14px;font-weight:bold;line-height:24px;padding:12px 84px;text-align:center;text-decoration:none!important;color:#ffffff!important;background-color:#7856ff;font-family:sans-serif;text-transform: uppercase;"
+                                                <a href="{{env('BE_URL')}}/auth/verify/{{$user->remember_token}}" style="border-radius:4px;display:inline-block;font-size:14px;font-weight:bold;line-height:24px;padding:12px 84px;text-align:center;text-decoration:none!important;color:#ffffff!important;background-color:#7856ff;font-family:sans-serif;text-transform: uppercase;"
                                                     target="_blank">Sign In</a>
                                             </div>
                                         @endif
                                         @if ($flag === 'unregister')
                                             <div style="Margin-top:30px;Margin-bottom:20px;text-align:center">
-                                                <a href="{{env('DEEP_URL')}}/users/unregister/{{$user->remember_token}}" style="border-radius:4px;display:inline-block;font-size:14px;font-weight:bold;line-height:24px;padding:12px 54px;text-align:center;text-decoration:none!important;color:#ffffff!important;background-color:#E04F46;font-family:sans-serif;text-transform: uppercase;"
+                                                <a href="{{env('BE_URL')}}/users/unregister/{{$user->remember_token}}" style="border-radius:4px;display:inline-block;font-size:14px;font-weight:bold;line-height:24px;padding:12px 54px;text-align:center;text-decoration:none!important;color:#ffffff!important;background-color:#E04F46;font-family:sans-serif;text-transform: uppercase;"
                                                     target="_blank">Delete Account</a>
                                             </div>
                                         @endif

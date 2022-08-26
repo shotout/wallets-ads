@@ -41,4 +41,10 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function photo()
+    {
+        return $this->hasOne('\App\Models\Media', 'owner_id')
+            ->where('type', 'user_photo');
+    }
 }

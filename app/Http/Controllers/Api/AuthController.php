@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\User;
 use Illuminate\Support\Str;
+use App\Jobs\SendResetEmail;
 use Illuminate\Http\Request;
 use App\Jobs\SendConfirmEmail;
 use Illuminate\Support\Facades\DB;
@@ -13,31 +14,37 @@ class AuthController extends Controller
 {
     public function register(Request $request)
     {
-        // validation
         $request->validate([
-            'name' => 'required|string|max:100',
+            'company_name' => 'required|string|max:100',
+            'tax_id' => 'required|string|max:100',
+            'first_name' => 'required|string|max:100',
+            'last_name' => 'required|string|max:100',
+            'street' => 'required|string|max:500',
+            'post_code' => 'required|string|max:100',
+            'city' => 'required|string|max:100',
             'email' => 'required|email|max:100|unique:users,email',
+            'phone' => 'required|string|max:100',
             'password' => 'required|confirmed|min:8|max:100',
         ]);
 
-        // add new user
         $user = new User;
-        $user->name = $request->name;
+        $user->company_name = $request->company_name;
+        $user->tax_id = $request->tax_id;
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+        $user->street = $request->street;
+        $user->post_code = $request->post_code;
+        $user->city = $request->city;
+        $user->phone = $request->phone;
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
         $user->remember_token = Str::random(16);
 
         if ($user->save()) {
-            // sending email verification
             SendConfirmEmail::dispatch($user, 'register')->onQueue('apiCampaign');
 
-            // generate token
-            $token = $user->createToken('auth_token')->plainTextToken;
-
-            // retun response
             return response()->json([
                 'status' => 'success',
-                'token' => $token,
                 'data' => $user
             ]);           
         }
@@ -45,45 +52,40 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        // validation
         $request->validate([
             'email' => 'required|email|max:100',
             'password' => 'required|min:8|max:100',
         ]);
 
-        // find email
-        $user = User::where('email', $request->email)->first();
+        $credentials = $request->only('email', 'password');
 
-        // check if email has register
-        if (!$user) {
+        if (auth()->attempt($credentials)) {
+            $user = User::where('email', $request->email)->first();
+    
+            if (!$user->email_verified_at) {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'email account not verified',
+                ]);
+            }
+    
+            $token = $user->createToken('auth_token')->plainTextToken;
+    
             return response()->json([
-                'status' => 'failed',
-                'message' => 'email account not registered',
+                'status' => 'success',
+                'token' => $token,
+                'data' => $user
             ]);
         }
 
-        // check if email has verify
-        if (!$user->email_verified_at) {
-            return response()->json([
-                'status' => 'failed',
-                'message' => 'email account not verified',
-            ]);
-        }
-
-        // generate token
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        // retun response
         return response()->json([
-            'status' => 'success',
-            'token' => $token,
-            'data' => $user
+            'status' => 'failed',
+            'message' => 'email or password incorrect',
         ]);
     }
 
     public function verify($token)
     {
-        // check email token and update 
         $user = User::where('remember_token', $token)->first();
 
         if (!$user) {
@@ -97,14 +99,33 @@ class AuthController extends Controller
         $user->remember_token = null;
         $user->update();
 
-        // generate token api
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        // retun response
         return response()->json([
             'status' => 'success',
-            'token' => $token,
             'data' => $user
         ]);
+        // return redirect()->to(env('FE_URL'));
+    }
+
+    public function checkEmail(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|max:100',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+    
+        if ($user) {
+            SendResetEmail::dispatch($user)->onQueue('apiCampaign');
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'link reset password will send if email exist',
+        ]);
+    }
+
+    public function resetPassword(Request $request)
+    {
+
     }
 }
