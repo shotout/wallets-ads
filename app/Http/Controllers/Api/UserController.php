@@ -71,6 +71,10 @@ class UserController extends Controller
             $media = Media::where('owner_id', $user->id)->where('type', 'user_photo')->first();
             if ($media) {
                 unlink(public_path().$media->url);
+            } else {
+                $media = new Media;
+                $media->owner_id = auth('sanctum')->user()->id;
+                $media->type = "user_photo";
             }
 
             $filename = uniqid();

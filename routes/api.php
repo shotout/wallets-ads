@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\CampaignController;
 
 /*
@@ -32,6 +33,18 @@ Route::group(
         Route::post('/check-email', [AuthController::class, 'checkEmail'])->name('checkEmail');
         Route::post('/check-token', [AuthController::class, 'checkToken'])->name('checkToken');
         Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('resetPassword');
+    }
+);
+
+Route::group(
+    [
+        'middleware' => 'auth:sanctum',
+        'prefix' => 'v1/user',
+        'name' => 'user.'
+    ],
+    function() {
+        Route::get('/', [UserController::class, 'show'])->name('show');
+        Route::patch('/', [UserController::class, 'update'])->name('update');
     }
 );
 
