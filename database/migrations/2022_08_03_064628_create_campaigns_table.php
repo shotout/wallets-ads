@@ -48,6 +48,7 @@ class CreateCampaignsTable extends Migration
             $table->integer('campaign_id')->nullable();
             $table->integer('ads_id')->nullable();
             $table->integer('fe_id')->nullable();
+            $table->string('name')->nullable();
             $table->integer('price')->nullable();
             $table->timestamps();
         });
@@ -77,6 +78,10 @@ class CreateCampaignsTable extends Migration
 
             $table->string('name')->nullable();
             $table->text('description')->nullable();
+
+            $table->integer('count_click')->nullable();
+            $table->integer('count_airdrop')->nullable();
+            $table->integer('count_mint')->nullable();
 
             $table->timestamps();
         });

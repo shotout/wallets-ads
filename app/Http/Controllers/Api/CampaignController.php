@@ -54,16 +54,15 @@ class CampaignController extends Controller
 
         $campaigns = $query->paginate($length);
 
-        $counter = (object) array(
-            "airdrop" => Campaign::where('user_id', auth('sanctum')->user()->id)->sum('count_airdrop'),
-            "click" => Campaign::where('user_id', auth('sanctum')->user()->id)->sum('count_click'),
-            "mint" => Campaign::where('user_id', auth('sanctum')->user()->id)->sum('count_mint'),
-        );
+        // $counter = (object) array(
+        //     "airdrop" => Campaign::where('user_id', auth('sanctum')->user()->id)->sum('count_airdrop'),
+        //     "click" => Campaign::where('user_id', auth('sanctum')->user()->id)->sum('count_click'),
+        //     "mint" => Campaign::where('user_id', auth('sanctum')->user()->id)->sum('count_mint'),
+        // );
 
         return response()->json([
             'status' => 'success',
-            'data' => $campaigns,
-            'counter' => $counter,
+            'data' => $campaigns
         ]);    
     }
 
@@ -90,12 +89,13 @@ class CampaignController extends Controller
             $campaign->save();
 
             if ($request->has('campaign_audiences') && count($request->campaign_audiences) > 0) {
-                foreach ($request->campaign_audiences as $audience) {
+                foreach ($request->campaign_audiences as $i => $audience) {
                     $audience = (object) $audience;
 
                     $adc = new Audience;
                     $adc->campaign_id = $campaign->id;
                     $adc->fe_id = $audience->fe_id;
+                    $adc->name = "Audience ".$i+1;
                     $adc->price = $audience->price;
                     $adc->save();
 

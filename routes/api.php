@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\CampaignController;
+use App\Http\Controllers\Api\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +46,20 @@ Route::group(
     function() {
         Route::get('/', [UserController::class, 'show'])->name('show');
         Route::patch('/', [UserController::class, 'update'])->name('update');
+    }
+);
+
+Route::group(
+    [
+        'middleware' => 'auth:sanctum',
+        'prefix' => 'v1/dashboard',
+        'name' => 'dashboard.'
+    ],
+    function() {
+        Route::get('/list-campaign', [DashboardController::class, 'listCampaign'])->name('listCampaign');
+        Route::get('/campaigns', [DashboardController::class, 'campaigns'])->name('campaigns');
+        Route::get('/audiences/{id}', [DashboardController::class, 'audiences'])->name('audiences');
+        Route::get('/export-audiences/{id}', [DashboardController::class, 'exportAudiences'])->name('exportAudiences');
     }
 );
 

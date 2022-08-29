@@ -26,4 +26,9 @@ class Audience extends Model
     {
         return $this->hasOne('\App\Models\DetailTarget');
     }
+
+    public function ads()
+    {
+        return $this->belongsTo('\App\Models\Ads', 'ads_id');
+    }
 }

@@ -17,4 +17,19 @@ class Ads extends Model
         return $this->hasOne('\App\Models\Media', 'owner_id')
             ->where('type', 'ads_nft');
     }
+
+    public function countAirdrop()
+    {
+        return self::sum('count_airdrop');
+    }
+
+    public function countClick()
+    {
+        return self::sum('count_click');
+    }
+
+    public function countMint()
+    {
+        return self::sum('count_mint');
+    }
 }
