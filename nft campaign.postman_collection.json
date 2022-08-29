@@ -733,6 +733,161 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "dashboard",
+			"item": [
+				{
+					"name": "list-campaign",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|MQlTZh8VFYms8IyGQ4Q9mTqcNtGIoHArgIq8iM9V",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/dashboard/list-campaign",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"dashboard",
+								"list-campaign"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "campaign",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|MQlTZh8VFYms8IyGQ4Q9mTqcNtGIoHArgIq8iM9V",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/dashboard/campaigns",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"dashboard",
+								"campaigns"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "audience",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|MQlTZh8VFYms8IyGQ4Q9mTqcNtGIoHArgIq8iM9V",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/dashboard/audiences/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"dashboard",
+								"audiences",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "export-audience",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|MQlTZh8VFYms8IyGQ4Q9mTqcNtGIoHArgIq8iM9V",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/dashboard/export-audiences/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"dashboard",
+								"export-audiences",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"event": [

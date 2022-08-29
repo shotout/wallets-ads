@@ -12,8 +12,10 @@ use App\Models\DetailTarget;
 use Illuminate\Http\Request;
 use App\Models\BalanceTarget;
 use App\Models\OptimizeTarget;
+use App\Exports\CampaignAudience;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 
 class DashboardController extends Controller
 {
@@ -110,6 +112,21 @@ class DashboardController extends Controller
 
     public function exportAudiences($id)
     {
+        $campaign = Campaign::find($id);
+        $audiences = Audience::where('campaign_id', $id)->with('ads')->get();
 
+        $counter = (object) array(
+            "airdrop" => $audiences[0]->ads->countAirdrop(),
+            "click" => $audiences[0]->ads->countClick(),
+            "mint" => $audiences[0]->ads->countMint(),
+        );
+
+        $data = (object) array(
+            "campaign" => $campaign,
+            "audiences" => $audiences,
+            'counter' => $counter
+        );
+
+        return Excel::download(new CampaignAudience($data), 'audience '.$campaign->name.'.xlsx');
     }
 }
