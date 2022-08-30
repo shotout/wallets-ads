@@ -86,6 +86,7 @@ class CampaignController extends Controller
             } else if ($request->campaign_end_date_type == 2) {
                 $campaign->end_date = $request->campaign_end_date;
             }
+            $campaign->status = 1;
             $campaign->save();
 
             if ($request->has('campaign_audiences') && count($request->campaign_audiences) > 0) {

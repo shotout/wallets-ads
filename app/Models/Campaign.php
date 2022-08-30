@@ -12,6 +12,9 @@ class Campaign extends Model
     protected $table = "campaigns";
     protected $guarded = [];
 
+    const IN_REVIEW = 1;
+    const FINISHED = 2;
+
     public function audiences()
     {
         return $this->hasMany('\App\Models\Audience')->with('optimizeTarget','balanceTarget','detailTarget');
