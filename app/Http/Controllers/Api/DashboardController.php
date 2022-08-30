@@ -83,6 +83,14 @@ class DashboardController extends Controller
     public function audiences($id)
     {
         $campaign = Campaign::find($id);
+
+        if (!$campaign) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'data not found'
+            ]); 
+        }
+
         $audiences = Audience::where('campaign_id', $id)->with('ads')->get();
 
         $counter = (object) array(
@@ -113,6 +121,14 @@ class DashboardController extends Controller
     public function exportAudiences($id)
     {
         $campaign = Campaign::find($id);
+
+        if (!$campaign) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'data not found'
+            ]); 
+        }
+        
         $audiences = Audience::where('campaign_id', $id)->with('ads')->get();
 
         $counter = (object) array(

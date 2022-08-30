@@ -102,27 +102,33 @@ class CampaignController extends Controller
 
                     $optimizeTarget = new OptimizeTarget;
                     $optimizeTarget->audience_id = $adc->id;
-                    $optimizeTarget->price = $audience->optimized_targeting_price;
-                    $optimizeTarget->description = $audience->optimized_targeting_description;
+                    // $optimizeTarget->price = $audience->optimized_targeting_price;
+                    // $optimizeTarget->description = $audience->optimized_targeting_description;
                     $optimizeTarget->save();
 
                     $balanceTarget = new BalanceTarget;
                     $balanceTarget->audience_id = $adc->id;
-                    $balanceTarget->price = $audience->balanced_targeting_price;
-                    $balanceTarget->description = $audience->balanced_targeting_description;
+                    // $balanceTarget->price = $audience->balanced_targeting_price;
+                    // $balanceTarget->description = $audience->balanced_targeting_description;
                     $balanceTarget->cryptocurrency_used = $audience->balanced_targeting_cryptocurrency;
                     $balanceTarget->account_age_year = $audience->balanced_targeting_year;
                     $balanceTarget->account_age_month = $audience->balanced_targeting_month;
                     $balanceTarget->account_age_day = $audience->balanced_targeting_day;
                     $balanceTarget->airdrops_received = $audience->balanced_targeting_airdrops;
-                    $balanceTarget->wallet_type = $audience->balanced_targeting_wallet;
-                    $balanceTarget->location = $audience->balanced_targeting_location;
+
+                    if (isset($audience->balanced_targeting_wallet) && $audience->balanced_targeting_wallet != '') {
+                        $balanceTarget->wallet_type = $audience->balanced_targeting_wallet;
+                    }
+                    if (isset($audience->balanced_targeting_location) && $audience->balanced_targeting_location != '') {
+                        $balanceTarget->location = $audience->balanced_targeting_location;
+                    }
+                    
                     $balanceTarget->save();
 
                     $detailTarget = new DetailTarget;
                     $detailTarget->audience_id = $adc->id;
-                    $detailTarget->price = $audience->detailed_targeting_price;
-                    $detailTarget->description = $audience->detailed_targeting_description;
+                    // $detailTarget->price = $audience->detailed_targeting_price;
+                    // $detailTarget->description = $audience->detailed_targeting_description;
                     $detailTarget->amount_transaction = $audience->detailed_targeting_amount_transaction;
                     $detailTarget->trading_volume = $audience->detailed_targeting_trading_volume;
                     $detailTarget->available_credit_wallet = $audience->detailed_targeting_available_credit_wallet;

@@ -29,6 +29,6 @@ class Audience extends Model
 
     public function ads()
     {
-        return $this->belongsTo('\App\Models\Ads', 'ads_id');
+        return $this->belongsTo('\App\Models\Ads', 'ads_id')->with('image');
     }
 }
