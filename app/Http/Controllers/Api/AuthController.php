@@ -46,7 +46,7 @@ class AuthController extends Controller
             return response()->json([
                 'status' => 'success',
                 'data' => $user
-            ]);           
+            ], 201);           
         }
     }
 
@@ -66,7 +66,7 @@ class AuthController extends Controller
                 return response()->json([
                     'status' => 'failed',
                     'message' => 'email account not verified',
-                ]);
+                ], 403);
             }
     
             $token = $user->createToken('auth_token')->plainTextToken;
@@ -75,13 +75,13 @@ class AuthController extends Controller
                 'status' => 'success',
                 'token' => $token,
                 'data' => $user
-            ]);
+            ], 200);
         }
 
         return response()->json([
             'status' => 'failed',
             'message' => 'email or password incorrect',
-        ]);
+        ], 401);
     }
 
     public function verify($token)
@@ -92,7 +92,7 @@ class AuthController extends Controller
             return response()->json([
                 'status' => 'failed',
                 'message' => 'token expired',
-            ]);
+            ], 401);
         }
 
         $user->email_verified_at = now();
@@ -102,7 +102,7 @@ class AuthController extends Controller
         return response()->json([
             'status' => 'success',
             'data' => $user
-        ]);
+        ], 200);
         // return redirect()->to(env('FE_URL'));
     }
 
@@ -124,7 +124,7 @@ class AuthController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'link reset password will send if email exist',
-        ]);
+        ], 200);
     }
 
     public function checkToken(Request $request)
@@ -139,13 +139,13 @@ class AuthController extends Controller
             return response()->json([
                 'status' => 'failed',
                 'message' => 'token expired',
-            ]);
+            ], 401);
         }
 
         return response()->json([
             'status' => 'success',
             'data' => $user,
-        ]);
+        ], 200);
     }
 
     public function resetPassword(Request $request)
@@ -161,7 +161,7 @@ class AuthController extends Controller
             return response()->json([
                 'status' => 'failed',
                 'message' => 'token expired',
-            ]);
+            ], 401);
         }
 
         $user->password = bcrypt($request->password);
@@ -171,6 +171,6 @@ class AuthController extends Controller
         return response()->json([
             'status' => 'success',
             'data' => $user,
-        ]);
+        ], 200);
     }
 }

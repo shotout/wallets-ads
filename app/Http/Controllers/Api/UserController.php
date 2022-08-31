@@ -20,13 +20,13 @@ class UserController extends Controller
             return response()->json([
                 'status' => 'failed',
                 'message' => 'user not found',
-            ]);
+            ], 404);
         }
 
         return response()->json([
             'status' => 'success',
             'data' => $user
-        ]);
+        ], 200);
     }
 
     public function update(Request $request)
@@ -50,7 +50,7 @@ class UserController extends Controller
             return response()->json([
                 'status' => 'failed',
                 'message' => 'user not found',
-            ]);
+            ], 404);
         }
 
         $user->company_name = $request->company_name;
@@ -90,6 +90,6 @@ class UserController extends Controller
         return response()->json([
             'status' => 'success',
             'data' => $user
-        ]); 
+        ], 200); 
     }
 }

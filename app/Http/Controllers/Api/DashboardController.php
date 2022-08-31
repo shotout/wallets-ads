@@ -28,7 +28,7 @@ class DashboardController extends Controller
         return response()->json([
             'status' => 'success',
             'data' => $listCampaign
-        ]);    
+        ], 200);    
     }
 
     public function campaigns(Request $request)
@@ -77,7 +77,7 @@ class DashboardController extends Controller
             'status' => 'success',
             'data' => $campaigns,
             'counter' => $counter,
-        ]);    
+        ], 200);    
     }
 
     public function audiences($id)
@@ -88,7 +88,7 @@ class DashboardController extends Controller
             return response()->json([
                 'status' => 'failed',
                 'message' => 'data not found'
-            ]); 
+            ], 404); 
         }
 
         $audiences = Audience::where('campaign_id', $id)->with('ads')->get();
@@ -115,7 +115,7 @@ class DashboardController extends Controller
         return response()->json([
             'status' => 'success',
             'data' => $data
-        ]);  
+        ], 200);  
     }
 
     public function exportAudiences($id)
@@ -126,7 +126,7 @@ class DashboardController extends Controller
             return response()->json([
                 'status' => 'failed',
                 'message' => 'data not found'
-            ]); 
+            ], 404); 
         }
         
         $audiences = Audience::where('campaign_id', $id)->with('ads')->get();

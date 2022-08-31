@@ -63,7 +63,7 @@ class CampaignController extends Controller
         return response()->json([
             'status' => 'success',
             'data' => $campaigns
-        ]);    
+        ], 200);    
     }
 
     public function store(Request $request)
@@ -219,7 +219,7 @@ class CampaignController extends Controller
         return response()->json([
             'status' => 'success',
             'data' => $campaign
-        ]); 
+        ], 201); 
     }
 
     public function show($id)
@@ -232,7 +232,7 @@ class CampaignController extends Controller
         return response()->json([
             'status' => 'success',
             'data' => $campaign
-        ]);  
+        ], 200);  
     }
 
     public function update(Request $request, $id)
@@ -418,6 +418,6 @@ class CampaignController extends Controller
         return response()->json([
             'status' => 'success',
             'data' => $campaign
-        ]); 
+        ], 200); 
     }
 }
