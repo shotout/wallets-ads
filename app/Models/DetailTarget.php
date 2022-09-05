@@ -11,4 +11,8 @@ class DetailTarget extends Model
 
     protected $table = "detailed_targeting";
     protected $guarded = [];
+
+    protected $casts = [
+        'cryptocurrency_used' => 'json',
+    ];
 }

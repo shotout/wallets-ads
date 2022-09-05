@@ -110,18 +110,18 @@ class CampaignController extends Controller
                     $balanceTarget->audience_id = $adc->id;
                     // $balanceTarget->price = $audience->balanced_targeting_price;
                     // $balanceTarget->description = $audience->balanced_targeting_description;
-                    $balanceTarget->cryptocurrency_used = $audience->balanced_targeting_cryptocurrency;
-                    $balanceTarget->account_age_year = $audience->balanced_targeting_year;
-                    $balanceTarget->account_age_month = $audience->balanced_targeting_month;
-                    $balanceTarget->account_age_day = $audience->balanced_targeting_day;
-                    $balanceTarget->airdrops_received = $audience->balanced_targeting_airdrops;
+                    // $balanceTarget->cryptocurrency_used = $audience->balanced_targeting_cryptocurrency;
+                    // $balanceTarget->account_age_year = $audience->balanced_targeting_year;
+                    // $balanceTarget->account_age_month = $audience->balanced_targeting_month;
+                    // $balanceTarget->account_age_day = $audience->balanced_targeting_day;
+                    // $balanceTarget->airdrops_received = $audience->balanced_targeting_airdrops;
 
-                    if (isset($audience->balanced_targeting_wallet) && $audience->balanced_targeting_wallet != '') {
-                        $balanceTarget->wallet_type = $audience->balanced_targeting_wallet;
-                    }
-                    if (isset($audience->balanced_targeting_location) && $audience->balanced_targeting_location != '') {
-                        $balanceTarget->location = $audience->balanced_targeting_location;
-                    }
+                    // if (isset($audience->balanced_targeting_wallet) && $audience->balanced_targeting_wallet != '') {
+                    //     $balanceTarget->wallet_type = $audience->balanced_targeting_wallet;
+                    // }
+                    // if (isset($audience->balanced_targeting_location) && $audience->balanced_targeting_location != '') {
+                    //     $balanceTarget->location = $audience->balanced_targeting_location;
+                    // }
                     
                     $balanceTarget->save();
 
@@ -129,9 +129,17 @@ class CampaignController extends Controller
                     $detailTarget->audience_id = $adc->id;
                     // $detailTarget->price = $audience->detailed_targeting_price;
                     // $detailTarget->description = $audience->detailed_targeting_description;
-                    $detailTarget->amount_transaction = $audience->detailed_targeting_amount_transaction;
-                    $detailTarget->trading_volume = $audience->detailed_targeting_trading_volume;
+                    $detailTarget->cryptocurrency_used = $audience->detailed_targeting_cryptocurrency;
+                    $detailTarget->account_age_year = $audience->detailed_targeting_year;
+                    $detailTarget->account_age_month = $audience->detailed_targeting_month;
+                    $detailTarget->account_age_day = $audience->detailed_targeting_day;
+
                     $detailTarget->available_credit_wallet = $audience->detailed_targeting_available_credit_wallet;
+                    $detailTarget->trading_volume = $audience->detailed_targeting_trading_volume;
+                    $detailTarget->airdrops_received = $audience->detailed_targeting_airdrops;
+
+                    $detailTarget->amount_transaction = $audience->detailed_targeting_amount_transaction;
+                    $detailTarget->amount_transaction_day = $audience->detailed_targeting_amount_transaction_day;
                     $detailTarget->nft_purchases = $audience->detailed_targeting_nft_purchases;
                     $detailTarget->save();
                 }
