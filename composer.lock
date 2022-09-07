@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e5cce13ac4f0f3fd8c5ac9c87a0b2429",
+    "content-hash": "da28c345f3f7ab05f8537b22fb058aa8",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -121,6 +121,343 @@
                 }
             ],
             "time": "2021-08-15T20:50:18+00:00"
+        },
+        {
+            "name": "composer/package-versions-deprecated",
+            "version": "1.11.99.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/composer/package-versions-deprecated.git",
+                "reference": "b4f54f74ef3453349c24a845d22392cd31e65f1d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/composer/package-versions-deprecated/zipball/b4f54f74ef3453349c24a845d22392cd31e65f1d",
+                "reference": "b4f54f74ef3453349c24a845d22392cd31e65f1d",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.1.0 || ^2.0",
+                "php": "^7 || ^8"
+            },
+            "replace": {
+                "ocramius/package-versions": "1.11.99"
+            },
+            "require-dev": {
+                "composer/composer": "^1.9.3 || ^2.0@dev",
+                "ext-zip": "^1.13",
+                "phpunit/phpunit": "^6.5 || ^7"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "PackageVersions\\Installer",
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PackageVersions\\": "src/PackageVersions"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marco Pivetta",
+                    "email": "ocramius@gmail.com"
+                },
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be"
+                }
+            ],
+            "description": "Composer plugin that provides efficient querying for installed package versions (no runtime IO)",
+            "support": {
+                "issues": "https://github.com/composer/package-versions-deprecated/issues",
+                "source": "https://github.com/composer/package-versions-deprecated/tree/1.11.99.5"
+            },
+            "funding": [
+                {
+                    "url": "https://packagist.com",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/composer",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/composer/composer",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2022-01-17T14:14:24+00:00"
+        },
+        {
+            "name": "contentful/contentful",
+            "version": "6.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/contentful/contentful.php.git",
+                "reference": "a6b201b26fb8b2df39fa1769e9a7b1ba160821cd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/contentful/contentful.php/zipball/a6b201b26fb8b2df39fa1769e9a7b1ba160821cd",
+                "reference": "a6b201b26fb8b2df39fa1769e9a7b1ba160821cd",
+                "shasum": ""
+            },
+            "require": {
+                "contentful/core": "^3.0",
+                "contentful/rich-text": "^3.1",
+                "php": "^7.2|^8.0",
+                "psr/cache": "^1.0|^2.0",
+                "psr/log": "^1.1|^2.0|^3.0",
+                "symfony/cache": "^5.0|^6.0",
+                "symfony/console": "~2.7|~3.0|~4.0|^5.0|^6.0",
+                "symfony/filesystem": "~2.7|~3.0|~4.0|~5.0|^6.0"
+            },
+            "require-dev": {
+                "php-vcr/php-vcr": "^1.5",
+                "php-vcr/phpunit-testlistener-vcr": "3.0.0|^3.2",
+                "phpunit/phpunit": "^8.5",
+                "roave/backward-compatibility-check": "^3.0|^5.0|^6.1"
+            },
+            "bin": [
+                "bin/contentful"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "6.3.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Contentful\\Delivery\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "SDK for the Contentful Content Delivery API",
+            "support": {
+                "issues": "https://github.com/contentful/contentful.php/issues",
+                "source": "https://github.com/contentful/contentful.php/tree/6.4.0"
+            },
+            "time": "2022-03-11T02:16:28+00:00"
+        },
+        {
+            "name": "contentful/contentful-management",
+            "version": "4.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/contentful/contentful-management.php.git",
+                "reference": "7573426b65bd624b384054ac2ceae7d9ccaaad98"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/contentful/contentful-management.php/zipball/7573426b65bd624b384054ac2ceae7d9ccaaad98",
+                "reference": "7573426b65bd624b384054ac2ceae7d9ccaaad98",
+                "shasum": ""
+            },
+            "require": {
+                "contentful/core": "^3.0",
+                "php": "^7.4|^8.0",
+                "symfony/console": "^3.0|^4.0|~4.0|^5.0|^6.0",
+                "symfony/filesystem": "^3.0|^4.0|~4.0|~5.0|^6.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.0",
+                "nikic/php-parser": "^3.1",
+                "php-vcr/php-vcr": "dev-curl_replace_assertion as 1.5",
+                "php-vcr/phpunit-testlistener-vcr": "^3.2",
+                "phpunit/phpunit": "~8.5"
+            },
+            "suggest": {
+                "nikic/php-parser": "Allows generating content type classes"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Contentful\\Management\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "SDK for the Contentful Content Management API",
+            "support": {
+                "issues": "https://github.com/contentful/contentful-management.php/issues",
+                "source": "https://github.com/contentful/contentful-management.php/tree/4.0.0"
+            },
+            "time": "2022-01-21T16:36:07+00:00"
+        },
+        {
+            "name": "contentful/core",
+            "version": "3.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/contentful/contentful-core.php.git",
+                "reference": "0dc07975889e142731a4c3c241532a540920f820"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/contentful/contentful-core.php/zipball/0dc07975889e142731a4c3c241532a540920f820",
+                "reference": "0dc07975889e142731a4c3c241532a540920f820",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "guzzlehttp/guzzle": "^6.5|^7.0",
+                "guzzlehttp/psr7": "^1.6|^2.1.1",
+                "jean85/pretty-package-versions": "^1.5",
+                "php": "^7.2|^8.0",
+                "psr/http-message": "^1.0",
+                "psr/log": "^1.1|^2.0|^3.0"
+            },
+            "require-dev": {
+                "monolog/monolog": "^2.0",
+                "phpunit/phpunit": "^8.5",
+                "roave/backward-compatibility-check": "^3.0|^5.0|^6.1",
+                "symfony/finder": "^3.0|^4.0|^5.0|^6.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Contentful\\Core\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Foundation library for Contentful PHP SDKs",
+            "support": {
+                "issues": "https://github.com/contentful/contentful-core.php/issues",
+                "source": "https://github.com/contentful/contentful-core.php/tree/3.2.0"
+            },
+            "time": "2022-07-16T20:21:09+00:00"
+        },
+        {
+            "name": "contentful/laravel",
+            "version": "8.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/contentful/contentful-laravel.git",
+                "reference": "0f4cef99c671511fb2072be56ec03622a6a12226"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/contentful/contentful-laravel/zipball/0f4cef99c671511fb2072be56ec03622a6a12226",
+                "reference": "0f4cef99c671511fb2072be56ec03622a6a12226",
+                "shasum": ""
+            },
+            "require": {
+                "contentful/contentful": "^6.0",
+                "contentful/core": "^3.0",
+                "laravel/framework": "~5.4|~6.0|^7.1|^8.0|^9.0",
+                "php": "^7.2|^8.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^5.1|^6.0",
+                "phpunit/phpunit": "^8.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.1.0-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Contentful\\Laravel\\ContentfulServiceProvider"
+                    ],
+                    "aliases": {
+                        "ContentfulDelivery": "Contentful\\Laravel\\Facades\\ContentfulDelivery"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Contentful\\Laravel\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Integrates the Contentful PHP SDK with Laravel.",
+            "support": {
+                "issues": "https://github.com/contentful/contentful-laravel/issues",
+                "source": "https://github.com/contentful/contentful-laravel/tree/8.2.0"
+            },
+            "time": "2022-03-11T10:29:16+00:00"
+        },
+        {
+            "name": "contentful/rich-text",
+            "version": "3.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/contentful/rich-text.php.git",
+                "reference": "8ca0e6b1f1527c4f6b172f1d24abedf5823e766a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/contentful/rich-text.php/zipball/8ca0e6b1f1527c4f6b172f1d24abedf5823e766a",
+                "reference": "8ca0e6b1f1527c4f6b172f1d24abedf5823e766a",
+                "shasum": ""
+            },
+            "require": {
+                "contentful/core": "^3.0",
+                "ext-json": "*",
+                "php": "^7.2|^8.0"
+            },
+            "require-dev": {
+                "league/plates": "^3.3",
+                "phpunit/phpunit": "^8.5",
+                "symfony/finder": "^3.0|^4.0|^5.0",
+                "twig/twig": "^3.0"
+            },
+            "suggest": {
+                "league/plates": "For integration with the Plates templating engine",
+                "twig/twig": "For integration with the Twig templating engine"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.3.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Contentful\\RichText\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Utilities for the Contentful Rich Text",
+            "support": {
+                "issues": "https://github.com/contentful/rich-text.php/issues",
+                "source": "https://github.com/contentful/rich-text.php/tree/3.4.0"
+            },
+            "time": "2022-07-17T13:37:16+00:00"
         },
         {
             "name": "dflydev/dot-access-data",
@@ -1007,6 +1344,61 @@
                 }
             ],
             "time": "2022-06-20T21:43:11+00:00"
+        },
+        {
+            "name": "jean85/pretty-package-versions",
+            "version": "1.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Jean85/pretty-package-versions.git",
+                "reference": "1e0104b46f045868f11942aea058cd7186d6c303"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Jean85/pretty-package-versions/zipball/1e0104b46f045868f11942aea058cd7186d6c303",
+                "reference": "1e0104b46f045868f11942aea058cd7186d6c303",
+                "shasum": ""
+            },
+            "require": {
+                "composer/package-versions-deprecated": "^1.8.0",
+                "php": "^7.0|^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.0|^8.5|^9.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Jean85\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alessandro Lai",
+                    "email": "alessandro.lai85@gmail.com"
+                }
+            ],
+            "description": "A wrapper for ocramius/package-versions to get pretty versions strings",
+            "keywords": [
+                "composer",
+                "package",
+                "release",
+                "versions"
+            ],
+            "support": {
+                "issues": "https://github.com/Jean85/pretty-package-versions/issues",
+                "source": "https://github.com/Jean85/pretty-package-versions/tree/1.6.0"
+            },
+            "time": "2021-02-04T16:20:16+00:00"
         },
         {
             "name": "laravel/framework",
@@ -2684,6 +3076,55 @@
             "time": "2022-07-30T15:51:26+00:00"
         },
         {
+            "name": "psr/cache",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/cache.git",
+                "reference": "213f9dbc5b9bfbc4f8db86d2838dc968752ce13b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/cache/zipball/213f9dbc5b9bfbc4f8db86d2838dc968752ce13b",
+                "reference": "213f9dbc5b9bfbc4f8db86d2838dc968752ce13b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.0.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Cache\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "https://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for caching libraries",
+            "keywords": [
+                "cache",
+                "psr",
+                "psr-6"
+            ],
+            "support": {
+                "source": "https://github.com/php-fig/cache/tree/2.0.0"
+            },
+            "time": "2021-02-03T23:23:37+00:00"
+        },
+        {
             "name": "psr/container",
             "version": "1.1.2",
             "source": {
@@ -3412,6 +3853,178 @@
             "time": "2021-10-18T15:26:12+00:00"
         },
         {
+            "name": "symfony/cache",
+            "version": "v6.0.11",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/cache.git",
+                "reference": "8c98079892d254b4e5806bedf694bddab8fe92b4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/cache/zipball/8c98079892d254b4e5806bedf694bddab8fe92b4",
+                "reference": "8c98079892d254b4e5806bedf694bddab8fe92b4",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.0.2",
+                "psr/cache": "^2.0|^3.0",
+                "psr/log": "^1.1|^2|^3",
+                "symfony/cache-contracts": "^1.1.7|^2|^3",
+                "symfony/service-contracts": "^1.1|^2|^3",
+                "symfony/var-exporter": "^5.4|^6.0"
+            },
+            "conflict": {
+                "doctrine/dbal": "<2.13.1",
+                "symfony/dependency-injection": "<5.4",
+                "symfony/http-kernel": "<5.4",
+                "symfony/var-dumper": "<5.4"
+            },
+            "provide": {
+                "psr/cache-implementation": "2.0|3.0",
+                "psr/simple-cache-implementation": "1.0|2.0|3.0",
+                "symfony/cache-implementation": "1.1|2.0|3.0"
+            },
+            "require-dev": {
+                "cache/integration-tests": "dev-master",
+                "doctrine/dbal": "^2.13.1|^3.0",
+                "predis/predis": "^1.1",
+                "psr/simple-cache": "^1.0|^2.0|^3.0",
+                "symfony/config": "^5.4|^6.0",
+                "symfony/dependency-injection": "^5.4|^6.0",
+                "symfony/filesystem": "^5.4|^6.0",
+                "symfony/http-kernel": "^5.4|^6.0",
+                "symfony/messenger": "^5.4|^6.0",
+                "symfony/var-dumper": "^5.4|^6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Cache\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Provides an extended PSR-6, PSR-16 (and tags) implementation",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "caching",
+                "psr6"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/cache/tree/v6.0.11"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2022-07-29T07:39:48+00:00"
+        },
+        {
+            "name": "symfony/cache-contracts",
+            "version": "v2.5.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/cache-contracts.git",
+                "reference": "64be4a7acb83b6f2bf6de9a02cee6dad41277ebc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/cache-contracts/zipball/64be4a7acb83b6f2bf6de9a02cee6dad41277ebc",
+                "reference": "64be4a7acb83b6f2bf6de9a02cee6dad41277ebc",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.5",
+                "psr/cache": "^1.0|^2.0|^3.0"
+            },
+            "suggest": {
+                "symfony/cache-implementation": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "2.5-dev"
+                },
+                "thanks": {
+                    "name": "symfony/contracts",
+                    "url": "https://github.com/symfony/contracts"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Contracts\\Cache\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Generic abstractions related to caching",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "abstractions",
+                "contracts",
+                "decoupling",
+                "interfaces",
+                "interoperability",
+                "standards"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/cache-contracts/tree/v2.5.2"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2022-01-02T09:53:40+00:00"
+        },
+        {
             "name": "symfony/console",
             "version": "v5.4.11",
             "source": {
@@ -3874,6 +4487,69 @@
                 }
             ],
             "time": "2022-01-02T09:55:41+00:00"
+        },
+        {
+            "name": "symfony/filesystem",
+            "version": "v6.0.12",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/filesystem.git",
+                "reference": "a36b782dc19dce3ab7e47d4b92b13cefb3511da3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/a36b782dc19dce3ab7e47d4b92b13cefb3511da3",
+                "reference": "a36b782dc19dce3ab7e47d4b92b13cefb3511da3",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.0.2",
+                "symfony/polyfill-ctype": "~1.8",
+                "symfony/polyfill-mbstring": "~1.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Filesystem\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Provides basic utilities for the filesystem",
+            "homepage": "https://symfony.com",
+            "support": {
+                "source": "https://github.com/symfony/filesystem/tree/v6.0.12"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2022-08-02T16:01:06+00:00"
         },
         {
             "name": "symfony/finder",
@@ -5604,6 +6280,78 @@
                 }
             ],
             "time": "2022-07-20T13:00:38+00:00"
+        },
+        {
+            "name": "symfony/var-exporter",
+            "version": "v6.0.10",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/var-exporter.git",
+                "reference": "e3df004a8d0fb572c420a6915cd23db9254c8366"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/var-exporter/zipball/e3df004a8d0fb572c420a6915cd23db9254c8366",
+                "reference": "e3df004a8d0fb572c420a6915cd23db9254c8366",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.0.2"
+            },
+            "require-dev": {
+                "symfony/var-dumper": "^5.4|^6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\VarExporter\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Allows exporting any serializable PHP data structure to plain PHP code",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "clone",
+                "construct",
+                "export",
+                "hydrate",
+                "instantiate",
+                "serialize"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/var-exporter/tree/v6.0.10"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2022-05-27T12:57:11+00:00"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",

@@ -9,6 +9,9 @@ use Illuminate\Http\Request;
 use App\Jobs\SendConfirmEmail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Contentful\Core\Api\Exception;
+use Contentful\Management\Client;
+use Contentful\Management\Resource\Entry;
 
 class AuthController extends Controller
 {
@@ -27,6 +30,8 @@ class AuthController extends Controller
             'password' => 'required|confirmed|min:8|max:100',
         ]);
 
+        $email = $request->email;
+
         $user = new User;
         $user->company_name = $request->company_name;
         $user->tax_id = $request->tax_id;
@@ -41,13 +46,42 @@ class AuthController extends Controller
         $user->remember_token = Str::random(16);
 
         if ($user->save()) {
-            SendConfirmEmail::dispatch($user, 'register')->onQueue('apiCampaign');
+            // SendConfirmEmail::dispatch($user, 'register')->onQueue('apiCampaign');   
+            $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
+            $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
+
+            $newuser = User::where('email', $email)->first();
+
+            //add user to contentful
+            $entry = new Entry('users');
+            $entry->setField('companyName', 'en-US', $newuser->company_name);
+            $entry->setField('taxId', 'en-US', $newuser->tax_id);
+            $entry->setField('firstName', 'en-US', $newuser->first_name);
+            $entry->setField('lastName', 'en-US', $newuser->last_name);
+            $entry->setField('street', 'en-US', $newuser->street);
+            $entry->setField('postCode', 'en-US', $newuser->post_code);
+            $entry->setField('city', 'en-US', $newuser->city);
+            $entry->setField('email', 'en-US', $newuser->email);
+            $entry->setField('phone', 'en-US', $newuser->phone);
+            $entry->setField('accountCreatedTime', 'en-US', $newuser->created_at);
+            $environment->create($entry);
+
+            //publish user to contentful
+            $entry_id = $entry->getId();
+            $entry = $environment->getEntry($entry_id);
+            $entry->publish();
+
+            //update user with contentful id
+            $updateuser = User::where('email', $email)->first();
+            $updateuser->entry_id = $entry_id;
+            $updateuser->save();        
 
             return response()->json([
                 'status' => 'success',
                 'data' => $user
             ], 201);           
         }
+            
     }
 
     public function login(Request $request)
