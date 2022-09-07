@@ -33,7 +33,7 @@ class SendResetEmail implements ShouldQueue
      */
     public function handle()
     {
-        $this->user->email_message = 'NFT Daily Reset Password';
+        $this->user->email_message = 'Reset Password';
         $this->user->name = $this->user->first_name ." ".$this->user->last_name;
 
         Mail::send('email.reset', ['user' => $this->user], function($message) {
