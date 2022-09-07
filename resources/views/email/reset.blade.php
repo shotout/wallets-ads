@@ -16,8 +16,10 @@
                         <div role="section">
                             <div style="background-color:#ffffff">
                                 <div style="Margin:0 auto;max-width:600px;min-width:320px;width:320px;width:calc(28000% - 167400px);word-wrap:break-word;word-break:break-word">
-                                    <div style="width: 100px;margin: 0 auto;">
-                                    <a href ="https://nftdaily.app/" target="_blank"><img src="https://backend.nftdaily.app/assets/logo/logo.png" style="margin-top: 50px;margin-bottom: 30%;width: 100%;text-align: center;"></a>
+                                    <div style="width: 200px;margin: 0 auto;">
+                                    <a href ="{{env('APP_URL')}}" target="_blank">
+                                        <img src="{{env('APP_URL')}}/assets/images/logo.png" style="margin-top: 50px;margin-bottom: 20%;width: 100%;text-align: center;">
+                                    </a>
                                     </div>
                                     <div style="border-collapse:collapse;display:table;width:100%">
                                         <div style="max-width:600px;min-width:320px;width:320px;width:calc(28000% - 167400px);text-align:left;color:#111324;font-size:16px;line-height:24px;font-family:sans-serif">
@@ -49,15 +51,15 @@
                                         &nbsp;
                                     </div>
                                     </div>
-                                    <div style="Margin-left:20px;Margin-right:20px">
+                                    {{-- <div style="Margin-left:20px;Margin-right:20px">
                                     <div>
                                         <h1 style="Margin-top:0;Margin-bottom:20px;font-style:normal;font-weight:normal;color:#111324;font-size:16px;line-height:31px;text-align:left">Thank you for request reset password on the NFT Daily App!</h1>
                                     </div>
-                                    </div>
+                                    </div> --}}
                                     <div style="Margin-left:20px;Margin-right:20px">
                                     <div>
                                         <p style="Margin-top:0;Margin-bottom:20px">
-                                            Click the button below to <span style="font-weight: bold;">reset your password</span> on NFT Daily and make sure that you <span style="font-weight: bold;">won't miss out on the newest drops!</span>  
+                                            We have received a request to reset your password for <span style="font-weight: bold;">WALLETADS</span>. You can click the button below to reset your password.
                                         </p>
                                     </div>
                                     </div>

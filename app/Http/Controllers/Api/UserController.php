@@ -107,6 +107,8 @@ class UserController extends Controller
             $media->save();
         }
 
+        $user = User::with('photo')->find($user->id);
+        
         return response()->json([
             'status' => 'success',
             'data' => $user

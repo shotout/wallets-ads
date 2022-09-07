@@ -94,7 +94,7 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (auth()->attempt($credentials)) {
-            $user = User::where('email', $request->email)->first();
+            $user = User::with('photo')->where('email', $request->email)->first();
     
             if (!$user->email_verified_at) {
                 return response()->json([
@@ -133,11 +133,11 @@ class AuthController extends Controller
         $user->remember_token = null;
         $user->update();
 
-        return response()->json([
-            'status' => 'success',
-            'data' => $user
-        ], 200);
-        // return redirect()->to(env('FE_URL'));
+        // return response()->json([
+        //     'status' => 'success',
+        //     'data' => $user
+        // ], 200);
+        return redirect()->to(env('FE_URL'));
     }
 
     public function checkEmail(Request $request)
