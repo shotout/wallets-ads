@@ -161,11 +161,11 @@ class CreateCampaignsTable extends Migration
                 $table->integer('account_age_month')->nullable();
                 $table->integer('account_age_day')->nullable();
 
-                $table->integer('available_credit_wallet')->nullable();
-                $table->integer('trading_volume')->nullable();
-                $table->integer('airdrops_received')->nullable();
+                $table->string('available_credit_wallet')->nullable();
+                $table->string('trading_volume')->nullable();
+                $table->string('airdrops_received')->nullable();
 
-                $table->integer('amount_transaction')->nullable();
+                $table->string('amount_transaction')->nullable();
                 $table->integer('amount_transaction_day')->nullable();
                 $table->text('nft_purchases')->nullable();     
 
