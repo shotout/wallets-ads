@@ -28,10 +28,8 @@ class WebhookHandler extends ProcessWebhookJob
                     $blacklist->walletaddress = $walletaddress;
                     $blacklist->save();
 
-                    logger('Blacklisted wallet address added to database');
                 }
 
-                logger($data);
             }
         
     }
