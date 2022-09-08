@@ -1,14 +1,17 @@
-<?php
+<?php 
 
 namespace App\Handler;
 
-use Spatie\WebhookClient\Jobs\ProcessWebhookJob;
+use Spatie\WebhookClient\ProcessWebhookJob;
+use Contentful\Delivery\Client as DeliveryClient;
 
-class WebhookHandler extends ProcessWebhookJob
+class WebhookHandler extends ProcessWebhookJob 
 {
-    public function handle()
+       
+
+    public function handle( DeliveryClient $client)
     {
-        logger('Webhook received successfully');
+        logger('webhook received');
+        
     }
 }
-   
