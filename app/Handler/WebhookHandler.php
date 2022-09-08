@@ -20,7 +20,7 @@ class WebhookHandler extends ProcessWebhookJob
                 {
                     //retrieve data from contentful
                     $entry_id = $data['sys']['id'];
-                    $walletaddress = $data['sys']['fields']['walletaddress']['en-US'];
+                    $walletaddress = $data['fields']['walletAddress']['en-US'];
                     
                     //insert into database
                     $blacklist = new Blacklisted;
