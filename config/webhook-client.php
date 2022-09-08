@@ -1,6 +1,6 @@
 <?php
 
-use app\Handler\WebhookHandler;
+use App\Handler\WebhookHandler;
 
 return [
     'configs' => [
