@@ -12,7 +12,7 @@ class WebhookHandler extends ProcessWebhookJob
     public function handle( )
     {
         $data = $this->webhookCall->payload;
-        logger('webhook received');
+        logger('webhook received ok');
         logger($data);
     }
 }
