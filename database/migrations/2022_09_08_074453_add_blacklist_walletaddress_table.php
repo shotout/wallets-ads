@@ -16,6 +16,7 @@ class AddBlacklistWalletaddressTable extends Migration
         $table = 'blacklist_walletaddress';
         Schema::create($table, function (Blueprint $table) {
             $table->id();
+            $table->string('entry_id')->nullable();
             $table->string('walletaddress')->nullable();
             $table->timestamps();
         });
