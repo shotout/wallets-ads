@@ -11,6 +11,7 @@ class WebhookHandler extends ProcessWebhookJob
 
     public function handle( )
     {
+        $test = 0;
         $data = $this->webhookCall->payload;
         logger('webhook received');
         logger($data);
