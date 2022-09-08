@@ -16,7 +16,7 @@ class WebhookHandler extends ProcessWebhookJob
 
         if($data['sys']['type'] == 'Entry')
             {
-                if($data['sys']['contentType']['sys']['id'] == 'blacklistWalletaddress')
+                if($data['sys']['contentType']['sys']['id'] == 'blacklistedWalletAddress')
                 {
                     //retrieve data from contentful
                     $entry_id = $data['sys']['id'];
