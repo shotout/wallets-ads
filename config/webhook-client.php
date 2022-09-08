@@ -1,6 +1,6 @@
 <?php
 
-use App\Handler\WebhookHandler;
+
 
 return [
     'configs' => [
@@ -60,7 +60,7 @@ return [
              *
              * This should be set to a class that extends \Spatie\WebhookClient\Jobs\ProcessWebhookJob.
              */
-            'process_webhook_job' => WebhookHandler::class,
+            'process_webhook_job' => app\Handler\WebhookHandler::class,
         ],
     ],
 ];
