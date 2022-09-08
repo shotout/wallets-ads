@@ -14,7 +14,7 @@ class UserController extends Controller
 {
     public function show()
     {
-        $user = User::with('photo')->find(auth('sanctum')->user()->id);
+        $user = User::with('photo','payment')->find(auth('sanctum')->user()->id);
 
         if (!$user) {
             return response()->json([

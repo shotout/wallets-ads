@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\CampaignController;
 use App\Http\Controllers\Api\DashboardController;
 
@@ -74,6 +75,18 @@ Route::group(
         Route::post('/', [CampaignController::class, 'store'])->name('store');
         Route::get('/{id}', [CampaignController::class, 'show'])->name('show');
         Route::patch('/{id}', [CampaignController::class, 'update'])->name('update');
+    }
+);
+
+Route::group(
+    [
+        'middleware' => 'auth:sanctum',
+        'prefix' => 'v1/payment',
+        'name' => 'payment.'
+    ],
+    function() {
+        Route::post('/', [PaymentController::class, 'store'])->name('store');
+        Route::patch('/{id}', [PaymentController::class, 'update'])->name('update');
     }
 );
 

@@ -32,6 +32,7 @@ class CreateCampaignsTable extends Migration
 
             // type 1,2,3
             $table->tinyInteger('type')->nullable();
+            $table->integer('day')->nullable();
 
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();

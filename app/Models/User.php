@@ -47,4 +47,9 @@ class User extends Authenticatable
         return $this->hasOne('\App\Models\Media', 'owner_id')
             ->where('type', 'user_photo');
     }
+
+    public function payment()
+    {
+        return $this->hasOne('\App\Models\Payment');
+    }
 }

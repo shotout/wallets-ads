@@ -60,7 +60,7 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (auth()->attempt($credentials)) {
-            $user = User::with('photo')->where('email', $request->email)->first();
+            $user = User::with('photo','payment')->where('email', $request->email)->first();
     
             if (!$user->email_verified_at) {
                 return response()->json([
