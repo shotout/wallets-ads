@@ -8,7 +8,7 @@ class WebhookHandler extends ProcessWebhookJob
 {
     public function handle()
     {
-        logger('Webhook received!');
+        logger('Webhook received successfully');
     }
 }
    
