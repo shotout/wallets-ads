@@ -1,9 +1,8 @@
 {
 	"info": {
-		"_postman_id": "a3182f4d-db40-4f0c-8031-e8fff4ed179c",
+		"_postman_id": "83336e25-fa9a-4e0e-95c9-90b78acbb475",
 		"name": "nft campaign",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "12074833"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -221,7 +220,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "1|MQlTZh8VFYms8IyGQ4Q9mTqcNtGIoHArgIq8iM9V",
+									"value": "1|R2bxIRs2JjfWROb2qJAKBsM0GgjX4zEqMtyGDNU1",
 									"type": "string"
 								}
 							]
@@ -254,7 +253,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "1|RdrcZf2ESayxv1aiEjVHelLYPTj1CnEEmgKFaq99",
+									"value": "1|R2bxIRs2JjfWROb2qJAKBsM0GgjX4zEqMtyGDNU1",
 									"type": "string"
 								}
 							]
@@ -269,7 +268,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"campaign_name\": \"Mekaverse\",\n    \"campaign_start_date\": \"2022-08-12\",\n    \"campaign_end_date_type\": 1,\n    \"campaign_end_date\": \"\",\n\n    \"campaign_audiences\": [\n        {\n            \"fe_id\": 1,\n            \"price\": 500,\n\n            \"detailed_targeting_cryptocurrency\": [1,2,3],\n            \"detailed_targeting_year\": 1,\n            \"detailed_targeting_month\": 2,\n            \"detailed_targeting_day\": 30,\n\n            \"detailed_targeting_available_credit_wallet\": 1,\n            \"detailed_targeting_trading_volume\": 1,\n            \"detailed_targeting_airdrops\": 1,\n\n            \"detailed_targeting_amount_transaction\": 1,\n            \"detailed_targeting_amount_transaction_day\": 30,\n            \"detailed_targeting_nft_purchases\": \"Creator 1, Creator 2, Creator 3\"\n        },\n\n        {\n            \"fe_id\": 2,\n            \"price\": 1000,\n\n            \"detailed_targeting_cryptocurrency\": [1,2,3],\n            \"detailed_targeting_year\": 1,\n            \"detailed_targeting_month\": 2,\n            \"detailed_targeting_day\": 30,\n\n            \"detailed_targeting_available_credit_wallet\": 1,\n            \"detailed_targeting_trading_volume\": 1,\n            \"detailed_targeting_airdrops\": 1,\n\n            \"detailed_targeting_amount_transaction\": 1,\n            \"detailed_targeting_amount_transaction_day\": 30,\n            \"detailed_targeting_nft_purchases\": \"Creator 1, Creator 2, Creator 3\"\n        },\n\n        {\n            \"fe_id\": 3,\n            \"price\": 1500,\n\n            \"detailed_targeting_cryptocurrency\": [1,2,3],\n            \"detailed_targeting_year\": 1,\n            \"detailed_targeting_month\": 2,\n            \"detailed_targeting_day\": 30,\n\n            \"detailed_targeting_available_credit_wallet\": 1,\n            \"detailed_targeting_trading_volume\": 1,\n            \"detailed_targeting_airdrops\": 1,\n\n            \"detailed_targeting_amount_transaction\": 1,\n            \"detailed_targeting_amount_transaction_day\": 30,\n            \"detailed_targeting_nft_purchases\": \"Creator 1, Creator 2, Creator 3\"\n        }\n    ],\n\n    \"ads_page_name\": \"Title Page Mekaverse\",\n    \"ads_page_description\": \"Description Page Mekaverse\",\n    \"ads_page_website\": \"https://google.com\",\n    \"ads_page_discord\": \"https://discord.com\",\n    \"ads_page_twitter\": \"https://twitter.com\",\n    \"ads_page_instagram\": \"https://instagram.com\",\n    \"ads_page_medium\": \"https://medium.com\",\n    \"ads_page_facebook\": \"https://facebook.com\",\n    \"ads_page_external_page\": \"https://external.com\",\n    \"ads_page_logo\": \"\",\n    \"ads_page_banner\": \"\",\n\n    \"campaign_ads\": [\n        {\n            \"name\": \"Name Ads 1\",\n            \"description\": \"Desc Ads 1\",\n            \"fe_id\": [1,2],\n            \"image\": \"\"\n        },\n        {\n            \"name\": \"Name Ads 2\",\n            \"description\": \"Desc Ads 2\",\n            \"fe_id\": [3],\n            \"image\": \"\"\n        }\n    ]\n}",
+							"raw": "{\n    \"campaign_name\": \"Mekaverse\",\n    \"campaign_start_date\": \"2022-08-12\",\n    \"campaign_end_date_type\": 1,\n    \"campaign_end_date_day\": 10,\n    \"campaign_end_date\": \"01/02/2023\",\n\n    \"campaign_audiences\": [\n        {\n            \"fe_id\": 1,\n            \"price\": 500,\n\n            \"detailed_targeting_cryptocurrency\": [\"ETH\",\"BNC\",\"SOL\"],\n            \"detailed_targeting_year\": 1,\n            \"detailed_targeting_month\": 2,\n            \"detailed_targeting_day\": 30,\n\n            \"detailed_targeting_available_credit_wallet\": \"USD100-1,000\",\n            \"detailed_targeting_trading_volume\": \"USD100-1,000\",\n            \"detailed_targeting_airdrops\": \"1-5\",\n\n            \"detailed_targeting_amount_transaction\": \"6-10\",\n            \"detailed_targeting_amount_transaction_day\": 30,\n            \"detailed_targeting_nft_purchases\": \"Creator 1, Creator 2, Creator 3\"\n        },\n\n        {\n            \"fe_id\": 2,\n            \"price\": 1000,\n\n            \"detailed_targeting_cryptocurrency\": [\"ETH\",\"BNC\",\"SOL\"],\n            \"detailed_targeting_year\": 1,\n            \"detailed_targeting_month\": 2,\n            \"detailed_targeting_day\": 30,\n\n            \"detailed_targeting_available_credit_wallet\": \"USD100-1,000\",\n            \"detailed_targeting_trading_volume\": \"USD100-1,000\",\n            \"detailed_targeting_airdrops\": \"1-5\",\n\n            \"detailed_targeting_amount_transaction\": \"6-10\",\n            \"detailed_targeting_amount_transaction_day\": 30,\n            \"detailed_targeting_nft_purchases\": \"Creator 1, Creator 2, Creator 3\"\n        },\n\n        {\n            \"fe_id\": 3,\n            \"price\": 1500,\n\n            \"detailed_targeting_cryptocurrency\": [\"ETH\",\"BNC\",\"SOL\"],\n            \"detailed_targeting_year\": 1,\n            \"detailed_targeting_month\": 2,\n            \"detailed_targeting_day\": 30,\n\n            \"detailed_targeting_available_credit_wallet\": \"USD100-1,000\",\n            \"detailed_targeting_trading_volume\": \"USD100-1,000\",\n            \"detailed_targeting_airdrops\": \"1-5\",\n\n            \"detailed_targeting_amount_transaction\": \"6-10\",\n            \"detailed_targeting_amount_transaction_day\": 30,\n            \"detailed_targeting_nft_purchases\": \"Creator 1, Creator 2, Creator 3\"\n        }\n    ],\n\n    \"ads_page_name\": \"Title Page Mekaverse\",\n    \"ads_page_description\": \"Description Page Mekaverse\",\n    \"ads_page_website\": \"https://google.com\",\n    \"ads_page_discord\": \"https://discord.com\",\n    \"ads_page_twitter\": \"https://twitter.com\",\n    \"ads_page_instagram\": \"https://instagram.com\",\n    \"ads_page_medium\": \"https://medium.com\",\n    \"ads_page_facebook\": \"https://facebook.com\",\n    \"ads_page_external_page\": \"https://external.com\",\n    \"ads_page_logo\": \"\",\n    \"ads_page_banner\": \"\",\n\n    \"campaign_ads\": [\n        {\n            \"name\": \"Name Ads 1\",\n            \"description\": \"Desc Ads 1\",\n            \"fe_id\": [1,2],\n            \"image\": \"\"\n        },\n        {\n            \"name\": \"Name Ads 2\",\n            \"description\": \"Desc Ads 2\",\n            \"fe_id\": [3],\n            \"image\": \"\"\n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -792,7 +791,7 @@
 								}
 							]
 						},
-						"method": "GET",
+						"method": "POST",
 						"header": [
 							{
 								"key": "Accept",
@@ -884,6 +883,102 @@
 								"dashboard",
 								"export-audiences",
 								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "payment",
+			"item": [
+				{
+					"name": "add",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "2|qILxzi5NYkZiP2xl0psNO0gZbZPtY0kemmsryPlA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"method\": \"card\",\n    \"email\": \"padliyulian@gmail.com\",\n    \"card_number\": 123,\n    \"card_expired\": \"12/22\",\n    \"card_cvc\": 111,\n    \"card_name\": \"Padli Yulian\",\n    \"country\": 1,\n    \"post_code\": 35362\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/payment",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"payment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "2|qILxzi5NYkZiP2xl0psNO0gZbZPtY0kemmsryPlA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"method\": \"card\",\n    \"email\": \"padliyulian@gmail.com\",\n    \"card_number\": 1234,\n    \"card_expired\": \"12/22\",\n    \"card_cvc\": 111,\n    \"card_name\": \"Padli Yulian\",\n    \"country\": 1,\n    \"post_code\": 35362\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/payment/3",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"payment",
+								"3"
 							]
 						}
 					},

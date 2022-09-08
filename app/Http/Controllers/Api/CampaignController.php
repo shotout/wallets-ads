@@ -82,7 +82,8 @@ class CampaignController extends Controller
             $campaign->start_date = $request->campaign_start_date;
             $campaign->type = $request->campaign_end_date_type;
             if ($request->campaign_end_date_type == 1) {
-                $campaign->end_date = Carbon::now()->addDay(7);
+                $campaign->end_date = Carbon::now()->addDay($request->campaign_end_date_day);
+                $campaign->day = $request->campaign_end_date_day;
             } else if ($request->campaign_end_date_type == 2) {
                 $campaign->end_date = $request->campaign_end_date;
             }
