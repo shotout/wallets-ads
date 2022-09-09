@@ -46,7 +46,8 @@ class AuthController extends Controller
         $user->remember_token = Str::random(16);
 
         if ($user->save()) {
-               
+
+            //contentful env    
             $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
             $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
 
