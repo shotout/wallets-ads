@@ -14,6 +14,7 @@ use App\Models\BalanceTarget;
 use App\Models\OptimizeTarget;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class CampaignController extends Controller
 {
@@ -38,7 +39,7 @@ class CampaignController extends Controller
         }
 
         $query = Campaign::where('user_id', auth('sanctum')->user()->id)
-            ->with('audiences','adsPage','ads')
+            // ->with('audiences','adsPage','ads')
             ->orderBy($column, $dir);
 
         if ($request->has('status') && $request->input('status') != '') {
@@ -159,31 +160,47 @@ class CampaignController extends Controller
             $adsPage->external_page = $request->ads_page_external_page;
             $adsPage->save();
 
-            if ($request->hasFile('ads_page_logo')) {
-                $filename = uniqid();
-                $fileExt = $request->ads_page_logo->getClientOriginalExtension();
-                $fileNameToStore = $filename.'_'.time().'.'.$fileExt;
-                $request->ads_page_logo->move(public_path().'/assets/images/logo/', $fileNameToStore);
+            if ($request->has('ads_page_logo')) {
+                // $filename = uniqid();
+                // $fileExt = $request->ads_page_logo->getClientOriginalExtension();
+                // $fileNameToStore = $filename.'_'.time().'.'.$fileExt;
+                // $request->ads_page_logo->move(public_path().'/assets/images/logo/', $fileNameToStore);
+
+                $image_parts = explode(";base64,", $request->ads_page_logo);
+                $image_type_aux = explode("image/", $image_parts[0]);
+                $image_type = $image_type_aux[1];
+                $image_base64 = base64_decode($image_parts[1]);
+                $fileNameToStore = uniqid() .'_' .time(). '.' .$image_type;
+                $fileURL = "/assets/images/logo/" .$fileNameToStore;
+                Storage::disk('public_uploads')->put($fileURL, $image_base64);
 
                 $media = new Media;
                 $media->owner_id = $adsPage->id;
                 $media->type = "ads_logo";
                 $media->name = $fileNameToStore;
-                $media->url = "/assets/images/logo/$fileNameToStore";
+                $media->url = $fileURL;
                 $media->save();
             }
 
-            if ($request->hasFile('ads_page_banner')) {
-                $filename = uniqid();
-                $fileExt = $request->ads_page_banner->getClientOriginalExtension();
-                $fileNameToStore = $filename.'_'.time().'.'.$fileExt;
-                $request->ads_page_banner->move(public_path().'/assets/images/banner/', $fileNameToStore);
+            if ($request->has('ads_page_banner')) {
+                // $filename = uniqid();
+                // $fileExt = $request->ads_page_banner->getClientOriginalExtension();
+                // $fileNameToStore = $filename.'_'.time().'.'.$fileExt;
+                // $request->ads_page_banner->move(public_path().'/assets/images/banner/', $fileNameToStore);
+
+                $image_parts = explode(";base64,", $request->ads_page_banner);
+                $image_type_aux = explode("image/", $image_parts[0]);
+                $image_type = $image_type_aux[1];
+                $image_base64 = base64_decode($image_parts[1]);
+                $fileNameToStore = uniqid() .'_' .time(). '.' .$image_type;
+                $fileURL = "/assets/images/banner/" .$fileNameToStore;
+                Storage::disk('public_uploads')->put($fileURL, $image_base64);
 
                 $media = new Media;
                 $media->owner_id = $adsPage->id;
                 $media->type = "ads_banner";
                 $media->name = $fileNameToStore;
-                $media->url = "/assets/images/banner/$fileNameToStore";
+                $media->url = $fileURL;
                 $media->save();
             }
 
@@ -207,16 +224,25 @@ class CampaignController extends Controller
                     }
 
                     if (isset($ads->image)) {
-                        $filename = uniqid();
-                        $fileExt = $ads->image->getClientOriginalExtension();
-                        $fileNameToStore = $filename.'_'.time().'.'.$fileExt;
-                        $ads->image->move(public_path().'/assets/images/nft/', $fileNameToStore);
+                        $image_parts = explode(";base64,", $ads->image);
+                        $image_type_aux = explode("image/", $image_parts[0]);
+                        $image_type = $image_type_aux[1];
+                        $image_base64 = base64_decode($image_parts[1]);
+                        $fileNameToStore = uniqid() .'_' .time(). '.' .$image_type;
+                        $fileURL = "/assets/images/nft/" .$fileNameToStore;
+                
+                        Storage::disk('public_uploads')->put($fileURL, $image_base64);
+
+                        // $filename = uniqid();
+                        // $fileExt = $ads->image->getClientOriginalExtension();
+                        // $fileNameToStore = $filename.'_'.time().'.'.$fileExt;
+                        // $ads->image->move(public_path().'/assets/images/nft/', $fileNameToStore);
         
                         $media = new Media;
                         $media->owner_id = $newAds->id;
                         $media->type = "ads_nft";
                         $media->name = $fileNameToStore;
-                        $media->url = "/assets/images/nft/$fileNameToStore";
+                        $media->url = $fileURL;
                         $media->save();
                     }
                 }
