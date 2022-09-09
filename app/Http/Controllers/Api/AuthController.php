@@ -46,7 +46,7 @@ class AuthController extends Controller
         $user->remember_token = Str::random(16);
 
         if ($user->save()) {
-            SendConfirmEmail::dispatch($user, 'register')->onQueue('apiCampaign');   
+            // SendConfirmEmail::dispatch($user, 'register')->onQueue('apiCampaign');   
             $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
             $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
 
