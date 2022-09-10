@@ -46,7 +46,7 @@ class AuthController extends Controller
 
         if ($user->save()) {
             
-            //contentful env item
+            //contentful env
             $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
             $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
 
