@@ -41,6 +41,9 @@ class WebhookHandler extends ProcessWebhookJob
                     $user = User::where('entry_id', $entry_id)->first();
                     
                     SendConfirmEmail::dispatch($user, 'register')->onQueue('apiCampaign');
+
+                    $user->status = '1';
+                    $user->save();
                     
 
                 }
