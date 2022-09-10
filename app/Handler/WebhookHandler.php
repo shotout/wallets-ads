@@ -39,6 +39,7 @@ class WebhookHandler extends ProcessWebhookJob
                     
                     //retrieve user from database
                     $user = User::where('entry_id', $entry_id)->first();
+                    
                     SendConfirmEmail::dispatch($user, 'register')->onQueue('apiCampaign');
 
                     

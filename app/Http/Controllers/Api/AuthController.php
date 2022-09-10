@@ -6,7 +6,6 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use App\Jobs\SendResetEmail;
 use Illuminate\Http\Request;
-use App\Jobs\SendConfirmEmail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Contentful\Core\Api\Exception;
