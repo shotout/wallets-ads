@@ -14,7 +14,11 @@ class AddStatusFieldToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('status')->default('0');
+            $table->string('status')->default('0')->after('remember_token');
+        });
+
+        Schema::table('campaigns', function (Blueprint $table) {
+            $table->string('entry_id')->default('0')->after('id');
         });
     }
 
@@ -27,6 +31,10 @@ class AddStatusFieldToUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('status');
+        });
+
+        Schema::table('campaigns', function (Blueprint $table) {
+            $table->dropColumn('entry_id');
         });
     }
 }

@@ -14,6 +14,8 @@ use App\Models\BalanceTarget;
 use App\Models\OptimizeTarget;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Contentful\Management\Client;
+use Contentful\Management\Resource\Entry;
 use Illuminate\Support\Facades\Storage;
 
 class CampaignController extends Controller
@@ -90,6 +92,33 @@ class CampaignController extends Controller
             }
             $campaign->status = 1;
             $campaign->save();
+
+
+            //contentful env
+            $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
+            $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
+
+            $newcampaign = Campaign::where('user_id', auth('sanctum')->user()->id)->orderBy('id', 'desc')->first();
+
+            //add campaign to contentful
+            $entry = new Entry('campaign');
+            $entry->setField('usersemail', 'en-US', auth('sanctum')->user()->email);
+            $entry->setField('campaignName', 'en-US', $newcampaign->name);
+            $entry->setField('availability', 'en-US', $newcampaign->day);
+            $entry->setField('startDate', 'en-US', $newcampaign->start_date->format('d-m-Y H:i:s'));
+            $entry->setField('status', 'en-US', $newcampaign->status);
+            $entry->setField('creationTime', 'en-US', $newcampaign->created_at->format('Y-m-d H:i:s'));
+            $environment->create($entry);
+
+            //publish user to contentful
+            $entry_id = $entry->getId();
+            $entry = $environment->getEntry($entry_id);
+            $entry->publish();
+
+            $updatecampaign = Campaign::where('user_id', auth('sanctum')->user()->id)->orderBy('id', 'desc')->first();
+            $updatecampaign->entry_id = $entry_id;
+            $updatecampaign->save();    
+
 
             if ($request->has('campaign_audiences') && count($request->campaign_audiences) > 0) {
                 foreach ($request->campaign_audiences as $i => $audience) {
