@@ -17,9 +17,9 @@ class AddStatusFieldToUsersTable extends Migration
             $table->string('status')->default('0')->after('remember_token');
         });
 
-        // Schema::table('campaigns', function (Blueprint $table) {
-        //     $table->string('entry_id')->default('0')->after('id');
-        // });
+        Schema::table('campaigns', function (Blueprint $table) {
+            $table->string('entry_id')->default('0')->after('id');
+        });
     }
 
     /**
@@ -33,8 +33,8 @@ class AddStatusFieldToUsersTable extends Migration
             $table->dropColumn('status');
         });
 
-        // Schema::table('campaigns', function (Blueprint $table) {
-        //     $table->dropColumn('entry_id');
-        // });
+        Schema::table('campaigns', function (Blueprint $table) {
+            $table->dropColumn('entry_id');
+        });
     }
 }
