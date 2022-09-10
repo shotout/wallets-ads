@@ -8,6 +8,7 @@ use App\Jobs\SendResetEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Jobs\SendConfirmEmail;
 use Contentful\Core\Api\Exception;
 use Contentful\Management\Client;
 use Contentful\Management\Resource\Entry;
