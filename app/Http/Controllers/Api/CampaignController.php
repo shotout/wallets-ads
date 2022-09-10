@@ -160,7 +160,7 @@ class CampaignController extends Controller
             $adsPage->external_page = $request->ads_page_external_page;
             $adsPage->save();
 
-            if ($request->has('ads_page_logo')) {
+            if ($request->has('ads_page_logo') && $request->ads_page_logo != '') {
                 // $filename = uniqid();
                 // $fileExt = $request->ads_page_logo->getClientOriginalExtension();
                 // $fileNameToStore = $filename.'_'.time().'.'.$fileExt;
@@ -182,7 +182,7 @@ class CampaignController extends Controller
                 $media->save();
             }
 
-            if ($request->has('ads_page_banner')) {
+            if ($request->has('ads_page_banner') && $request->ads_page_banner != '') {
                 // $filename = uniqid();
                 // $fileExt = $request->ads_page_banner->getClientOriginalExtension();
                 // $fileNameToStore = $filename.'_'.time().'.'.$fileExt;
