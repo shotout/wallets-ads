@@ -8,7 +8,6 @@ use App\Jobs\SendResetEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Jobs\SendConfirmEmail;
 use Contentful\Core\Api\Exception;
 use Contentful\Management\Client;
 use Contentful\Management\Resource\Entry;
@@ -46,8 +45,8 @@ class AuthController extends Controller
         $user->remember_token = Str::random(16);
 
         if ($user->save()) {
-            
-            //contentful env
+
+            //contentful env    
             $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
             $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
 
@@ -68,9 +67,7 @@ class AuthController extends Controller
             $environment->create($entry);
 
             //publish user to contentful
-            $entry_id = $entry->getId();
-            $entry = $environment->getEntry($entry_id);
-            $entry->publish();
+            $entry_id = $entry->getId();            
 
             //update user with contentful id
             $updateuser = User::where('email', $email)->first();
