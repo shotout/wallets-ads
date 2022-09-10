@@ -97,19 +97,23 @@ class CampaignController extends Controller
 
                     $adc = new Audience;
                     $adc->campaign_id = $campaign->id;
-                    $adc->fe_id = $audience->fe_id;
+                    if (isset($audience->fe_id)) {
+                        $adc->fe_id = $audience->fe_id;
+                    }
                     $adc->name = "Audience ".$i+1;
-                    $adc->price = $audience->price;
+                    if (isset($audience->price)) {
+                        $adc->price = $audience->price;
+                    }
                     $adc->save();
 
-                    $optimizeTarget = new OptimizeTarget;
-                    $optimizeTarget->audience_id = $adc->id;
+                    // $optimizeTarget = new OptimizeTarget;
+                    // $optimizeTarget->audience_id = $adc->id;
                     // $optimizeTarget->price = $audience->optimized_targeting_price;
                     // $optimizeTarget->description = $audience->optimized_targeting_description;
-                    $optimizeTarget->save();
+                    // $optimizeTarget->save();
 
-                    $balanceTarget = new BalanceTarget;
-                    $balanceTarget->audience_id = $adc->id;
+                    // $balanceTarget = new BalanceTarget;
+                    // $balanceTarget->audience_id = $adc->id;
                     // $balanceTarget->price = $audience->balanced_targeting_price;
                     // $balanceTarget->description = $audience->balanced_targeting_description;
                     // $balanceTarget->cryptocurrency_used = $audience->balanced_targeting_cryptocurrency;
@@ -125,24 +129,45 @@ class CampaignController extends Controller
                     //     $balanceTarget->location = $audience->balanced_targeting_location;
                     // }
                     
-                    $balanceTarget->save();
+                    // $balanceTarget->save();
 
                     $detailTarget = new DetailTarget;
                     $detailTarget->audience_id = $adc->id;
                     // $detailTarget->price = $audience->detailed_targeting_price;
                     // $detailTarget->description = $audience->detailed_targeting_description;
-                    $detailTarget->cryptocurrency_used = $audience->detailed_targeting_cryptocurrency;
-                    $detailTarget->account_age_year = $audience->detailed_targeting_year;
-                    $detailTarget->account_age_month = $audience->detailed_targeting_month;
-                    $detailTarget->account_age_day = $audience->detailed_targeting_day;
-
-                    $detailTarget->available_credit_wallet = $audience->detailed_targeting_available_credit_wallet;
-                    $detailTarget->trading_volume = $audience->detailed_targeting_trading_volume;
-                    $detailTarget->airdrops_received = $audience->detailed_targeting_airdrops;
-
-                    $detailTarget->amount_transaction = $audience->detailed_targeting_amount_transaction;
-                    $detailTarget->amount_transaction_day = $audience->detailed_targeting_amount_transaction_day;
-                    $detailTarget->nft_purchases = $audience->detailed_targeting_nft_purchases;
+                    if (count($audience->detailed_targeting_cryptocurrency) > 0) {
+                        $detailTarget->cryptocurrency_used = $audience->detailed_targeting_cryptocurrency;
+                    }
+                    if (isset($audience->detailed_targeting_year)) {
+                        $detailTarget->account_age_year = $audience->detailed_targeting_year;
+                    }
+                    if (isset($audience->detailed_targeting_month)) {
+                        $detailTarget->account_age_month = $audience->detailed_targeting_month;
+                    }
+                    if (isset($audience->detailed_targeting_day)) {
+                        $detailTarget->account_age_day = $audience->detailed_targeting_day;
+                    }
+                    
+                    if (isset($audience->detailed_targeting_available_credit_wallet)) {
+                        $detailTarget->available_credit_wallet = $audience->detailed_targeting_available_credit_wallet;
+                    }
+                    if (isset($audience->detailed_targeting_trading_volume)) {
+                        $detailTarget->trading_volume = $audience->detailed_targeting_trading_volume;
+                    }
+                    if (isset($audience->detailed_targeting_airdrops)) {
+                        $detailTarget->airdrops_received = $audience->detailed_targeting_airdrops;
+                    }
+                    
+                    if (isset($audience->detailed_targeting_amount_transaction)) {
+                        $detailTarget->amount_transaction = $audience->detailed_targeting_amount_transaction;
+                    }
+                    if (isset($audience->detailed_targeting_amount_transaction_day)) {
+                        $detailTarget->amount_transaction_day = $audience->detailed_targeting_amount_transaction_day;
+                    }
+                    if (isset($audience->detailed_targeting_nft_purchases)) {
+                        $detailTarget->nft_purchases = $audience->detailed_targeting_nft_purchases;
+                    }
+                    
                     $detailTarget->save();
                 }
             }
@@ -210,16 +235,22 @@ class CampaignController extends Controller
 
                     $newAds = new Ads;
                     $newAds->campaign_id = $campaign->id;
-                    $newAds->name = $ads->name;
-                    $newAds->description = $ads->description;
+                    if (isset($ads->name)) {
+                        $newAds->name = $ads->name;
+                    }
+                    if (isset($ads->description)) {
+                        $newAds->description = $ads->description;
+                    }
                     $newAds->save();
 
                     if (count($ads->fe_id) > 0) {
                         foreach ($ads->fe_id as $id) {
                             $audience = Audience::where('fe_id', $id)->first();
-                            $audience->ads_id = $newAds->id;
-                            $audience->fe_id = null;
-                            $audience->update();
+                            if ($audience) {
+                                $audience->ads_id = $newAds->id;
+                                $audience->fe_id = null;
+                                $audience->update();
+                            }
                         }
                     }
 
