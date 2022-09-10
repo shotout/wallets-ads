@@ -81,13 +81,22 @@ class CampaignController extends Controller
             $campaign->user_id = auth('sanctum')->user()->id;
             $campaign->name = $request->campaign_name;
             $campaign->start_date = $request->campaign_start_date;
+
             $campaign->type = $request->campaign_end_date_type;
             if ($request->campaign_end_date_type == 1) {
+                $campaign->end_date = Carbon::now()->addDay(90);
+            }
+            if ($request->campaign_end_date_type == 2) {
+                $campaign->end_date = Carbon::now()->addDay(21);
+            }
+            if ($request->campaign_end_date_type == 3) {
                 $campaign->end_date = Carbon::now()->addDay($request->campaign_end_date_day);
                 $campaign->day = $request->campaign_end_date_day;
-            } else if ($request->campaign_end_date_type == 2) {
-                $campaign->end_date = $request->campaign_end_date;
             }
+            // if ($request->campaign_end_date_type == 2) {
+            //     $campaign->end_date = $request->campaign_end_date;
+            // }
+
             $campaign->status = 1;
             $campaign->save();
 
@@ -182,6 +191,7 @@ class CampaignController extends Controller
             $adsPage->instagram = $request->ads_page_instagram;
             $adsPage->medium = $request->ads_page_medium;
             $adsPage->facebook = $request->ads_page_facebook;
+            $adsPage->telegram = $request->ads_page_telegram;
             $adsPage->external_page = $request->ads_page_external_page;
             $adsPage->save();
 
