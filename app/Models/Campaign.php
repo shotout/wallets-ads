@@ -17,7 +17,7 @@ class Campaign extends Model
 
     public function audiences()
     {
-        return $this->hasMany('\App\Models\Audience')->with('optimizeTarget','balanceTarget','detailTarget');
+        return $this->hasMany('\App\Models\Audience')->with('detailTarget');
     }
 
     public function adsPage()
