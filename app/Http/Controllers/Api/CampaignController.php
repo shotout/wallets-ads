@@ -114,9 +114,9 @@ class CampaignController extends Controller
             $entry->setField('usersemail', 'en-US', auth('sanctum')->user()->email);
             $entry->setField('campaignName', 'en-US', $newcampaign->name);
             $entry->setField('availability', 'en-US', $newcampaign->day);
-            $entry->setField('startDate', 'en-US', $newcampaign->start_date->format('d-m-Y H:i:s'));
+            $entry->setField('startDate', 'en-US', $newcampaign->start_date);
             $entry->setField('status', 'en-US', $newcampaign->status);
-            $entry->setField('creationTime', 'en-US', $newcampaign->created_at->format('Y-m-d H:i:s'));
+            $entry->setField('creationTime', 'en-US', $newcampaign->created_at);
             $environment->create($entry);
 
             //publish user to contentful
