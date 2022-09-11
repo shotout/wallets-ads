@@ -23,6 +23,7 @@ class UpdateDefaultValueTable extends Migration
             $table->string('amount_transaction')->default('0')->change();
             $table->string('amount_transaction_day')->default('0')->change();
             $table->string('nft_purchases')->default('0')->change();
+            $table->string('airdrops_received')->default('0')->change();
         });
     }
 
