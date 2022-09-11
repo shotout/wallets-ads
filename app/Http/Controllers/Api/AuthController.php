@@ -91,13 +91,22 @@ class AuthController extends Controller
 
         $credentials = $request->only('email', 'password');
 
+
+
         if (auth()->attempt($credentials)) {
             $user = User::with('photo','payment')->where('email', $request->email)->first();
+
+            if($user->status == 0){
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Our team is currently still checking your data. You will be informed by email as soon as your account is activated.'
+                ], 401);
+            }
     
             if (!$user->email_verified_at) {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'email account not verified',
+                    'message' => 'Account not verified, please check your email.'
                 ], 403);
             }
     
@@ -135,7 +144,7 @@ class AuthController extends Controller
         //     'status' => 'success',
         //     'data' => $user
         // ], 200);
-        return redirect()->to(env('FE_URL'));
+        return redirect()->to(env('FE_URL').'?'.$user->id);
     }
 
     public function checkEmail(Request $request)
