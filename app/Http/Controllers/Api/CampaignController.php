@@ -173,7 +173,7 @@ class CampaignController extends Controller
                     $detailTarget->audience_id = $adc->id;
                     // $detailTarget->price = $audience->detailed_targeting_price;
                     // $detailTarget->description = $audience->detailed_targeting_description;
-                    if (count($audience->detailed_targeting_cryptocurrency) > 0) {
+                    if (isset($audience->detailed_targeting_cryptocurrency)) {
                         $detailTarget->cryptocurrency_used = $audience->detailed_targeting_cryptocurrency;
                     }
                     if (isset($audience->detailed_targeting_year)) {
