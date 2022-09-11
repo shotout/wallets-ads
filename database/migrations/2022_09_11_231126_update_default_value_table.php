@@ -391,18 +391,18 @@ class CampaignController extends Controller
                 $entry_ads->setField('adsText', 'en-US', $ad->description);
                 $entry_ads->setField('price', 'en-US', $audience->price);
                 $entry_ads->setField('cryptocurrenciesUsed', 'en-US', $detail_audience->cryptocurrency_used);
-                $entry_ads->setField('accountAge', 'en-US', $detail_audience->account_age_year . ' years ' . $detail_audience->account_age_month . ' months ' . $detail_audience->account_age_day . ' days');
-                $entry_ads->setField('availableCreditInWallet', 'en-US', $detail_audience->available_credit_in_wallet);
-                $entry_ads->setField('tradingVolume', 'en-US', $detail_audience->trading_volume);
-                $entry_ads->setField('airdropsReceived', 'en-US', $detail_audience->airdrops_received);
-                $entry_ads->setField('amountOfTransaction', 'en-US', $detail_audience->amount_transaction . 'Within' . $detail_audience->amount_transaction_day);
+                // $entry_ads->setField('accountAge', 'en-US', $detail_audience->year . ' years ' . $detail_audience->month. ' months ' . $detail_audience->day . ' days');
+                // $entry_ads->setField('availableCreditInWallet', 'en-US', $detail_audience->available_credit_in_wallet);
+                // $entry_ads->setField('tradingVolume', 'en-US', $detail_audience->trading_volume);
+                // $entry_ads->setField('airdropsReceived', 'en-US', $detail_audience->airdrops_received);
+                // $entry_ads->setField('amountOfTransaction', 'en-US', $detail_audience->amount_transaction . 'Within' . $detail_audience->amount_transaction_day);
                 $entry_ads->setField('nftPurchases', 'en-US', $detail_audience->nft_purchases);
-                $environment->create($entry_ads);
+                // $environment->create($entry_ads);
 
-                //publish ads to contentful
-                $entry_id = $entry_ads->getId();
-                $entry_ads = $environment->getEntry($entry_id);
-                $entry_ads->publish();
+                // //publish ads to contentful
+                // $entry_id = $entry_ads->getId();
+                // $entry_ads = $environment->getEntry($entry_id);
+                // $entry_ads->publish();
             }
 
 
