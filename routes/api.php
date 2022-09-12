@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\CampaignController;
 use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\StripeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -87,6 +88,19 @@ Route::group(
     function() {
         Route::post('/', [PaymentController::class, 'store'])->name('store');
         Route::patch('/{id}', [PaymentController::class, 'update'])->name('update');
+    }
+);
+
+Route::group(
+    [
+        'middleware' => 'auth:sanctum',
+        'prefix' => 'v1/pay',
+        'name' => 'stripe.'
+    ],
+    function() {
+        Route::get('/', [StripeController::class, 'index1'])->name('index');
+        Route::post('/charges', [StripeController::class, 'index'])->name('store');
+       
     }
 );
 
