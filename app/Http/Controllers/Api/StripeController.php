@@ -23,7 +23,7 @@ class StripeController extends Controller
                 ],
             ]);
 
-            //charge customer
+            //charge customer payment
             $charge = new StripeClient(env('STRIPE_LIVE_API_KEY'));
 
             $charge->charges->create([
