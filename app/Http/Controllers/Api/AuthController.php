@@ -69,7 +69,7 @@ class AuthController extends Controller
             //publish user to contentful
             $entry_id = $entry->getId();            
 
-            //update user with contentful id
+            //update user with contentful id data
             $updateuser = User::where('email', $email)->first();
             $updateuser->entry_id = $entry_id;
             $updateuser->save();        
