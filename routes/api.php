@@ -98,7 +98,7 @@ Route::group(
         'name' => 'stripe.'
     ],
     function() {
-         Route::post('/charges', [StripeController::class, 'index'])->name('charges');
+         Route::post('/charges', [PaymentController::class, 'index'])->name('charges');
        
     }
 );
