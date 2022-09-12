@@ -14,6 +14,9 @@ use App\Models\BalanceTarget;
 use App\Models\OptimizeTarget;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Contentful\Management\Client;
+use Contentful\Management\Resource\Asset;
+use Contentful\Management\Resource\Entry;
 use Illuminate\Support\Facades\Storage;
 
 class CampaignController extends Controller
@@ -47,7 +50,7 @@ class CampaignController extends Controller
         }
 
         if ($request->has('search') && $request->input('search') != '') {
-            $query->where(function($q) use($request) {
+            $query->where(function ($q) use ($request) {
                 $q->where('field1', 'like', '%' . $request->input('search') . '%')
                     ->orWhere('field2', 'like', '%' . $request->input('search') . '%');
             });
@@ -64,7 +67,7 @@ class CampaignController extends Controller
         return response()->json([
             'status' => 'success',
             'data' => $campaigns
-        ], 200);    
+        ], 200);
     }
 
     public function store(Request $request)
@@ -85,13 +88,16 @@ class CampaignController extends Controller
             $campaign->type = $request->campaign_end_date_type;
             if ($request->campaign_end_date_type == 1) {
                 $campaign->end_date = Carbon::now()->addDay(90);
+                $campaign->availability = '90';
             }
             if ($request->campaign_end_date_type == 2) {
                 $campaign->end_date = Carbon::now()->addDay(21);
+                $campaign->availability = '21';
             }
             if ($request->campaign_end_date_type == 3) {
                 $campaign->end_date = Carbon::now()->addDay($request->campaign_end_date_day);
                 $campaign->day = $request->campaign_end_date_day;
+                $campaign->availability = $request->campaign_end_date_day;
             }
             // if ($request->campaign_end_date_type == 2) {
             //     $campaign->end_date = $request->campaign_end_date;
@@ -109,7 +115,7 @@ class CampaignController extends Controller
                     if (isset($audience->fe_id)) {
                         $adc->fe_id = $audience->fe_id;
                     }
-                    $adc->name = "Audience ".$i+1;
+                    $adc->name = "Audience " . $i + 1;
                     if (isset($audience->price)) {
                         $adc->price = $audience->price;
                     }
@@ -137,14 +143,16 @@ class CampaignController extends Controller
                     // if (isset($audience->balanced_targeting_location) && $audience->balanced_targeting_location != '') {
                     //     $balanceTarget->location = $audience->balanced_targeting_location;
                     // }
-                    
+
                     // $balanceTarget->save();
 
                     $detailTarget = new DetailTarget;
                     $detailTarget->audience_id = $adc->id;
+                    $detailTarget->campaign_id = $campaign->id;
                     // $detailTarget->price = $audience->detailed_targeting_price;
                     // $detailTarget->description = $audience->detailed_targeting_description;
-                    if ($audience->detailed_targeting_cryptocurrency != null && count($audience->detailed_targeting_cryptocurrency) > 0) {
+
+                    if (isset($audience->detailed_targeting_cryptocurrency)) {
                         $detailTarget->cryptocurrency_used = $audience->detailed_targeting_cryptocurrency;
                     }
                     if (isset($audience->detailed_targeting_year)) {
@@ -156,7 +164,7 @@ class CampaignController extends Controller
                     if (isset($audience->detailed_targeting_day)) {
                         $detailTarget->account_age_day = $audience->detailed_targeting_day;
                     }
-                    
+
                     if (isset($audience->detailed_targeting_available_credit_wallet)) {
                         $detailTarget->available_credit_wallet = $audience->detailed_targeting_available_credit_wallet;
                     }
@@ -166,7 +174,7 @@ class CampaignController extends Controller
                     if (isset($audience->detailed_targeting_airdrops)) {
                         $detailTarget->airdrops_received = $audience->detailed_targeting_airdrops;
                     }
-                    
+
                     if (isset($audience->detailed_targeting_amount_transaction)) {
                         $detailTarget->amount_transaction = $audience->detailed_targeting_amount_transaction;
                     }
@@ -176,7 +184,7 @@ class CampaignController extends Controller
                     if (isset($audience->detailed_targeting_nft_purchases)) {
                         $detailTarget->nft_purchases = $audience->detailed_targeting_nft_purchases;
                     }
-                    
+
                     $detailTarget->save();
                 }
             }
@@ -205,8 +213,8 @@ class CampaignController extends Controller
                 $image_type_aux = explode("image/", $image_parts[0]);
                 $image_type = $image_type_aux[1];
                 $image_base64 = base64_decode($image_parts[1]);
-                $fileNameToStore = uniqid() .'_' .time(). '.' .$image_type;
-                $fileURL = "/assets/images/logo/" .$fileNameToStore;
+                $fileNameToStore = uniqid() . '_' . time() . '.' . $image_type;
+                $fileURL = "/assets/images/logo/" . $fileNameToStore;
                 Storage::disk('public_uploads')->put($fileURL, $image_base64);
 
                 $media = new Media;
@@ -227,8 +235,8 @@ class CampaignController extends Controller
                 $image_type_aux = explode("image/", $image_parts[0]);
                 $image_type = $image_type_aux[1];
                 $image_base64 = base64_decode($image_parts[1]);
-                $fileNameToStore = uniqid() .'_' .time(). '.' .$image_type;
-                $fileURL = "/assets/images/banner/" .$fileNameToStore;
+                $fileNameToStore = uniqid() . '_' . time() . '.' . $image_type;
+                $fileURL = "/assets/images/banner/" . $fileNameToStore;
                 Storage::disk('public_uploads')->put($fileURL, $image_base64);
 
                 $media = new Media;
@@ -269,16 +277,16 @@ class CampaignController extends Controller
                         $image_type_aux = explode("image/", $image_parts[0]);
                         $image_type = $image_type_aux[1];
                         $image_base64 = base64_decode($image_parts[1]);
-                        $fileNameToStore = uniqid() .'_' .time(). '.' .$image_type;
-                        $fileURL = "/assets/images/nft/" .$fileNameToStore;
-                
+                        $fileNameToStore = uniqid() . '_' . time() . '.' . $image_type;
+                        $fileURL = "/assets/images/nft/" . $fileNameToStore;
+
                         Storage::disk('public_uploads')->put($fileURL, $image_base64);
 
                         // $filename = uniqid();
                         // $fileExt = $ads->image->getClientOriginalExtension();
                         // $fileNameToStore = $filename.'_'.time().'.'.$fileExt;
                         // $ads->image->move(public_path().'/assets/images/nft/', $fileNameToStore);
-        
+
                         $media = new Media;
                         $media->owner_id = $newAds->id;
                         $media->type = "ads_nft";
@@ -292,23 +300,156 @@ class CampaignController extends Controller
             return $campaign;
         });
 
+        //contentful env
+        $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
+        $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
+
+        $newcampaign = Campaign::where('id', $campaign->id)->first();
+
+        //add campaign to contentful
+        $entry = new Entry('campaign');
+        $entry->setField('usersemail', 'en-US', auth('sanctum')->user()->email);
+        $entry->setField('campaignName', 'en-US', $newcampaign->name);
+        $entry->setField('availability', 'en-US', $newcampaign->availability);
+        $entry->setField('startDate', 'en-US', $newcampaign->start_date);
+        $entry->setField('creationTime', 'en-US', Carbon::now('Asia/Jakarta')->toDateTimeString());
+        $environment->create($entry);
+
+        //publish user to contentful
+        $entry_id = $entry->getId();
+        $entry = $environment->getEntry($entry_id);
+        $entry->publish();
+
+        //add entry campaign to contentful
+        $updatecampaign = Campaign::where('user_id', auth('sanctum')->user()->id)->orderBy('id', 'desc')->first();
+        $updatecampaign->entry_id = $entry_id;
+        $updatecampaign->save();
+
+        //retrieve data from database
+        $newadspage = AdsPage::where('campaign_id', $campaign->id)->first();
+
+        $url_logo = Media::where('owner_id', $newadspage->id)->where('type', 'ads_logo')->first();
+        $url_banner = Media::where('owner_id', $newadspage->id)->where('type', 'ads_banner')->first();
+
+        $logo = new \Contentful\Core\File\RemoteUploadFile(
+            $campaign->name . 'CollectionLogo',
+            'JPEG,JPG,PNG',
+            'http://backend.walletads.io' . $url_logo->url
+        );
+
+        $banner = new \Contentful\Core\File\RemoteUploadFile(
+            $campaign->name . 'Collection Banner',
+            'JPEG,JPG,PNG',
+            'http://backend.walletads.io' . $url_banner->url
+        );
+
+        // Prepare uploadig image
+        $asset_logo = new Asset();
+        $asset_logo->setTitle('en-US', 'Collection Logo of ' . $campaign->name);
+        $asset_logo->setFile('en-US', $logo);
+
+        //process Image
+        $environment->create($asset_logo);
+        $asset_logo_id = $asset_logo->getId();
+        $asset_logo = $environment->getAsset($asset_logo_id);
+        $asset_logo->process('en-US');
+
+        // Prepare uploadig image
+        $asset_banner = new Asset();
+        $asset_banner->setTitle('en-US', 'Collection Banner of ' . $campaign->name);
+        $asset_banner->setFile('en-US', $banner);
+
+        //process Image
+        $environment->create($asset_banner);
+        $asset_banner_id = $asset_banner->getId();
+        $asset_banner = $environment->getAsset($asset_banner_id);
+        $asset_banner->process('en-US');
+
+        //add collection page to contentful
+        $entry_ads_page = new Entry('adsPage');
+        $entry_ads_page->setField('campaignName', 'en-US', $campaign->name);
+        $entry_ads_page->setField('collectionPageName', 'en-US', $newadspage->name);
+        $entry_ads_page->setField('collectionPageText', 'en-US', $newadspage->description);
+        $entry_ads_page->setField('collectionPageWebsite', 'en-US', $newadspage->website);
+        $entry_ads_page->setField('collectionPageDiscord', 'en-US', $newadspage->discord);
+        $entry_ads_page->setField('collectionPageMedium', 'en-US', $newadspage->medium);
+        $entry_ads_page->setField('collectionPageTelegram', 'en-US', $newadspage->telegram);
+        $entry_ads_page->setField('collectionPageLogo', 'en-US', $asset_logo->asLink());
+        $entry_ads_page->setField('collectionPageBanner', 'en-US', $asset_banner->asLink());
+        $environment->create($entry_ads_page);
+
+        //publish ads page to contentful
+        $entry_id = $entry_ads_page->getId();
+        $entry_ads_page = $environment->getEntry($entry_id);
+        $entry_ads_page->publish();
+
+        //add ads to contentful
+        $adv = Ads::where('campaign_id', $campaign->id)->get();
+
+        foreach ($adv as $ad) {
+
+            $audience = Audience::where('ads_id', $ad->id)->first();
+            $detail_audience = DetailTarget::where('id', $audience->id)->first();
+
+
+            //upload image
+            $url_image = Media::where('type', 'ads_nft')->orderby('id','desc')->first();
+
+            $image = new \Contentful\Core\File\RemoteUploadFile(
+                $campaign->name . 'Media',
+                'JPEG,JPG,PNG',
+                'http://backend.walletads.io' . $url_image->url
+            );
+
+            $asset_image = new Asset();
+            $asset_image->setTitle('en-US', 'Collection Logo of ' . $campaign->name);
+            $asset_image->setFile('en-US', $image);
+
+            //process Image
+            $environment->create($asset_image);
+            $asset_image_id = $asset_image->getId();
+            $asset_image = $environment->getAsset($asset_image_id);
+            $asset_image->process('en-US');
+
+
+            $entry_ads = new Entry('adsCreation');
+            $entry_ads->setField('campaignName', 'en-US', $campaign->name);
+            $entry_ads->setField('adsName', 'en-US', $ad->name);
+            $entry_ads->setField('adsText', 'en-US', $ad->description);
+            $entry_ads->setField('price', 'en-US', $ad->description);
+            $entry_ads->setField('adsImage', 'en-US', $asset_image->asLink());
+            // $entry_ads->setField('cryptocurrenciesUsed', 'en-US', $detail_audience->cryptocurrency_used);
+            $entry_ads->setField('accountAge', 'en-US', $detail_audience->account_age_year . ' years ' . $detail_audience->account_age_month . ' months ' . $detail_audience->account_age_day . ' days');
+            $entry_ads->setField('availableCreditInWallet', 'en-US', $detail_audience->available_credit_wallet);
+            $entry_ads->setField('tradingVolume', 'en-US', $detail_audience->trading_volume);
+            $entry_ads->setField('airdropsReceived', 'en-US', $detail_audience->airdrops_received);
+            $entry_ads->setField('amountOfTransaction', 'en-US', $detail_audience->amount_transaction . ' Within ' . $detail_audience->amount_transaction_day . ' days');
+            $entry_ads->setField('nftPurchases', 'en-US', $detail_audience->nft_purchases);
+            $environment->create($entry_ads);
+
+            //publish ads to contentful
+            $entry_id = $entry_ads->getId();
+            $entry_ads = $environment->getEntry($entry_id);
+            $entry_ads->publish();
+        }
+
         return response()->json([
             'status' => 'success',
             'data' => $campaign
-        ], 201); 
+        ], 201);
     }
 
     public function show($id)
     {
         $campaign = Campaign::where('user_id', auth('sanctum')->user()->id)
             ->where('id', $id)
-            ->with('audiences','adsPage','ads')
+            ->with('audiences', 'adsPage', 'ads')
             ->first();
 
         return response()->json([
             'status' => 'success',
             'data' => $campaign
-        ], 200);  
+        ], 200);
     }
 
     public function update(Request $request, $id)
@@ -323,7 +464,7 @@ class CampaignController extends Controller
 
             $campaign = Campaign::where('user_id', auth('sanctum')->user()->id)
                 ->where('id', $id)
-                ->with('audiences','adsPage','ads')
+                ->with('audiences', 'adsPage', 'ads')
                 ->first();
             $campaign->user_id = auth('sanctum')->user()->id;
             $campaign->name = $request->campaign_name;
@@ -346,7 +487,7 @@ class CampaignController extends Controller
                     } else {
                         $adc = Audience::find($audience->id);
                     }
-                    
+
                     $adc->campaign_id = $campaign->id;
                     $adc->price = $audience->price;
                     $adc->save();
@@ -409,13 +550,13 @@ class CampaignController extends Controller
             if ($request->hasFile('ads_page_logo')) {
                 $media = Media::where('owner_id', $adsPage->id)->where('type', 'ads_logo')->first();
                 if ($media) {
-                    unlink(public_path().$media->url);
+                    unlink(public_path() . $media->url);
                 }
 
                 $filename = uniqid();
                 $fileExt = $request->ads_page_logo->getClientOriginalExtension();
-                $fileNameToStore = $filename.'_'.time().'.'.$fileExt;
-                $request->ads_page_logo->move(public_path().'/assets/images/logo/', $fileNameToStore);
+                $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
+                $request->ads_page_logo->move(public_path() . '/assets/images/logo/', $fileNameToStore);
 
                 $media->name = $fileNameToStore;
                 $media->url = "/assets/images/logo/$fileNameToStore";
@@ -425,13 +566,13 @@ class CampaignController extends Controller
             if ($request->hasFile('ads_page_banner')) {
                 $media = Media::where('owner_id', $adsPage->id)->where('type', 'ads_banner')->first();
                 if ($media) {
-                    unlink(public_path().$media->url);
+                    unlink(public_path() . $media->url);
                 }
 
                 $filename = uniqid();
                 $fileExt = $request->ads_page_banner->getClientOriginalExtension();
-                $fileNameToStore = $filename.'_'.time().'.'.$fileExt;
-                $request->ads_page_banner->move(public_path().'/assets/images/banner/', $fileNameToStore);
+                $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
+                $request->ads_page_banner->move(public_path() . '/assets/images/banner/', $fileNameToStore);
 
                 $media->name = $fileNameToStore;
                 $media->url = "/assets/images/banner/$fileNameToStore";
@@ -448,7 +589,7 @@ class CampaignController extends Controller
                         $oldAds = new Ads;
                         $oldAds->campaign_id = $campaign->id;
                     }
-                    
+
                     $oldAds->name = $ads->name;
                     $oldAds->description = $ads->description;
                     $oldAds->save();
@@ -473,14 +614,14 @@ class CampaignController extends Controller
                     if (isset($ads->image)) {
                         $media = Media::where('owner_id', $oldAds->id)->where('type', 'ads_nft')->first();
                         if ($media) {
-                            unlink(public_path().$media->url);
+                            unlink(public_path() . $media->url);
                         }
 
                         $filename = uniqid();
                         $fileExt = $ads->image->getClientOriginalExtension();
-                        $fileNameToStore = $filename.'_'.time().'.'.$fileExt;
-                        $ads->image->move(public_path().'/assets/images/nft/', $fileNameToStore);
-            
+                        $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
+                        $ads->image->move(public_path() . '/assets/images/nft/', $fileNameToStore);
+
                         $media->name = $fileNameToStore;
                         $media->url = "/assets/images/nft/$fileNameToStore";
                         $media->save();
@@ -488,12 +629,14 @@ class CampaignController extends Controller
                 }
             }
 
+
+
             return $campaign;
         });
 
         return response()->json([
             'status' => 'success',
             'data' => $campaign
-        ], 200); 
+        ], 200);
     }
 }

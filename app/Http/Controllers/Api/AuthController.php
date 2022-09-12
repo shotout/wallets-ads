@@ -6,9 +6,11 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use App\Jobs\SendResetEmail;
 use Illuminate\Http\Request;
-use App\Jobs\SendConfirmEmail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Contentful\Core\Api\Exception;
+use Contentful\Management\Client;
+use Contentful\Management\Resource\Entry;
 
 class AuthController extends Controller
 {
@@ -27,6 +29,8 @@ class AuthController extends Controller
             'password' => 'required|confirmed|min:8|max:100',
         ]);
 
+        $email = $request->email;
+
         $user = new User;
         $user->company_name = $request->company_name;
         $user->tax_id = $request->tax_id;
@@ -41,13 +45,41 @@ class AuthController extends Controller
         $user->remember_token = Str::random(16);
 
         if ($user->save()) {
-            SendConfirmEmail::dispatch($user, 'register')->onQueue('apiCampaign');
+
+            //contentful env    
+            $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
+            $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
+
+            $newuser = User::where('email', $email)->first();
+
+            //add user to contentful
+            $entry = new Entry('users');
+            $entry->setField('companyName', 'en-US', $newuser->company_name);
+            $entry->setField('taxId', 'en-US', $newuser->tax_id);
+            $entry->setField('firstName', 'en-US', $newuser->first_name);
+            $entry->setField('lastName', 'en-US', $newuser->last_name);
+            $entry->setField('street', 'en-US', $newuser->street);
+            $entry->setField('postCode', 'en-US', $newuser->post_code);
+            $entry->setField('city', 'en-US', $newuser->city);
+            $entry->setField('email', 'en-US', $newuser->email);
+            $entry->setField('phone', 'en-US', $newuser->phone);
+            $entry->setField('accountCreatedTime', 'en-US', $newuser->created_at);
+            $environment->create($entry);
+
+            //publish user to contentful
+            $entry_id = $entry->getId();            
+
+            //update user with contentful id
+            $updateuser = User::where('email', $email)->first();
+            $updateuser->entry_id = $entry_id;
+            $updateuser->save();        
 
             return response()->json([
                 'status' => 'success',
                 'data' => $user
             ], 201);           
         }
+            
     }
 
     public function login(Request $request)
@@ -59,13 +91,22 @@ class AuthController extends Controller
 
         $credentials = $request->only('email', 'password');
 
+
+
         if (auth()->attempt($credentials)) {
             $user = User::with('photo','payment')->where('email', $request->email)->first();
+
+            if($user->status == 0){
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Our team is currently still checking your data. You will be informed by email as soon as your account is activated.'
+                ], 401);
+            }
     
             if (!$user->email_verified_at) {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'email account not verified',
+                    'message' => 'Account not verified, please check your email.'
                 ], 403);
             }
     
@@ -103,7 +144,7 @@ class AuthController extends Controller
         //     'status' => 'success',
         //     'data' => $user
         // ], 200);
-        return redirect()->to(env('FE_URL'));
+        return redirect()->to(env('FE_URL').'?'.$user->id);
     }
 
     public function checkEmail(Request $request)

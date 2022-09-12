@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Jobs\SendConfirmEmail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Contentful\Management\Client;
 
 class UserController extends Controller
 {
@@ -39,7 +40,7 @@ class UserController extends Controller
             'street' => 'required|string|max:500',
             'post_code' => 'required|string|max:100',
             'city' => 'required|string|max:100',
-            'email' => 'required|email|max:100|unique:users,email,'.auth('sanctum')->user()->id,
+            'email' => 'required|email|max:100|unique:users,email,' . auth('sanctum')->user()->id,
             'phone' => 'required|string|max:100',
             'password' => 'nullable|confirmed|min:8|max:100',
             'photo' => 'nullable|image|max:1024|image|mimes:jpeg,png,jpg',
@@ -67,10 +68,29 @@ class UserController extends Controller
         }
         $user->update();
 
+        //update contentfull data
+        $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
+        $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
+
+        $updateuser = User::find(auth('sanctum')->user()->id);
+
+        $entry = $environment->getEntry($updateuser->entry_id);
+        $entry->setField('companyName', 'en-US', $updateuser->company_name);
+        $entry->setField('taxId', 'en-US', $updateuser->tax_id);
+        $entry->setField('firstName', 'en-US', $updateuser->first_name);
+        $entry->setField('lastName', 'en-US', $updateuser->last_name);
+        $entry->setField('street', 'en-US', $updateuser->street);
+        $entry->setField('postCode', 'en-US', $updateuser->post_code);
+        $entry->setField('city', 'en-US', $updateuser->city);
+        $entry->setField('email', 'en-US', $updateuser->email);
+        $entry->setField('phone', 'en-US', $updateuser->phone);
+        $entry->update();
+
+
         if ($request->hasFile('photo')) {
             $media = Media::where('owner_id', $user->id)->where('type', 'user_photo')->first();
             if ($media) {
-                unlink(public_path().$media->url);
+                unlink(public_path() . $media->url);
             } else {
                 $media = new Media;
                 $media->owner_id = auth('sanctum')->user()->id;
@@ -79,8 +99,8 @@ class UserController extends Controller
 
             $filename = uniqid();
             $fileExt = $request->photo->getClientOriginalExtension();
-            $fileNameToStore = $filename.'_'.time().'.'.$fileExt;
-            $request->photo->move(public_path().'/assets/images/user/', $fileNameToStore);
+            $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
+            $request->photo->move(public_path() . '/assets/images/user/', $fileNameToStore);
 
             $media->name = $fileNameToStore;
             $media->url = "/assets/images/user/$fileNameToStore";
@@ -92,6 +112,6 @@ class UserController extends Controller
         return response()->json([
             'status' => 'success',
             'data' => $user
-        ], 200); 
+        ], 200);
     }
 }
