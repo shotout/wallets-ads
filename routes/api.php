@@ -98,8 +98,7 @@ Route::group(
         'name' => 'stripe.'
     ],
     function() {
-        Route::get('/', [StripeController::class, 'index1'])->name('index');
-        Route::post('/charges', [StripeController::class, 'index'])->name('store');
+         Route::post('/charges', [StripeController::class, 'index'])->name('charges');
        
     }
 );
