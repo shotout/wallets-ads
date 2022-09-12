@@ -296,123 +296,141 @@ class CampaignController extends Controller
                 }
             }
 
-            //contentful env
-            $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
-            $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
-
-            $newcampaign = Campaign::where('id', $campaign->id)->first();
-
-            //add campaign to contentful
-            $entry = new Entry('campaign');
-            $entry->setField('usersemail', 'en-US', auth('sanctum')->user()->email);
-            $entry->setField('campaignName', 'en-US', $newcampaign->name);
-            $entry->setField('availability', 'en-US', $newcampaign->availability);
-            $entry->setField('startDate', 'en-US', $newcampaign->start_date);
-            $entry->setField('creationTime', 'en-US', Carbon::now('Asia/Jakarta')->toDateTimeString());
-            $environment->create($entry);
-
-            //publish user to contentful
-            $entry_id = $entry->getId();
-            $entry = $environment->getEntry($entry_id);
-            $entry->publish();
-
-            //add entry campaign to contentful
-            $updatecampaign = Campaign::where('user_id', auth('sanctum')->user()->id)->orderBy('id', 'desc')->first();
-            $updatecampaign->entry_id = $entry_id;
-            $updatecampaign->save();
-
-            //retrieve data from database
-            $newadspage = AdsPage::where('campaign_id', $campaign->id)->first();
-
-            $url_logo = Media::where('owner_id', $newadspage->id)->where('type', 'ads_logo')->first();
-            $url_banner = Media::where('owner_id', $newadspage->id)->where('type', 'ads_banner')->first();
-
-            $logo = new \Contentful\Core\File\RemoteUploadFile(
-                $campaign->name . 'CollectionLogo',
-                'JPEG,JPG,PNG',
-                'http://backend.walletads.io' . $url_logo->url
-            );
-
-            $banner = new \Contentful\Core\File\RemoteUploadFile(
-                $campaign->name . 'Collection Banner',
-                'JPEG,JPG,PNG',
-                'http://backend.walletads.io' . $url_banner->url
-            );
-
-            // Prepare uploadig image
-            $asset_logo = new Asset();
-            $asset_logo->setTitle('en-US', 'Collection Logo of ' . $campaign->name);
-            $asset_logo->setFile('en-US', $logo);
-
-            //process Image
-            $environment->create($asset_logo);
-            $asset_logo_id = $asset_logo->getId();
-            $asset_logo = $environment->getAsset($asset_logo_id);
-            $asset_logo->process('en-US');
-
-            // Prepare uploadig image
-            $asset_banner = new Asset();
-            $asset_banner->setTitle('en-US', 'Collection Banner of ' . $campaign->name);
-            $asset_banner->setFile('en-US', $banner);
-
-            //process Image
-            $environment->create($asset_banner);
-            $asset_banner_id = $asset_banner->getId();
-            $asset_banner = $environment->getAsset($asset_banner_id);
-            $asset_banner->process('en-US');
-
-            //add collection page to contentful
-            $entry_ads_page = new Entry('adsPage');
-            $entry_ads_page->setField('campaignName', 'en-US', $campaign->name);
-            $entry_ads_page->setField('collectionPageName', 'en-US', $newadspage->name);
-            $entry_ads_page->setField('collectionPageText', 'en-US', $newadspage->description);
-            $entry_ads_page->setField('collectionPageWebsite', 'en-US', $newadspage->website);
-            $entry_ads_page->setField('collectionPageDiscord', 'en-US', $newadspage->discord);
-            $entry_ads_page->setField('collectionPageMedium', 'en-US', $newadspage->medium);
-            $entry_ads_page->setField('collectionPageTelegram', 'en-US', $newadspage->telegram);
-            $entry_ads_page->setField('collectionPageLogo', 'en-US', $asset_logo->asLink());
-            $entry_ads_page->setField('collectionPageBanner', 'en-US', $asset_banner->asLink());
-            $environment->create($entry_ads_page);
-
-            //publish ads page to contentful
-            $entry_id = $entry_ads_page->getId();
-            $entry_ads_page = $environment->getEntry($entry_id);
-            $entry_ads_page->publish();
-
-            //add ads to contentful
-            $adv = Ads::where('campaign_id', $campaign->id)->get();
-
-            foreach ($adv as $ad) {
-                
-                $penonton = Ads::where('id', 27)->first();
-                $detail_audience = DetailTarget::where('audience_id', 9)->first();
-
-                $entry_ads = new Entry('adsCreation');
-                $entry_ads->setField('campaignName', 'en-US', $campaign->name);
-                $entry_ads->setField('adsName', 'en-US', $ad->name);
-                $entry_ads->setField('adsText', 'en-US', $ad->description);
-                $entry_ads->setField('price', 'en-US', $penonton->created_at);
-                // $entry_ads->setField('cryptocurrenciesUsed', 'en-US', $detail_audience->cryptocurrency_used);
-                // $entry_ads->setField('accountAge', 'en-US', $detail_audience->account_age_year . ' years ' . $detail_audience->account_age_month . ' months ' . $detail_audience->account_age_day . ' days');
-                // $entry_ads->setField('availableCreditInWallet', 'en-US', $detail_audience->available_credit_in_wallet);
-                // $entry_ads->setField('tradingVolume', 'en-US', $detail_audience->trading_volume);
-                // $entry_ads->setField('airdropsReceived', 'en-US', $detail_audience->airdrops_received);
-                // $entry_ads->setField('amountOfTransaction', 'en-US', $detail_audience->amount_transaction . 'Within' . $detail_audience->amount_transaction_day);
-                // $entry_ads->setField('nftPurchases', 'en-US', $detail_audience->nft_purchases);
-                $environment->create($entry_ads);
-
-                //publish ads to contentful
-                $entry_id = $entry_ads->getId();
-                $entry_ads = $environment->getEntry($entry_id);
-                $entry_ads->publish();
-            }
-
-
-
-
-
             return $campaign;
         });
+
+        //contentful env
+        $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
+        $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
+
+        $newcampaign = Campaign::where('id', $campaign->id)->first();
+
+        //add campaign to contentful
+        $entry = new Entry('campaign');
+        $entry->setField('usersemail', 'en-US', auth('sanctum')->user()->email);
+        $entry->setField('campaignName', 'en-US', $newcampaign->name);
+        $entry->setField('availability', 'en-US', $newcampaign->availability);
+        $entry->setField('startDate', 'en-US', $newcampaign->start_date);
+        $entry->setField('creationTime', 'en-US', Carbon::now('Asia/Jakarta')->toDateTimeString());
+        $environment->create($entry);
+
+        //publish user to contentful
+        $entry_id = $entry->getId();
+        $entry = $environment->getEntry($entry_id);
+        $entry->publish();
+
+        //add entry campaign to contentful
+        $updatecampaign = Campaign::where('user_id', auth('sanctum')->user()->id)->orderBy('id', 'desc')->first();
+        $updatecampaign->entry_id = $entry_id;
+        $updatecampaign->save();
+
+        //retrieve data from database
+        $newadspage = AdsPage::where('campaign_id', $campaign->id)->first();
+
+        $url_logo = Media::where('owner_id', $newadspage->id)->where('type', 'ads_logo')->first();
+        $url_banner = Media::where('owner_id', $newadspage->id)->where('type', 'ads_banner')->first();
+
+        $logo = new \Contentful\Core\File\RemoteUploadFile(
+            $campaign->name . 'CollectionLogo',
+            'JPEG,JPG,PNG',
+            'http://backend.walletads.io' . $url_logo->url
+        );
+
+        $banner = new \Contentful\Core\File\RemoteUploadFile(
+            $campaign->name . 'Collection Banner',
+            'JPEG,JPG,PNG',
+            'http://backend.walletads.io' . $url_banner->url
+        );
+
+        // Prepare uploadig image
+        $asset_logo = new Asset();
+        $asset_logo->setTitle('en-US', 'Collection Logo of ' . $campaign->name);
+        $asset_logo->setFile('en-US', $logo);
+
+        //process Image
+        $environment->create($asset_logo);
+        $asset_logo_id = $asset_logo->getId();
+        $asset_logo = $environment->getAsset($asset_logo_id);
+        $asset_logo->process('en-US');
+
+        // Prepare uploadig image
+        $asset_banner = new Asset();
+        $asset_banner->setTitle('en-US', 'Collection Banner of ' . $campaign->name);
+        $asset_banner->setFile('en-US', $banner);
+
+        //process Image
+        $environment->create($asset_banner);
+        $asset_banner_id = $asset_banner->getId();
+        $asset_banner = $environment->getAsset($asset_banner_id);
+        $asset_banner->process('en-US');
+
+        //add collection page to contentful
+        $entry_ads_page = new Entry('adsPage');
+        $entry_ads_page->setField('campaignName', 'en-US', $campaign->name);
+        $entry_ads_page->setField('collectionPageName', 'en-US', $newadspage->name);
+        $entry_ads_page->setField('collectionPageText', 'en-US', $newadspage->description);
+        $entry_ads_page->setField('collectionPageWebsite', 'en-US', $newadspage->website);
+        $entry_ads_page->setField('collectionPageDiscord', 'en-US', $newadspage->discord);
+        $entry_ads_page->setField('collectionPageMedium', 'en-US', $newadspage->medium);
+        $entry_ads_page->setField('collectionPageTelegram', 'en-US', $newadspage->telegram);
+        $entry_ads_page->setField('collectionPageLogo', 'en-US', $asset_logo->asLink());
+        $entry_ads_page->setField('collectionPageBanner', 'en-US', $asset_banner->asLink());
+        $environment->create($entry_ads_page);
+
+        //publish ads page to contentful
+        $entry_id = $entry_ads_page->getId();
+        $entry_ads_page = $environment->getEntry($entry_id);
+        $entry_ads_page->publish();
+
+        //add ads to contentful
+        $adv = Ads::where('campaign_id', $campaign->id)->get();
+
+        foreach ($adv as $ad) {
+
+            $audience = Audience::where('ads_id', $ad->id)->first();
+            $detail_audience = DetailTarget::where('id', $audience->id)->first();
+
+
+            //upload image
+            $url_image = Media::where('type', 'ads_nft')->orderby('id','desc')->first();
+
+            $image = new \Contentful\Core\File\RemoteUploadFile(
+                $campaign->name . 'Media',
+                'JPEG,JPG,PNG',
+                'http://backend.walletads.io' . $url_image->url
+            );
+
+            $asset_image = new Asset();
+            $asset_image->setTitle('en-US', 'Collection Logo of ' . $campaign->name);
+            $asset_image->setFile('en-US', $image);
+
+            //process Image
+            $environment->create($asset_image);
+            $asset_image_id = $asset_image->getId();
+            $asset_image = $environment->getAsset($asset_image_id);
+            $asset_image->process('en-US');
+
+
+            $entry_ads = new Entry('adsCreation');
+            $entry_ads->setField('campaignName', 'en-US', $campaign->name);
+            $entry_ads->setField('adsName', 'en-US', $ad->name);
+            $entry_ads->setField('adsText', 'en-US', $ad->description);
+            $entry_ads->setField('price', 'en-US', $ad->description);
+            $entry_ads->setField('adsImage', 'en-US', $asset_image->asLink());
+            // $entry_ads->setField('cryptocurrenciesUsed', 'en-US', $detail_audience->cryptocurrency_used);
+            $entry_ads->setField('accountAge', 'en-US', $detail_audience->account_age_year . ' years ' . $detail_audience->account_age_month . ' months ' . $detail_audience->account_age_day . ' days');
+            $entry_ads->setField('availableCreditInWallet', 'en-US', $detail_audience->available_credit_wallet);
+            $entry_ads->setField('tradingVolume', 'en-US', $detail_audience->trading_volume);
+            $entry_ads->setField('airdropsReceived', 'en-US', $detail_audience->airdrops_received);
+            $entry_ads->setField('amountOfTransaction', 'en-US', $detail_audience->amount_transaction . ' Within ' . $detail_audience->amount_transaction_day . ' days');
+            $entry_ads->setField('nftPurchases', 'en-US', $detail_audience->nft_purchases);
+            $environment->create($entry_ads);
+
+            //publish ads to contentful
+            $entry_id = $entry_ads->getId();
+            $entry_ads = $environment->getEntry($entry_id);
+            $entry_ads->publish();
+        }
 
         return response()->json([
             'status' => 'success',
