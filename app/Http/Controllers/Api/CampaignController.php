@@ -119,6 +119,12 @@ class CampaignController extends Controller
                     if (isset($audience->price)) {
                         $adc->price = $audience->price;
                     }
+                    if (isset($audience->price_airdrop)) {
+                        $adc->price_airdrop = $audience->price_airdrop;
+                    }
+                    if (isset($audience->total_user)) {
+                        $adc->total_user = $audience->total_user;
+                    }
                     $adc->save();
 
                     // $optimizeTarget = new OptimizeTarget;
@@ -151,6 +157,7 @@ class CampaignController extends Controller
                     $detailTarget->campaign_id = $campaign->id;
                     // $detailTarget->price = $audience->detailed_targeting_price;
                     // $detailTarget->description = $audience->detailed_targeting_description;
+
                     if (isset($audience->detailed_targeting_cryptocurrency)) {
                         $detailTarget->cryptocurrency_used = $audience->detailed_targeting_cryptocurrency;
                     }
@@ -465,16 +472,34 @@ class CampaignController extends Controller
                 ->where('id', $id)
                 ->with('audiences', 'adsPage', 'ads')
                 ->first();
+
+            if (!$campaign) {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'data not found'
+                ], 404); 
+            }
+
             $campaign->user_id = auth('sanctum')->user()->id;
             $campaign->name = $request->campaign_name;
             $campaign->start_date = $request->campaign_start_date;
+
             $campaign->type = $request->campaign_end_date_type;
             if ($request->campaign_end_date_type == 1) {
-                $campaign->end_date = Carbon::now()->addDay(7);
-            } else if ($request->campaign_end_date_type == 2) {
-                $campaign->end_date = $request->campaign_end_date;
+                $campaign->end_date = Carbon::now()->addDay(90);
+                $campaign->availability = '90';
             }
-            $campaign->save();
+            if ($request->campaign_end_date_type == 2) {
+                $campaign->end_date = Carbon::now()->addDay(21);
+                $campaign->availability = '21';
+            }
+            if ($request->campaign_end_date_type == 3) {
+                $campaign->end_date = Carbon::now()->addDay($request->campaign_end_date_day);
+                $campaign->day = $request->campaign_end_date_day;
+                $campaign->availability = $request->campaign_end_date_day;
+            }
+
+            $campaign->update();
 
             if ($request->has('campaign_audiences') && count($request->campaign_audiences) > 0) {
                 foreach ($request->campaign_audiences as $audience) {
@@ -482,54 +507,68 @@ class CampaignController extends Controller
 
                     if (isset($audience->fe_id) && $audience->fe_id != '') {
                         $adc = new Audience;
-                        $adc->fe_id = $audience->fe_id;
+                        if (isset($audience->fe_id)) {
+                            $adc->fe_id = $audience->fe_id;
+                        }
+
+                        $counter = Audience::where('campaign_id', $campaign->id)->count();
+                        $adc->name = "Audience " . $counter + 1;
                     } else {
                         $adc = Audience::find($audience->id);
                     }
 
                     $adc->campaign_id = $campaign->id;
-                    $adc->price = $audience->price;
+                    if (isset($audience->price)) {
+                        $adc->price = $audience->price;
+                    }
+                    if (isset($audience->price_airdrop)) {
+                        $adc->price_airdrop = $audience->price_airdrop;
+                    }
+                    if (isset($audience->total_user)) {
+                        $adc->total_user = $audience->total_user;
+                    }
                     $adc->save();
 
-                    if (isset($audience->fe_id) && $audience->fe_id != '') {
-                        $optimizeTarget = new OptimizeTarget;
-                        $optimizeTarget->audience_id = $adc->id;
-                    } else {
-                        $optimizeTarget = OptimizeTarget::where('audience_id', $adc->id)->first();
-                    }
-                    $optimizeTarget->price = $audience->optimized_targeting_price;
-                    $optimizeTarget->description = $audience->optimized_targeting_description;
-                    $optimizeTarget->save();
-
-                    if (isset($audience->fe_id) && $audience->fe_id != '') {
-                        $balanceTarget = new BalanceTarget;
-                        $balanceTarget->audience_id = $adc->id;
-                    } else {
-                        $balanceTarget = BalanceTarget::where('audience_id', $adc->id)->first();
-                    }
-                    $balanceTarget->price = $audience->balanced_targeting_price;
-                    $balanceTarget->description = $audience->balanced_targeting_description;
-                    $balanceTarget->cryptocurrency_used = $audience->balanced_targeting_cryptocurrency;
-                    $balanceTarget->account_age_year = $audience->balanced_targeting_year;
-                    $balanceTarget->account_age_month = $audience->balanced_targeting_month;
-                    $balanceTarget->account_age_day = $audience->balanced_targeting_day;
-                    $balanceTarget->airdrops_received = $audience->balanced_targeting_airdrops;
-                    $balanceTarget->wallet_type = $audience->balanced_targeting_wallet;
-                    $balanceTarget->location = $audience->balanced_targeting_location;
-                    $balanceTarget->save();
 
                     if (isset($audience->fe_id) && $audience->fe_id != '') {
                         $detailTarget = new DetailTarget;
                         $detailTarget->audience_id = $adc->id;
+                        $detailTarget->campaign_id = $campaign->id;
                     } else {
                         $detailTarget = DetailTarget::where('audience_id', $adc->id)->first();
                     }
-                    $detailTarget->price = $audience->detailed_targeting_price;
-                    $detailTarget->description = $audience->detailed_targeting_description;
-                    $detailTarget->amount_transaction = $audience->detailed_targeting_amount_transaction;
-                    $detailTarget->trading_volume = $audience->detailed_targeting_trading_volume;
-                    $detailTarget->available_credit_wallet = $audience->detailed_targeting_available_credit_wallet;
-                    $detailTarget->nft_purchases = $audience->detailed_targeting_nft_purchases;
+                    if (isset($audience->detailed_targeting_cryptocurrency)) {
+                        $detailTarget->cryptocurrency_used = $audience->detailed_targeting_cryptocurrency;
+                    }
+                    if (isset($audience->detailed_targeting_year)) {
+                        $detailTarget->account_age_year = $audience->detailed_targeting_year;
+                    }
+                    if (isset($audience->detailed_targeting_month)) {
+                        $detailTarget->account_age_month = $audience->detailed_targeting_month;
+                    }
+                    if (isset($audience->detailed_targeting_day)) {
+                        $detailTarget->account_age_day = $audience->detailed_targeting_day;
+                    }
+
+                    if (isset($audience->detailed_targeting_available_credit_wallet)) {
+                        $detailTarget->available_credit_wallet = $audience->detailed_targeting_available_credit_wallet;
+                    }
+                    if (isset($audience->detailed_targeting_trading_volume)) {
+                        $detailTarget->trading_volume = $audience->detailed_targeting_trading_volume;
+                    }
+                    if (isset($audience->detailed_targeting_airdrops)) {
+                        $detailTarget->airdrops_received = $audience->detailed_targeting_airdrops;
+                    }
+
+                    if (isset($audience->detailed_targeting_amount_transaction)) {
+                        $detailTarget->amount_transaction = $audience->detailed_targeting_amount_transaction;
+                    }
+                    if (isset($audience->detailed_targeting_amount_transaction_day)) {
+                        $detailTarget->amount_transaction_day = $audience->detailed_targeting_amount_transaction_day;
+                    }
+                    if (isset($audience->detailed_targeting_nft_purchases)) {
+                        $detailTarget->nft_purchases = $audience->detailed_targeting_nft_purchases;
+                    }
                     $detailTarget->save();
                 }
             }
@@ -543,38 +582,53 @@ class CampaignController extends Controller
             $adsPage->instagram = $request->ads_page_instagram;
             $adsPage->medium = $request->ads_page_medium;
             $adsPage->facebook = $request->ads_page_facebook;
+            $adsPage->instagram = $request->ads_page_instagram;
             $adsPage->external_page = $request->ads_page_external_page;
             $adsPage->save();
 
-            if ($request->hasFile('ads_page_logo')) {
+            if ($request->has('ads_page_logo') && $request->ads_page_logo != '') {
                 $media = Media::where('owner_id', $adsPage->id)->where('type', 'ads_logo')->first();
                 if ($media) {
                     unlink(public_path() . $media->url);
+                } else {
+                    $media = new Media;
+                    $media->owner_id = $adsPage->id;
+                    $media->type = "ads_logo";
                 }
 
-                $filename = uniqid();
-                $fileExt = $request->ads_page_logo->getClientOriginalExtension();
-                $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
-                $request->ads_page_logo->move(public_path() . '/assets/images/logo/', $fileNameToStore);
+                $image_parts = explode(";base64,", $request->ads_page_logo);
+                $image_type_aux = explode("image/", $image_parts[0]);
+                $image_type = $image_type_aux[1];
+                $image_base64 = base64_decode($image_parts[1]);
+                $fileNameToStore = uniqid() . '_' . time() . '.' . $image_type;
+                $fileURL = "/assets/images/logo/" . $fileNameToStore;
+                Storage::disk('public_uploads')->put($fileURL, $image_base64);
 
                 $media->name = $fileNameToStore;
-                $media->url = "/assets/images/logo/$fileNameToStore";
+                $media->url = $fileURL;
                 $media->save();
             }
 
-            if ($request->hasFile('ads_page_banner')) {
+            if ($request->has('ads_page_banner') && $request->ads_page_banner != '') {
                 $media = Media::where('owner_id', $adsPage->id)->where('type', 'ads_banner')->first();
                 if ($media) {
                     unlink(public_path() . $media->url);
+                } else {
+                    $media = new Media;
+                    $media->owner_id = $adsPage->id;
+                    $media->type = "ads_banner";
                 }
 
-                $filename = uniqid();
-                $fileExt = $request->ads_page_banner->getClientOriginalExtension();
-                $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
-                $request->ads_page_banner->move(public_path() . '/assets/images/banner/', $fileNameToStore);
+                $image_parts = explode(";base64,", $request->ads_page_banner);
+                $image_type_aux = explode("image/", $image_parts[0]);
+                $image_type = $image_type_aux[1];
+                $image_base64 = base64_decode($image_parts[1]);
+                $fileNameToStore = uniqid() . '_' . time() . '.' . $image_type;
+                $fileURL = "/assets/images/banner/" . $fileNameToStore;
+                Storage::disk('public_uploads')->put($fileURL, $image_base64);
 
                 $media->name = $fileNameToStore;
-                $media->url = "/assets/images/banner/$fileNameToStore";
+                $media->url = $fileURL;
                 $media->save();
             }
 
