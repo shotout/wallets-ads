@@ -5,10 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Stripe\StripeClient;
-use Stripe\Customer;
 
 class StripeController extends Controller
-
 {
     public function index(Request $request)
     {
@@ -40,7 +38,8 @@ class StripeController extends Controller
         } catch (\Exception $e) {
 
             return response()->json([
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
+                'status' => 'Payment Failed'
             ], 500);
         }
     }
