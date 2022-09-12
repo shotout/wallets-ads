@@ -148,6 +148,7 @@ class CampaignController extends Controller
 
                     $detailTarget = new DetailTarget;
                     $detailTarget->audience_id = $adc->id;
+                    $detailTarget->campaign_id = $campaign->id;
                     // $detailTarget->price = $audience->detailed_targeting_price;
                     // $detailTarget->description = $audience->detailed_targeting_description;
                     if (isset($audience->detailed_targeting_cryptocurrency)) {
@@ -379,24 +380,25 @@ class CampaignController extends Controller
             $entry_ads_page->publish();
 
             //add ads to contentful
-            $ads = Ads::where('campaign_id', $campaign->id)->get();
+            $adv = Ads::where('campaign_id', $campaign->id)->get();
 
-            foreach ($ads as $ad) {
-                $audience = Audience::where('ads_id', $ad->id)->first();
-                $detail_audience = DetailTarget::where('audience_id', $audience->id)->first();
+            foreach ($adv as $ad) {
+                
+                $penonton = Ads::where('id', 27)->first();
+                $detail_audience = DetailTarget::where('audience_id', 9)->first();
 
                 $entry_ads = new Entry('adsCreation');
                 $entry_ads->setField('campaignName', 'en-US', $campaign->name);
                 $entry_ads->setField('adsName', 'en-US', $ad->name);
                 $entry_ads->setField('adsText', 'en-US', $ad->description);
-                $entry_ads->setField('price', 'en-US', $audience->price);
-                $entry_ads->setField('cryptocurrenciesUsed', 'en-US', $detail_audience->cryptocurrency_used);
-                $entry_ads->setField('accountAge', 'en-US', $detail_audience->account_age_year . ' years ' . $detail_audience->account_age_month . ' months ' . $detail_audience->account_age_day . ' days');
-                $entry_ads->setField('availableCreditInWallet', 'en-US', $detail_audience->available_credit_in_wallet);
-                $entry_ads->setField('tradingVolume', 'en-US', $detail_audience->trading_volume);
-                $entry_ads->setField('airdropsReceived', 'en-US', $detail_audience->airdrops_received);
-                $entry_ads->setField('amountOfTransaction', 'en-US', $detail_audience->amount_transaction . 'Within' . $detail_audience->amount_transaction_day);
-                $entry_ads->setField('nftPurchases', 'en-US', $detail_audience->nft_purchases);
+                $entry_ads->setField('price', 'en-US', $penonton->created_at);
+                // $entry_ads->setField('cryptocurrenciesUsed', 'en-US', $detail_audience->cryptocurrency_used);
+                // $entry_ads->setField('accountAge', 'en-US', $detail_audience->account_age_year . ' years ' . $detail_audience->account_age_month . ' months ' . $detail_audience->account_age_day . ' days');
+                // $entry_ads->setField('availableCreditInWallet', 'en-US', $detail_audience->available_credit_in_wallet);
+                // $entry_ads->setField('tradingVolume', 'en-US', $detail_audience->trading_volume);
+                // $entry_ads->setField('airdropsReceived', 'en-US', $detail_audience->airdrops_received);
+                // $entry_ads->setField('amountOfTransaction', 'en-US', $detail_audience->amount_transaction . 'Within' . $detail_audience->amount_transaction_day);
+                // $entry_ads->setField('nftPurchases', 'en-US', $detail_audience->nft_purchases);
                 $environment->create($entry_ads);
 
                 //publish ads to contentful
