@@ -6,10 +6,11 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use App\Jobs\SendResetEmail;
 use Illuminate\Http\Request;
+use App\Jobs\SendNotifRegister;
+use Contentful\Management\Client;
+use Contentful\Core\Api\Exception;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Contentful\Core\Api\Exception;
-use Contentful\Management\Client;
 use Contentful\Management\Resource\Entry;
 
 class AuthController extends Controller
@@ -39,12 +40,15 @@ class AuthController extends Controller
         $user->street = $request->street;
         $user->post_code = $request->post_code;
         $user->city = $request->city;
+        $user->country = $request->country;
         $user->phone = $request->phone;
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
         $user->remember_token = Str::random(16);
 
         if ($user->save()) {
+
+            SendNotifRegister::dispatch($user)->onQueue('apiCampaign');
 
             //contentful env    
             $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
