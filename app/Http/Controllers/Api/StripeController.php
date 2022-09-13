@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Exception;
 use Illuminate\Http\Request;
+use Stripe\SetupIntent;
+use Stripe\Stripe;
 use Stripe\StripeClient;
+use Stripe\Checkout\Session;
 
 class StripeController extends Controller
 {
@@ -42,5 +46,40 @@ class StripeController extends Controller
                 'status' => 'Payment Failed'
             ], 500);
         }
+    }
+
+
+    public function intent(Request $request)
+    {
+        try{
+
+            Stripe::setApiKey(env('STRIPE_LIVE_API_KEY'));
+
+            $session = \Stripe\Checkout\Session::create([
+                'payment_method_types'  => ['card'],
+                'line_items'            => [[
+                    'price_data' => [
+                        'currency'      => 'usd',
+                        'unit_amount'   => $request->total_budget,
+                        'product_data'  => [
+                            'name'  => $request->campaign_name,
+                        ]],
+                        'quantity'      => 1,]],                        
+                'mode' => 'payment',
+                'client_reference_id' => 'INV_001',
+                'customer_email' => auth('sanctum')->user()->email,
+                'success_url' => "https://dasboard.walletads.io/create-campaign/?id=".$request->campaign_id."&status=success",
+                'cancel_url' =>  "https://dasboard.walletads.io/create-campaign/?id=".$request->campaign_id."&status=fail"
+                ]);         
+
+                return response()->json($session, 200);
+        }
+        catch(Exception $e)
+        {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'status' => 'Intent Failed'
+            ], 500);
+        }   
     }
 }
