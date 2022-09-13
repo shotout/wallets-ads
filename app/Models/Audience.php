@@ -27,6 +27,12 @@ class Audience extends Model
         return $this->hasOne('\App\Models\DetailTarget');
     }
 
+    public function file()
+    {
+        return $this->hasOne('\App\Models\Media', 'owner_id')
+            ->where('type', 'audience_file');
+    }
+
     public function ads()
     {
         return $this->belongsTo('\App\Models\Ads', 'ads_id')->with('image');

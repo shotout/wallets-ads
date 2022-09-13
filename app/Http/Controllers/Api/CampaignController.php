@@ -190,6 +190,23 @@ class CampaignController extends Controller
                         $detailTarget->nft_purchases = $audience->detailed_targeting_nft_purchases;
                     }
 
+                    if (isset($audience->file)) {
+                        $file_parts = explode(";base64,", $audience->file);
+                        $file_type_aux = explode("@file/", $file_parts[0]);
+                        $file_type = $file_type_aux[1];
+                        $file_base64 = base64_decode($file_parts[1]);
+                        $fileNameToStore = uniqid() . '_' . time() . '.xlsx';
+                        $fileURL = "/assets/files/audience/" . $fileNameToStore;
+                        Storage::disk('public_uploads')->put($fileURL, $file_base64);
+
+                        $media = new Media;
+                        $media->owner_id = $adc->id;
+                        $media->type = "audience_file";
+                        $media->name = $fileNameToStore;
+                        $media->url = $fileURL;
+                        $media->save();
+                    }
+
                     $detailTarget->save();
                 }
             }
