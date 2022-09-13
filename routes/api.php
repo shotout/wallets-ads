@@ -99,7 +99,7 @@ Route::group(
     ],
     function() {
          Route::post('/charges', [StripeController::class, 'index'])->name('store');
-       
+         Route::post('/intent', [StripeController::class, 'intent'])->name('intent');       
     }
 );
 
