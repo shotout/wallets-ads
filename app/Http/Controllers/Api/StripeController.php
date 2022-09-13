@@ -68,8 +68,8 @@ class StripeController extends Controller
                 'mode' => 'payment',
                 'client_reference_id' => 'INV_001',
                 'customer_email' => auth('sanctum')->user()->email,
-                'success_url' => "https://dasboard.walletads.io/create-campaign/?id=".$request->campaign_id."&status=success",
-                'cancel_url' =>  "https://dasboard.walletads.io/create-campaign/?id=".$request->campaign_id."&status=fail"
+                'success_url' => "https://dashboard.walletads.io/create-campaign/?id=".$request->campaign_id."&status=success",
+                'cancel_url' =>  "https://dashboard.walletads.io/create-campaign/?id=".$request->campaign_id."&status=fail"
                 ]);         
 
                 return response()->json($session, 200);
