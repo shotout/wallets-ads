@@ -411,11 +411,10 @@ class CampaignController extends Controller
         foreach ($adv as $ad) {
 
             $audience = Audience::where('ads_id', $ad->id)->first();
-            $detail_audience = DetailTarget::where('id', $audience->id)->first();
-
+            $detail_audience = DetailTarget::where('audience_id', $audience->id)->first();
 
             //upload image
-            $url_image = Media::where('type', 'ads_nft')->orderby('id', 'desc')->first();
+            $url_image = Media::where('owner_id', $ad->id)->where('type', 'ads_nft')->orderby('id','desc')->first();
 
             $image = new \Contentful\Core\File\RemoteUploadFile(
                 $campaign->name . 'Media',
@@ -435,13 +434,14 @@ class CampaignController extends Controller
 
 
             $entry_ads = new Entry('adsCreation');
+            $entry_ads->setField('userEmail', 'en-US', auth('sanctum')->user()->email);
             $entry_ads->setField('adsCreation', 'en-US', $audience->name);
             $entry_ads->setField('campaignName', 'en-US', $campaign->name);
             $entry_ads->setField('adsName', 'en-US', $ad->name);
             $entry_ads->setField('adsText', 'en-US', $ad->description);
-            $entry_ads->setField('price', 'en-US', $audience->price);
+            $entry_ads->setField('budget', 'en-US', $audience->price);
             $entry_ads->setField('adsImage', 'en-US', $asset_image->asLink());
-            // $entry_ads->setField('cryptocurrenciesUsed', 'en-US', $detail_audience->cryptocurrency_used);
+            $entry_ads->setField('cryptocurrenciesUsed', 'en-US', $detail_audience->cryptocurrency_used);
             $entry_ads->setField('accountAge', 'en-US', $detail_audience->account_age_year . ' years ' . $detail_audience->account_age_month . ' months ' . $detail_audience->account_age_day . ' days');
             $entry_ads->setField('availableCreditInWallet', 'en-US', $detail_audience->available_credit_wallet);
             $entry_ads->setField('tradingVolume', 'en-US', $detail_audience->trading_volume);
