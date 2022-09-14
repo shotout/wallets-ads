@@ -436,7 +436,7 @@ class CampaignController extends Controller
 
                 $file = new \Contentful\Core\File\RemoteUploadFile(
                     $campaign->name . 'Spreadsheet',
-                    'xls,xlsx,csv',
+                    'xlsx/xls/csv',
                     'http://backend.walletads.io' . $url_file->url
                 );
 
