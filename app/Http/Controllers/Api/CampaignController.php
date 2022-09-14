@@ -192,8 +192,8 @@ class CampaignController extends Controller
 
                     if (isset($audience->file) && $audience->file != '') {
                         $file_parts = explode(";base64,", $audience->file);
-                        $file_type_aux = explode("@file/", $file_parts[0]);
-                        $file_type = $file_type_aux[1];
+                        // $file_type_aux = explode("@file/", $file_parts[0]);
+                        // $file_type = $file_type_aux[1];
                         $file_base64 = base64_decode($file_parts[1]);
                         $fileNameToStore = uniqid() . '_' . time() . '.xlsx';
                         $fileURL = "/assets/files/audience/" . $fileNameToStore;
@@ -596,8 +596,8 @@ class CampaignController extends Controller
                         }
 
                         $file_parts = explode(";base64,", $audience->file);
-                        $file_type_aux = explode("@file/", $file_parts[0]);
-                        $file_type = $file_type_aux[1];
+                        // $file_type_aux = explode("@file/", $file_parts[0]);
+                        // $file_type = $file_type_aux[1];
                         $file_base64 = base64_decode($file_parts[1]);
                         $fileNameToStore = uniqid() . '_' . time() . '.xlsx';
                         $fileURL = "/assets/files/audience/" . $fileNameToStore;
