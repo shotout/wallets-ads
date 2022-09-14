@@ -40,6 +40,7 @@ class UserController extends Controller
             'street' => 'required|string|max:500',
             'post_code' => 'required|string|max:100',
             'city' => 'required|string|max:100',
+            'country' => 'required|string|max:100',
             'email' => 'required|email|max:100|unique:users,email,' . auth('sanctum')->user()->id,
             'phone' => 'required|string|max:100',
             'password' => 'nullable|confirmed|min:8|max:100',
@@ -61,6 +62,7 @@ class UserController extends Controller
         $user->street = $request->street;
         $user->post_code = $request->post_code;
         $user->city = $request->city;
+        $user->country = $request->country;
         $user->phone = $request->phone;
         $user->email = $request->email;
         if ($request->has('password') && $request->password != '') {
@@ -82,6 +84,7 @@ class UserController extends Controller
         $entry->setField('street', 'en-US', $updateuser->street);
         $entry->setField('postCode', 'en-US', $updateuser->post_code);
         $entry->setField('city', 'en-US', $updateuser->city);
+        $entry->setField('country', 'en-US', $updateuser->country);
         $entry->setField('email', 'en-US', $updateuser->email);
         $entry->setField('phone', 'en-US', $updateuser->phone);
         $entry->update();
