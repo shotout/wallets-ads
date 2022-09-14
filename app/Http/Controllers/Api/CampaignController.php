@@ -338,13 +338,13 @@ class CampaignController extends Controller
         $logo = new \Contentful\Core\File\RemoteUploadFile(
             $campaign->name . 'CollectionLogo',
             'JPEG,JPG,PNG',
-            'http://127.0.0.1:8000' . $url_logo->url
+            'http://backend.walletads.io' . $url_logo->url
         );
 
         $banner = new \Contentful\Core\File\RemoteUploadFile(
             $campaign->name . 'Collection Banner',
             'JPEG,JPG,PNG',
-            'http://127.0.0.1:8000' . $url_banner->url
+            'http://backend.walletads.io' . $url_banner->url
         );
 
         // Prepare uploadig image
@@ -423,6 +423,16 @@ class CampaignController extends Controller
             $asset_image = $environment->getAsset($asset_image_id);
             $asset_image->process('en-US');
 
+            if($audience->price_airdrop == "0.039")
+            {
+                $package = "Optimize Targeting";
+            }
+            else
+            {
+                $package = "Upload Own Audience Targeting";
+            }
+            
+
 
             $entry_ads = new Entry('adsCreation');
             $entry_ads->setField('userEmail', 'en-US', auth('sanctum')->user()->email);
@@ -433,6 +443,9 @@ class CampaignController extends Controller
             $entry_ads->setField('adsName', 'en-US', $ad->name);
             $entry_ads->setField('adsText', 'en-US', $ad->description);
             $entry_ads->setField('budget', 'en-US', $audience->price);
+            $entry_ads->setField('paymentMethod', 'en-US', 'Card');
+            // $entry_ads->setField('audienceFile', 'en-US', $asset_image->asLink());
+            $entry_ads->setField('targetingOption', 'en-US', $package);
             $entry_ads->setField('pricePerAirdrop', 'en-US', $audience->price_airdrop);
             $entry_ads->setField('totalUser', 'en-US', $audience->total_user);
             $entry_ads->setField('adsImage', 'en-US', $asset_image->asLink());
@@ -495,6 +508,10 @@ class CampaignController extends Controller
             $campaign->user_id = auth('sanctum')->user()->id;
             $campaign->name = $request->campaign_name;
             $campaign->start_date = $request->campaign_start_date;
+
+            if(isset($request->status)){
+                $campaign->status = $request->status;
+            }
 
             $campaign->type = $request->campaign_end_date_type;
             if ($request->campaign_end_date_type == 1) {

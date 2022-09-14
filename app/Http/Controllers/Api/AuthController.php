@@ -68,6 +68,7 @@ class AuthController extends Controller
             $entry->setField('city', 'en-US', $newuser->city);
             $entry->setField('email', 'en-US', $newuser->email);
             $entry->setField('phone', 'en-US', $newuser->phone);
+            $entry->setField('country', 'en-US', $newuser->country);
             $entry->setField('accountCreatedTime', 'en-US', $newuser->created_at);
             $environment->create($entry);
 
