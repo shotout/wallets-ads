@@ -294,7 +294,7 @@ class CampaignController extends Controller
                         }
                     }
 
-                    if (isset($ads->image)) {
+                    if (isset($ads->image) && $ads->image != '') {
                         $image_parts = explode(";base64,", $ads->image);
                         $image_type_aux = explode("image/", $image_parts[0]);
                         $image_type = $image_type_aux[1];
@@ -728,9 +728,11 @@ class CampaignController extends Controller
             return $campaign;
         });
 
+        $data = Campaign::with('audiences', 'adsPage', 'ads')->find($campaign->id);
+
         return response()->json([
             'status' => 'success',
-            'data' => $campaign
+            'data' => $data
         ], 200);
     }
 }
