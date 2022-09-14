@@ -28,7 +28,7 @@ class AuthController extends Controller
             'email' => 'required|email|max:100|unique:users,email',
             'phone' => 'required|string|max:100',
             'password' => 'required|confirmed|min:8|max:100',
-            'country' => 'required|string|max:100',
+            // 'country' => 'required|string|max:100',
         ]);
 
         $email = $request->email;
