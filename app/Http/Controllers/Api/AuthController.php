@@ -28,7 +28,7 @@ class AuthController extends Controller
             'email' => 'required|email|max:100|unique:users,email',
             'phone' => 'required|string|max:100',
             'password' => 'required|confirmed|min:8|max:100',
-            // 'country' => 'required|string|max:100',
+            'country' => 'required|string|max:100',
         ]);
 
         $email = $request->email;
@@ -68,6 +68,7 @@ class AuthController extends Controller
             $entry->setField('city', 'en-US', $newuser->city);
             $entry->setField('email', 'en-US', $newuser->email);
             $entry->setField('phone', 'en-US', $newuser->phone);
+            $entry->setField('country', 'en-US', $newuser->country);
             $entry->setField('accountCreatedTime', 'en-US', $newuser->created_at);
             $environment->create($entry);
 
