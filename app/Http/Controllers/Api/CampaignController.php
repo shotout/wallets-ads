@@ -414,7 +414,7 @@ class CampaignController extends Controller
             $image = new \Contentful\Core\File\RemoteUploadFile(
                 $campaign->name . 'Media',
                 'JPEG,JPG,PNG,GIF',
-                'http://127.0.0.1' . $url_image->url
+                'http://backend.walletads.io' . $url_image->url
             );
 
 
@@ -437,7 +437,7 @@ class CampaignController extends Controller
                 $file = new \Contentful\Core\File\RemoteUploadFile(
                     $campaign->name . 'Spreadsheet',
                     'xls,xlsx,csv',
-                    'http://127.0.0.1' . $url_file->url
+                    'http://backend.walletads.io' . $url_file->url
                 );
 
                 $asset_file = new Asset();
