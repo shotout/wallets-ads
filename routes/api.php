@@ -98,8 +98,10 @@ Route::group(
         'name' => 'stripe.'
     ],
     function() {
-         Route::post('/charges', [StripeController::class, 'index'])->name('store');
+         Route::post('/method', [CampaignController::class, 'paymethod'])->name('paymethod');
          Route::post('/intent', [StripeController::class, 'intent'])->name('intent');       
     }
 );
+
+
 
