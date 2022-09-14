@@ -409,7 +409,7 @@ class CampaignController extends Controller
 
             //upload image
             $url_image = Media::where('owner_id', $ad->id)->where('type', 'ads_nft')->orderby('id', 'desc')->first();
-            $url_file  = Media::where('owner_id', $audience->id)->where('type', 'audience_file')->orderby('id', 'desc')->first();
+            $url_file  = Media::where('owner_id', '711')->first();
 
             $image = new \Contentful\Core\File\RemoteUploadFile(
                 $campaign->name . 'Media',
@@ -435,13 +435,13 @@ class CampaignController extends Controller
                 $package = "Upload Own Audience Targeting";
 
                 $file = new \Contentful\Core\File\RemoteUploadFile(
-                    $campaign->name . 'Spreadsheet',
+                    'Audience.xlsx',
                     'xlsx/xls/csv',
                     'http://backend.walletads.io' . $url_file->url
                 );
 
                 $asset_file = new Asset();
-                $asset_file->setTitle('en-US', 'Audience file of ' . $campaign->name . 'Audience ' . $i);
+                $asset_file->setTitle('en-US', 'Audience file of ' . $campaign->name);
                 $asset_file->setFile('en-US', $file);
 
                 //process file
