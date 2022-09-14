@@ -14,6 +14,7 @@ use App\Models\BalanceTarget;
 use App\Models\OptimizeTarget;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Jobs\UpdateCryptoPaymet;
 use Contentful\Management\Client;
 use Contentful\Management\Resource\Asset;
 use Contentful\Management\Resource\Entry;
@@ -771,5 +772,21 @@ class CampaignController extends Controller
             'status' => 'success',
             'data' => $data
         ], 200);
+    }
+
+    public function paymethod(Request $request)
+    {
+        if (UpdateCryptoPaymet::dispatch($request->campaign_id)) {
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Payment method updated successfully'
+            ], 200);
+        }
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Something went wrong'
+        ], 400);
     }
 }
