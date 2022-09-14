@@ -338,13 +338,13 @@ class CampaignController extends Controller
         $logo = new \Contentful\Core\File\RemoteUploadFile(
             $campaign->name . 'CollectionLogo',
             'JPEG,JPG,PNG',
-            'http://127.0.0.1:8000' . $url_logo->url
+            'http://backend.walletads.io' . $url_logo->url
         );
 
         $banner = new \Contentful\Core\File\RemoteUploadFile(
             $campaign->name . 'Collection Banner',
             'JPEG,JPG,PNG',
-            'http://127.0.0.1:8000' . $url_banner->url
+            'http://backend.walletads.io' . $url_banner->url
         );
 
         // Prepare uploadig image
