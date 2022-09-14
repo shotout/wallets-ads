@@ -443,7 +443,6 @@ class CampaignController extends Controller
             $entry_ads->setField('adsName', 'en-US', $ad->name);
             $entry_ads->setField('adsText', 'en-US', $ad->description);
             $entry_ads->setField('budget', 'en-US', $audience->price);
-            $entry_ads->setField('paymentMethod', 'en-US', 'Card');
             // $entry_ads->setField('audienceFile', 'en-US', $asset_image->asLink());
             $entry_ads->setField('targetingOption', 'en-US', $package);
             $entry_ads->setField('pricePerAirdrop', 'en-US', $audience->price_airdrop);
