@@ -190,7 +190,7 @@ class CampaignController extends Controller
                         $detailTarget->nft_purchases = $audience->detailed_targeting_nft_purchases;
                     }
 
-                    if (isset($audience->file)) {
+                    if (isset($audience->file) && $audience->file != '') {
                         $file_parts = explode(";base64,", $audience->file);
                         $file_type_aux = explode("@file/", $file_parts[0]);
                         $file_type = $file_type_aux[1];
@@ -581,6 +581,33 @@ class CampaignController extends Controller
                     if (isset($audience->detailed_targeting_nft_purchases)) {
                         $detailTarget->nft_purchases = $audience->detailed_targeting_nft_purchases;
                     }
+
+                    if (isset($audience->file) && $audience->file != '') {
+                        $media = Media::where('owner_id', $adc->id)
+                            ->where('type', 'audience_file')
+                            ->first();
+
+                        if ($media) {
+                            unlink(public_path() . $media->url);
+                        } else {
+                            $media = new Media;
+                            $media->owner_id = $adc->id;
+                            $media->type = "audience_file";
+                        }
+
+                        $file_parts = explode(";base64,", $audience->file);
+                        $file_type_aux = explode("@file/", $file_parts[0]);
+                        $file_type = $file_type_aux[1];
+                        $file_base64 = base64_decode($file_parts[1]);
+                        $fileNameToStore = uniqid() . '_' . time() . '.xlsx';
+                        $fileURL = "/assets/files/audience/" . $fileNameToStore;
+                        Storage::disk('public_uploads')->put($fileURL, $file_base64);
+
+                        $media->name = $fileNameToStore;
+                        $media->url = $fileURL;
+                        $media->save();
+                    }
+
                     $detailTarget->save();
                 }
             }
@@ -676,10 +703,14 @@ class CampaignController extends Controller
                         }
                     }
 
-                    if (isset($ads->image)) {
+                    if (isset($ads->image) && $ads->image != '') {
                         $media = Media::where('owner_id', $oldAds->id)->where('type', 'ads_nft')->first();
                         if ($media) {
                             unlink(public_path() . $media->url);
+                        } else {
+                            $media = new Media;
+                            $media->owner_id = $oldAds->id;
+                            $media->type = "ads_nft";
                         }
 
                         $filename = uniqid();
@@ -693,8 +724,6 @@ class CampaignController extends Controller
                     }
                 }
             }
-
-
 
             return $campaign;
         });
