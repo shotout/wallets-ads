@@ -376,8 +376,6 @@ class CampaignController extends Controller
         $entry_ads_page->setField('availability', 'en-US', $campaign->availability);
         $entry_ads_page->setField('startDate', 'en-US', $campaign->start_date);
         $entry_ads_page->setField('totalBudget', 'en-US', Audience::where('campaign_id', $campaign->id)->sum('price'));
-        $entry_ads_page->setField('paymentMethod', 'en-US', 'Card');
-        $entry_ads_page->setField('paymentStatus', 'en-US', '0');
         $entry_ads_page->setField('collectionPageName', 'en-US', $newadspage->name);
         $entry_ads_page->setField('collectionPageText', 'en-US', $newadspage->description);
         $entry_ads_page->setField('collectionPageWebsite', 'en-US', $newadspage->website);
@@ -401,29 +399,19 @@ class CampaignController extends Controller
         //add ads to contentful
         $adv = Ads::where('campaign_id', $campaign->id)->get();
 
-        $i = 0;
-
         foreach ($adv as $ad) {
 
-            $audience = Audience::where('ads_id', $ad->id)->where('name', 'Audience ' . $i + 1)->first();
+            $audience = Audience::where('ads_id', $ad->id)->first();
             $detail_audience = DetailTarget::where('audience_id', $audience->id)->first();
 
             //upload image
-            $url_image = Media::where('owner_id', $ad->id)->where('type', 'ads_nft')->orderby('id', 'desc')->first();
-            $url_file  = Media::where('owner_id', $ad->id)->where('type', 'audience_file')->orderby('id', 'desc')->first();
+            $url_image = Media::where('owner_id', $ad->id)->where('type', 'ads_nft')->orderby('id','desc')->first();
 
             $image = new \Contentful\Core\File\RemoteUploadFile(
                 $campaign->name . 'Media',
                 'JPEG,JPG,PNG',
                 'http://backend.walletads.io' . $url_image->url
             );
-
-            $file = new \Contentful\Core\File\RemoteUploadFile(
-                $campaign->name . 'Media',
-                'XLS,XLSX,PNG',
-                'http://backend.walletads.io' . $url_image->url
-            );
-
 
             $asset_image = new Asset();
             $asset_image->setTitle('en-US', 'Collection Logo of ' . $campaign->name);
@@ -435,26 +423,15 @@ class CampaignController extends Controller
             $asset_image = $environment->getAsset($asset_image_id);
             $asset_image->process('en-US');
 
-            if (isset($url_file))
-             {
-                $asset_file = new Asset();
-                $asset_file->setTitle('en-US', 'Audience file of ' . $campaign->name . 'Audience ' . $i);
-                $asset_file->setFile('en-US', $file);
-
-                //process file
-                $environment->create($asset_file);
-                $asset_file_id = $asset_file->getId();
-                $asset_file = $environment->getAsset($asset_file_id);
-                $asset_file->process('en-US');
-            }
-
-
-            if ($audience->price_airdrop == "0.039") {
+            if($audience->price_airdrop == "0.039")
+            {
                 $package = "Optimize Targeting";
-            } else {
+            }
+            else
+            {
                 $package = "Upload Own Audience Targeting";
             }
-
+            
 
 
             $entry_ads = new Entry('adsCreation');
@@ -466,9 +443,8 @@ class CampaignController extends Controller
             $entry_ads->setField('adsName', 'en-US', $ad->name);
             $entry_ads->setField('adsText', 'en-US', $ad->description);
             $entry_ads->setField('budget', 'en-US', $audience->price);
-            if(isset($url_file)){
-                $entry_ads->setField('audienceFile', 'en-US', $asset_file->asLink());
-            }
+            $entry_ads->setField('paymentMethod', 'en-US', 'Card');
+            // $entry_ads->setField('audienceFile', 'en-US', $asset_image->asLink());
             $entry_ads->setField('targetingOption', 'en-US', $package);
             $entry_ads->setField('pricePerAirdrop', 'en-US', $audience->price_airdrop);
             $entry_ads->setField('totalUser', 'en-US', $audience->total_user);
@@ -486,7 +462,6 @@ class CampaignController extends Controller
             $entry_id = $entry_ads->getId();
             $entry_ads = $environment->getEntry($entry_id);
             $entry_ads->publish();
-            $i++;
         }
 
         return response()->json([
@@ -534,7 +509,7 @@ class CampaignController extends Controller
             $campaign->name = $request->campaign_name;
             $campaign->start_date = $request->campaign_start_date;
 
-            if (isset($request->status)) {
+            if(isset($request->status)){
                 $campaign->status = $request->status;
             }
 
