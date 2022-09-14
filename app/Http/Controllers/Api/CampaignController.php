@@ -776,7 +776,8 @@ class CampaignController extends Controller
 
     public function paymethod(Request $request)
     {
-        if (UpdateCryptoPaymet::dispatch($request->campaign_id)) {
+        $campaign_id = $request->campaign_id;
+        if (UpdateCryptoPaymet::dispatch($campaign_id)) {
 
             return response()->json([
                 'status' => 'success',

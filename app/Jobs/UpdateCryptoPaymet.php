@@ -16,14 +16,18 @@ class UpdateCryptoPaymet implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    protected $campaign_id;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($campaign)
+
+   
+
+    public function __construct($campaign_id)
     {
-        $campaign;
+        $this->campaign_id = $campaign_id;
     }   
     
         //
@@ -36,7 +40,8 @@ class UpdateCryptoPaymet implements ShouldQueue
      */
     public function handle()
     {        
-            $entry_id = Campaign::find($this->campaign->id)->entry_id;
+            $id = $this->campaign_id;
+            $entry_id = Campaign::find($id)->entry_id;
 
             $client = New Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
             $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
