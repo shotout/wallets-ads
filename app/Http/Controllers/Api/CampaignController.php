@@ -373,8 +373,8 @@ class CampaignController extends Controller
         $entry_ads_page = new Entry('adsPage');
         $entry_ads_page->setField('usersemail', 'en-US', auth('sanctum')->user()->email);
         $entry_ads_page->setField('campaignName', 'en-US', $campaign->name);
-        $entry_ads_page->setField('availability', 'en-US', $newcampaign->availability);
-        $entry_ads_page->setField('startDate', 'en-US', $newcampaign->start_date);
+        $entry_ads_page->setField('availability', 'en-US', $campaign->availability);
+        $entry_ads_page->setField('startDate', 'en-US', $campaign->start_date);
         $entry_ads_page->setField('totalBudget', 'en-US', Audience::where('campaign_id', $campaign->id)->sum('price'));
         $entry_ads_page->setField('collectionPageName', 'en-US', $newadspage->name);
         $entry_ads_page->setField('collectionPageText', 'en-US', $newadspage->description);
