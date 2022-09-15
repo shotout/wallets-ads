@@ -25,7 +25,7 @@ class WebhookHandler extends ProcessWebhookJob
             $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
 
             $entry = $environment->getEntry('29qhIihgtgWXQMZLOAzWNy');
-            $entry->setField('paymentStatus', 'en-US', false);
+            $entry->setField('paymentStatus', 'en-US', true);
             $entry->update();
             $entry->publish();     
         }
