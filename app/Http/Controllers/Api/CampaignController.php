@@ -414,7 +414,7 @@ class CampaignController extends Controller
 
             //upload image
             $url_image = Media::where('owner_id', $ad->id)->where('type', 'ads_nft')->orderby('id', 'desc')->first();
-            $url_file  = Media::where('owner_id', '711')->first();
+            $url_file  = Media::where('owner_id', $audience->id)->first();
 
             $image = new \Contentful\Core\File\RemoteUploadFile(
                 $campaign->name . 'Media',
