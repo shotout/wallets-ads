@@ -22,7 +22,7 @@ class WebhookHandler extends ProcessWebhookJob
 
         if ($request->type === 'checkout.session.completed' && $request->data['object']['payment_status'] === 'paid') {
 
-            $paymentid = StripePayment::where('payment_id', $request->data['object']['id'])->first();
+            $paymentid = StripePayment::where('stripe_id', $request->data['object']['id'])->first();
             $campaign = $paymentid->campaign_id;
             
             $client = New Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
