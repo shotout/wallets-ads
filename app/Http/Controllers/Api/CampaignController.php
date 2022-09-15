@@ -328,166 +328,166 @@ class CampaignController extends Controller
         });
 
         //contentful env
-        $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
-        $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
+        // $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
+        // $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
 
-        //retrieve data from database
-        $newadspage = AdsPage::where('campaign_id', $campaign->id)->first();
+        // //retrieve data from database
+        // $newadspage = AdsPage::where('campaign_id', $campaign->id)->first();
 
-        $url_logo = Media::where('owner_id', $newadspage->id)->where('type', 'ads_logo')->first();
-        $url_banner = Media::where('owner_id', $newadspage->id)->where('type', 'ads_banner')->first();
+        // $url_logo = Media::where('owner_id', $newadspage->id)->where('type', 'ads_logo')->first();
+        // $url_banner = Media::where('owner_id', $newadspage->id)->where('type', 'ads_banner')->first();
 
-        $logo = new \Contentful\Core\File\RemoteUploadFile(
-            $campaign->name . 'CollectionLogo',
-            'JPEG,JPG,PNG',
-            'http://backend.walletads.io' . $url_logo->url
-        );
+        // $logo = new \Contentful\Core\File\RemoteUploadFile(
+        //     $campaign->name . 'CollectionLogo',
+        //     'JPEG,JPG,PNG',
+        //     'http://backend.walletads.io' . $url_logo->url
+        // );
 
-        $banner = new \Contentful\Core\File\RemoteUploadFile(
-            $campaign->name . 'Collection Banner',
-            'JPEG,JPG,PNG',
-            'http://backend.walletads.io' . $url_banner->url
-        );
+        // $banner = new \Contentful\Core\File\RemoteUploadFile(
+        //     $campaign->name . 'Collection Banner',
+        //     'JPEG,JPG,PNG',
+        //     'http://backend.walletads.io' . $url_banner->url
+        // );
 
-        // Prepare uploadig image
-        $asset_logo = new Asset();
-        $asset_logo->setTitle('en-US', 'Collection Logo of ' . $campaign->name);
-        $asset_logo->setFile('en-US', $logo);
+        // // Prepare uploadig image
+        // $asset_logo = new Asset();
+        // $asset_logo->setTitle('en-US', 'Collection Logo of ' . $campaign->name);
+        // $asset_logo->setFile('en-US', $logo);
 
-        //process Image
-        $environment->create($asset_logo);
-        $asset_logo_id = $asset_logo->getId();
-        $asset_logo = $environment->getAsset($asset_logo_id);
-        $asset_logo->process('en-US');
+        // //process Image
+        // $environment->create($asset_logo);
+        // $asset_logo_id = $asset_logo->getId();
+        // $asset_logo = $environment->getAsset($asset_logo_id);
+        // $asset_logo->process('en-US');
 
-        // Prepare uploadig image
-        $asset_banner = new Asset();
-        $asset_banner->setTitle('en-US', 'Collection Banner of ' . $campaign->name);
-        $asset_banner->setFile('en-US', $banner);
+        // // Prepare uploadig image
+        // $asset_banner = new Asset();
+        // $asset_banner->setTitle('en-US', 'Collection Banner of ' . $campaign->name);
+        // $asset_banner->setFile('en-US', $banner);
 
-        //process Image
-        $environment->create($asset_banner);
-        $asset_banner_id = $asset_banner->getId();
-        $asset_banner = $environment->getAsset($asset_banner_id);
-        $asset_banner->process('en-US');
+        // //process Image
+        // $environment->create($asset_banner);
+        // $asset_banner_id = $asset_banner->getId();
+        // $asset_banner = $environment->getAsset($asset_banner_id);
+        // $asset_banner->process('en-US');
 
-        //add collection page to contentful
-        $entry_ads_page = new Entry('adsPage');
-        $entry_ads_page->setField('usersemail', 'en-US', auth('sanctum')->user()->email);
-        $entry_ads_page->setField('campaignName', 'en-US', $campaign->name);
-        $entry_ads_page->setField('availability', 'en-US', $campaign->availability);
-        $entry_ads_page->setField('startDate', 'en-US', $campaign->start_date);
-        $entry_ads_page->setField('totalBudget', 'en-US', Audience::where('campaign_id', $campaign->id)->sum('price'));
-        $entry_ads_page->setField('paymentMethod', 'en-US', 'Card');
-        $entry_ads_page->setField('paymentStatus', 'en-US', false);
-        $entry_ads_page->setField('collectionPageName', 'en-US', $newadspage->name);
-        $entry_ads_page->setField('collectionPageText', 'en-US', $newadspage->description);
-        $entry_ads_page->setField('collectionPageWebsite', 'en-US', $newadspage->website);
-        $entry_ads_page->setField('collectionPageDiscord', 'en-US', $newadspage->discord);
-        $entry_ads_page->setField('collectionPageMedium', 'en-US', $newadspage->medium);
-        $entry_ads_page->setField('collectionPageTelegram', 'en-US', $newadspage->telegram);
-        $entry_ads_page->setField('collectionPageLogo', 'en-US', $asset_logo->asLink());
-        $entry_ads_page->setField('collectionPageBanner', 'en-US', $asset_banner->asLink());
-        $environment->create($entry_ads_page);
+        // //add collection page to contentful
+        // $entry_ads_page = new Entry('adsPage');
+        // $entry_ads_page->setField('usersemail', 'en-US', auth('sanctum')->user()->email);
+        // $entry_ads_page->setField('campaignName', 'en-US', $campaign->name);
+        // $entry_ads_page->setField('availability', 'en-US', $campaign->availability);
+        // $entry_ads_page->setField('startDate', 'en-US', $campaign->start_date);
+        // $entry_ads_page->setField('totalBudget', 'en-US', Audience::where('campaign_id', $campaign->id)->sum('price'));
+        // $entry_ads_page->setField('paymentMethod', 'en-US', 'Card');
+        // $entry_ads_page->setField('paymentStatus', 'en-US', false);
+        // $entry_ads_page->setField('collectionPageName', 'en-US', $newadspage->name);
+        // $entry_ads_page->setField('collectionPageText', 'en-US', $newadspage->description);
+        // $entry_ads_page->setField('collectionPageWebsite', 'en-US', $newadspage->website);
+        // $entry_ads_page->setField('collectionPageDiscord', 'en-US', $newadspage->discord);
+        // $entry_ads_page->setField('collectionPageMedium', 'en-US', $newadspage->medium);
+        // $entry_ads_page->setField('collectionPageTelegram', 'en-US', $newadspage->telegram);
+        // $entry_ads_page->setField('collectionPageLogo', 'en-US', $asset_logo->asLink());
+        // $entry_ads_page->setField('collectionPageBanner', 'en-US', $asset_banner->asLink());
+        // $environment->create($entry_ads_page);
 
-        //publish ads page to contentful
-        $entry_id = $entry_ads_page->getId();
-        $entry_ads_page = $environment->getEntry($entry_id);
-        $entry_ads_page->publish();
+        // //publish ads page to contentful
+        // $entry_id = $entry_ads_page->getId();
+        // $entry_ads_page = $environment->getEntry($entry_id);
+        // $entry_ads_page->publish();
 
-        //update Campaign Data
-        $updatecampaign = Campaign::where('user_id', auth('sanctum')->user()->id)->orderBy('id', 'desc')->first();
-        $updatecampaign->entry_id = $entry_id;
-        $updatecampaign->save();
+        // //update Campaign Data
+        // $updatecampaign = Campaign::where('user_id', auth('sanctum')->user()->id)->orderBy('id', 'desc')->first();
+        // $updatecampaign->entry_id = $entry_id;
+        // $updatecampaign->save();
 
-        //add ads to contentful
-        $adv = Ads::where('campaign_id', $campaign->id)->get();
+        // //add ads to contentful
+        // $adv = Ads::where('campaign_id', $campaign->id)->get();
 
-        $i = 0;
+        // $i = 0;
 
-        foreach ($adv as $ad) {
+        // foreach ($adv as $ad) {
 
-            $audience_name = 'Audience ' . $i + 1;
+        //     $audience_name = 'Audience ' . $i + 1;
 
-            $audience = Audience::where('campaign_id', $campaign->id)->where('name', $audience_name)->first();
-            $detail_audience = DetailTarget::where('audience_id', $audience->id)->first();
+        //     $audience = Audience::where('campaign_id', $campaign->id)->where('name', $audience_name)->first();
+        //     $detail_audience = DetailTarget::where('audience_id', $audience->id)->first();
 
-            //upload image
-            $url_image = Media::where('owner_id', $ad->id)->where('type', 'ads_nft')->orderby('id', 'desc')->first();
-            $url_file  = Media::where('owner_id', $audience->id)->first();
+        //     //upload image
+        //     $url_image = Media::where('owner_id', $ad->id)->where('type', 'ads_nft')->orderby('id', 'desc')->first();
+        //     $url_file  = Media::where('owner_id', $audience->id)->first();
 
-            $image = new \Contentful\Core\File\RemoteUploadFile(
-                $campaign->name . 'Media',
-                'JPEG,JPG,PNG,GIF',
-                'http://backend.walletads.io' . $url_image->url
-            );
-
-
-            $asset_image = new Asset();
-            $asset_image->setTitle('en-US', 'Collection Logo of ' . $campaign->name);
-            $asset_image->setFile('en-US', $image);
-
-            //process Image
-            $environment->create($asset_image);
-            $asset_image_id = $asset_image->getId();
-            $asset_image = $environment->getAsset($asset_image_id);
-            $asset_image->process('en-US');
+        //     $image = new \Contentful\Core\File\RemoteUploadFile(
+        //         $campaign->name . 'Media',
+        //         'JPEG,JPG,PNG,GIF',
+        //         'http://backend.walletads.io' . $url_image->url
+        //     );
 
 
-            if ($audience->price_airdrop == "0.039") {
-                $package = "Optimize Targeting";
-            } else {
-                $package = "Upload Own Audience Targeting";
+        //     $asset_image = new Asset();
+        //     $asset_image->setTitle('en-US', 'Collection Logo of ' . $campaign->name);
+        //     $asset_image->setFile('en-US', $image);
 
-                $file = new \Contentful\Core\File\RemoteUploadFile(
-                    $campaign->name.'_'.$audience->name.'.xlsx',
-                    'xlsx/xls/csv',
-                    'http://backend.walletads.io' . $url_file->url
-                );
-
-                $asset_file = new Asset();
-                $asset_file->setTitle('en-US', 'Audience file of ' . $campaign->name);
-                $asset_file->setFile('en-US', $file);
-
-                //process file
-                $environment->create($asset_file);
-                $asset_file_id = $asset_file->getId();
-                $asset_file = $environment->getAsset($asset_file_id);
-                $asset_file->process('en-US');
-            }
+        //     //process Image
+        //     $environment->create($asset_image);
+        //     $asset_image_id = $asset_image->getId();
+        //     $asset_image = $environment->getAsset($asset_image_id);
+        //     $asset_image->process('en-US');
 
 
-            $entry_ads = new Entry('adsCreation');
-            $entry_ads->setField('userEmail', 'en-US', auth('sanctum')->user()->email);
-            $entry_ads->setField('adsCreation', 'en-US', $audience->name);
-            $entry_ads->setField('campaignName', 'en-US', $campaign->name);
-            $entry_ads->setField('campaignAvailability', 'en-US', $campaign->availability);
-            $entry_ads->setField('campaignStartDate', 'en-US', $campaign->start_date);
-            $entry_ads->setField('adsName', 'en-US', $ad->name);
-            $entry_ads->setField('adsText', 'en-US', $ad->description);
-            $entry_ads->setField('budget', 'en-US', $audience->price);
-            if ($audience->price_airdrop == "0.019") {
-                $entry_ads->setField('audienceFile', 'en-US', $asset_file->asLink());
-            }
-            $entry_ads->setField('targetingOption', 'en-US', $package);
-            $entry_ads->setField('pricePerAirdrop', 'en-US', $audience->price_airdrop);
-            $entry_ads->setField('totalUser', 'en-US', $audience->total_user);
-            $entry_ads->setField('adsImage', 'en-US', $asset_image->asLink());
-            // $entry_ads->setField('cryptocurrenciesUsed', 'en-US', $detail_audience->cryptocurrency_used);
-            $entry_ads->setField('accountAge', 'en-US', $detail_audience->account_age_year . ' years ' . $detail_audience->account_age_month . ' months ' . $detail_audience->account_age_day . ' days');
-            $entry_ads->setField('availableCreditInWallet', 'en-US', $detail_audience->available_credit_wallet);
-            $entry_ads->setField('tradingVolume', 'en-US', $detail_audience->trading_volume);
-            $entry_ads->setField('airdropsReceived', 'en-US', $detail_audience->airdrops_received);
-            $entry_ads->setField('amountOfTransaction', 'en-US', $detail_audience->amount_transaction . ' Within ' . $detail_audience->amount_transaction_day . ' days');
-            $entry_ads->setField('nftPurchases', 'en-US', $detail_audience->nft_purchases);
-            $environment->create($entry_ads);
+        //     if ($audience->price_airdrop == "0.039") {
+        //         $package = "Optimize Targeting";
+        //     } else {
+        //         $package = "Upload Own Audience Targeting";
 
-            //publish ads to contentful
-            $entry_id = $entry_ads->getId();
-            $entry_ads = $environment->getEntry($entry_id);
-            $entry_ads->publish();
-            $i++;
-        }
+        //         $file = new \Contentful\Core\File\RemoteUploadFile(
+        //             $campaign->name.'_'.$audience->name.'.xlsx',
+        //             'xlsx/xls/csv',
+        //             'http://backend.walletads.io' . $url_file->url
+        //         );
+
+        //         $asset_file = new Asset();
+        //         $asset_file->setTitle('en-US', 'Audience file of ' . $campaign->name);
+        //         $asset_file->setFile('en-US', $file);
+
+        //         //process file
+        //         $environment->create($asset_file);
+        //         $asset_file_id = $asset_file->getId();
+        //         $asset_file = $environment->getAsset($asset_file_id);
+        //         $asset_file->process('en-US');
+        //     }
+
+
+        //     $entry_ads = new Entry('adsCreation');
+        //     $entry_ads->setField('userEmail', 'en-US', auth('sanctum')->user()->email);
+        //     $entry_ads->setField('adsCreation', 'en-US', $audience->name);
+        //     $entry_ads->setField('campaignName', 'en-US', $campaign->name);
+        //     $entry_ads->setField('campaignAvailability', 'en-US', $campaign->availability);
+        //     $entry_ads->setField('campaignStartDate', 'en-US', $campaign->start_date);
+        //     $entry_ads->setField('adsName', 'en-US', $ad->name);
+        //     $entry_ads->setField('adsText', 'en-US', $ad->description);
+        //     $entry_ads->setField('budget', 'en-US', $audience->price);
+        //     if ($audience->price_airdrop == "0.019") {
+        //         $entry_ads->setField('audienceFile', 'en-US', $asset_file->asLink());
+        //     }
+        //     $entry_ads->setField('targetingOption', 'en-US', $package);
+        //     $entry_ads->setField('pricePerAirdrop', 'en-US', $audience->price_airdrop);
+        //     $entry_ads->setField('totalUser', 'en-US', $audience->total_user);
+        //     $entry_ads->setField('adsImage', 'en-US', $asset_image->asLink());
+        //     // $entry_ads->setField('cryptocurrenciesUsed', 'en-US', $detail_audience->cryptocurrency_used);
+        //     $entry_ads->setField('accountAge', 'en-US', $detail_audience->account_age_year . ' years ' . $detail_audience->account_age_month . ' months ' . $detail_audience->account_age_day . ' days');
+        //     $entry_ads->setField('availableCreditInWallet', 'en-US', $detail_audience->available_credit_wallet);
+        //     $entry_ads->setField('tradingVolume', 'en-US', $detail_audience->trading_volume);
+        //     $entry_ads->setField('airdropsReceived', 'en-US', $detail_audience->airdrops_received);
+        //     $entry_ads->setField('amountOfTransaction', 'en-US', $detail_audience->amount_transaction . ' Within ' . $detail_audience->amount_transaction_day . ' days');
+        //     $entry_ads->setField('nftPurchases', 'en-US', $detail_audience->nft_purchases);
+        //     $environment->create($entry_ads);
+
+        //     //publish ads to contentful
+        //     $entry_id = $entry_ads->getId();
+        //     $entry_ads = $environment->getEntry($entry_id);
+        //     $entry_ads->publish();
+        //     $i++;
+        // }
 
         return response()->json([
             'status' => 'success',
