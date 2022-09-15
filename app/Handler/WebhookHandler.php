@@ -7,53 +7,28 @@ use Spatie\WebhookClient\Jobs\ProcessWebhookJob;
 use Contentful\Delivery\Client as DeliveryClient;
 use App\Models\Blacklisted;
 use App\Models\User;
+use Contentful\Management\Client;
+use Illuminate\Http\Request;
 
 class WebhookHandler extends ProcessWebhookJob 
 {
        
 
-    public function handle()
+    public function handle(Request $request)
     {
         $data = $this->webhookCall->payload;
         logger($data);
 
-        // if($data['sys']['type'] == 'Entry')
-        //     {
-        //         if($data['sys']['contentType']['sys']['id'] == 'blacklistedWalletAddress')
-        //         {
-        //             //retrieve data from contentful
-        //             $entry_id = $data['sys']['id'];
-        //             $walletaddress = $data['fields']['walletAddress']['en-US'];
-                    
-        //             //insert into database
-        //             $blacklist = new Blacklisted;
-        //             $blacklist->entry_id = $entry_id;
-        //             $blacklist->walletaddress = $walletaddress;
-        //             $blacklist->save();
+        if ($request->type === 'checkout.session.completed') {
+            
+            $client = New Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
+            $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
 
-        //         }
-
-        //         if($data['sys']['contentType']['sys']['id'] == 'users')
-        //         {
-        //             //retrieve data from contentful
-        //             $entry_id = $data['sys']['id'];
-                    
-        //             //retrieve user from database
-        //             $user = User::where('entry_id', $entry_id)->first();
-                    
-        //             SendConfirmEmail::dispatch($user, 'register')->onQueue('apiCampaign');
-
-        //             $user->status = '1';
-        //             $user->save();
-                    
-
-        //         }
-
-
-
-
-
-        //     }
+            $entry = $environment->getEntry('29qhIihgtgWXQMZLOAzWNy');
+            $entry->setField('paymentStatus', 'en-US', false);
+            $entry->update();
+            $entry->publish();     
+        }
         
     }
 }
