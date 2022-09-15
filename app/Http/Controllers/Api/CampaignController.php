@@ -365,7 +365,7 @@ class CampaignController extends Controller
         // $asset_banner->setTitle('en-US', 'Collection Banner of ' . $campaign->name);
         // $asset_banner->setFile('en-US', $banner);
 
-        // //process Image
+        // //process Image ok
         // $environment->create($asset_banner);
         // $asset_banner_id = $asset_banner->getId();
         // $asset_banner = $environment->getAsset($asset_banner_id);
