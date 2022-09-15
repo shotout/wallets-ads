@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "f8c6e021-f5f2-452b-a790-dc344d299019",
+		"_postman_id": "44d29723-df8c-4b2c-add6-e327c340755c",
 		"name": "nft campaign",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "12074833"
@@ -213,6 +213,445 @@
 		{
 			"name": "campaign",
 			"item": [
+				{
+					"name": "add with form",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|xIIM9SXiEQm2C6rgurDxWBYYDZG4B1U8F6g4tymG",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "campaign_name",
+									"value": "Mekaverse",
+									"type": "text"
+								},
+								{
+									"key": "campaign_start_date",
+									"value": "2022-09-15",
+									"type": "text"
+								},
+								{
+									"key": "campaign_end_date_type",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "jeda",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "campaign_audiences[0][fe_id]",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "campaign_audiences[0][price]",
+									"value": "200",
+									"type": "text"
+								},
+								{
+									"key": "campaign_audiences[0][price_airdrop]",
+									"value": "0.039",
+									"type": "text"
+								},
+								{
+									"key": "campaign_audiences[0][total_user]",
+									"value": "12,820",
+									"type": "text"
+								},
+								{
+									"key": "campaign_audiences[0][detailed_targeting_cryptocurrency][0]",
+									"value": "ETH",
+									"type": "text"
+								},
+								{
+									"key": "campaign_audiences[0][detailed_targeting_cryptocurrency][1]",
+									"value": "SOL",
+									"type": "text"
+								},
+								{
+									"key": "campaign_audiences[0][detailed_targeting_year]",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "campaign_audiences[0][detailed_targeting_month]",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "campaign_audiences[0][detailed_targeting_day]",
+									"value": "30",
+									"type": "text"
+								},
+								{
+									"key": "campaign_audiences[0][detailed_targeting_available_credit_wallet]",
+									"value": "USD100-1,000",
+									"type": "text"
+								},
+								{
+									"key": "campaign_audiences[0][detailed_targeting_trading_volume]",
+									"value": "USD100-1,000",
+									"type": "text"
+								},
+								{
+									"key": "campaign_audiences[0][detailed_targeting_airdrops]",
+									"value": "1-5",
+									"type": "text"
+								},
+								{
+									"key": "campaign_audiences[0][detailed_targeting_amount_transaction]",
+									"value": "6-10",
+									"type": "text"
+								},
+								{
+									"key": "campaign_audiences[0][detailed_targeting_amount_transaction_day]",
+									"value": "30",
+									"type": "text"
+								},
+								{
+									"key": "campaign_audiences[0][detailed_targeting_nft_purchases]",
+									"value": "Creator 1, Creator 2, Creator 3",
+									"type": "text"
+								},
+								{
+									"key": "campaign_audiences[0][file]",
+									"type": "file",
+									"src": "/home/julian/Desktop/tes.xlsx"
+								},
+								{
+									"key": "jeda",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "ads_page_name",
+									"value": "Title Page Mekaverse",
+									"type": "text"
+								},
+								{
+									"key": "ads_page_description",
+									"value": "Description Page Mekaverse",
+									"type": "text"
+								},
+								{
+									"key": "ads_page_website",
+									"value": "https://google.com",
+									"type": "text"
+								},
+								{
+									"key": "ads_page_discord",
+									"value": "https://discord.com",
+									"type": "text"
+								},
+								{
+									"key": "ads_page_medium",
+									"value": "https://medium.com",
+									"type": "text"
+								},
+								{
+									"key": "ads_page_telegram",
+									"value": "https://telegram.com",
+									"type": "text"
+								},
+								{
+									"key": "ads_page_logo",
+									"type": "file",
+									"src": "/home/julian/Downloads/Logo NFT Daily.jpg"
+								},
+								{
+									"key": "ads_page_banner",
+									"type": "file",
+									"src": "/home/julian/Pictures/Screenshot from 2022-08-30 08-26-17.png"
+								},
+								{
+									"key": "jeda",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "campaign_ads[0][name]",
+									"value": "Name Ads 1",
+									"type": "text"
+								},
+								{
+									"key": "campaign_ads[0][description]",
+									"value": "Desc Ads 1",
+									"type": "text"
+								},
+								{
+									"key": "campaign_ads[0][fe_id][0]",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "campaign_ads[0][image]",
+									"type": "file",
+									"src": "/home/julian/Downloads/m1.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/campaigns",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"campaigns"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update with form",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|xIIM9SXiEQm2C6rgurDxWBYYDZG4B1U8F6g4tymG",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "campaign_name",
+									"value": "Mekaverse Edit",
+									"type": "text"
+								},
+								{
+									"key": "campaign_start_date",
+									"value": "2022-09-15",
+									"type": "text"
+								},
+								{
+									"key": "campaign_end_date_type",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "jeda",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "campaign_audiences[0][id]",
+									"value": "28",
+									"type": "text"
+								},
+								{
+									"key": "campaign_audiences[0][price]",
+									"value": "2000",
+									"type": "text"
+								},
+								{
+									"key": "campaign_audiences[0][price_airdrop]",
+									"value": "0.039",
+									"type": "text"
+								},
+								{
+									"key": "campaign_audiences[0][total_user]",
+									"value": "12,820",
+									"type": "text"
+								},
+								{
+									"key": "campaign_audiences[0][detailed_targeting_cryptocurrency][0]",
+									"value": "ETH",
+									"type": "text"
+								},
+								{
+									"key": "campaign_audiences[0][detailed_targeting_cryptocurrency][1]",
+									"value": "SOL",
+									"type": "text"
+								},
+								{
+									"key": "campaign_audiences[0][detailed_targeting_year]",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "campaign_audiences[0][detailed_targeting_month]",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "campaign_audiences[0][detailed_targeting_day]",
+									"value": "30",
+									"type": "text"
+								},
+								{
+									"key": "campaign_audiences[0][detailed_targeting_available_credit_wallet]",
+									"value": "USD100-1,000",
+									"type": "text"
+								},
+								{
+									"key": "campaign_audiences[0][detailed_targeting_trading_volume]",
+									"value": "USD100-1,000",
+									"type": "text"
+								},
+								{
+									"key": "campaign_audiences[0][detailed_targeting_airdrops]",
+									"value": "1-5",
+									"type": "text"
+								},
+								{
+									"key": "campaign_audiences[0][detailed_targeting_amount_transaction]",
+									"value": "6-10",
+									"type": "text"
+								},
+								{
+									"key": "campaign_audiences[0][detailed_targeting_amount_transaction_day]",
+									"value": "30",
+									"type": "text"
+								},
+								{
+									"key": "campaign_audiences[0][detailed_targeting_nft_purchases]",
+									"value": "Creator 1, Creator 2, Creator 3",
+									"type": "text"
+								},
+								{
+									"key": "campaign_audiences[0][file]",
+									"type": "file",
+									"src": "/home/julian/Desktop/tes.xlsx"
+								},
+								{
+									"key": "jeda",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "ads_page_name",
+									"value": "Title Page Mekaverse Edit",
+									"type": "text"
+								},
+								{
+									"key": "ads_page_description",
+									"value": "Description Page Mekaverse",
+									"type": "text"
+								},
+								{
+									"key": "ads_page_website",
+									"value": "https://google.com",
+									"type": "text"
+								},
+								{
+									"key": "ads_page_discord",
+									"value": "https://discord.com",
+									"type": "text"
+								},
+								{
+									"key": "ads_page_medium",
+									"value": "https://medium.com",
+									"type": "text"
+								},
+								{
+									"key": "ads_page_telegram",
+									"value": "https://telegram.com",
+									"type": "text"
+								},
+								{
+									"key": "ads_page_logo",
+									"type": "file",
+									"src": "/home/julian/Pictures/Screenshot from 2022-08-24 16-28-51.png"
+								},
+								{
+									"key": "ads_page_banner",
+									"type": "file",
+									"src": "/home/julian/Pictures/Screenshot from 2022-09-05 09-55-48.png"
+								},
+								{
+									"key": "jeda",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "campaign_ads[0][name]",
+									"value": "Name Ads 1 Edit",
+									"type": "text"
+								},
+								{
+									"key": "campaign_ads[0][description]",
+									"value": "Desc Ads 1",
+									"type": "text"
+								},
+								{
+									"key": "campaign_ads[0][audience_id][0]",
+									"value": "28",
+									"type": "text"
+								},
+								{
+									"key": "campaign_ads[0][image]",
+									"type": "file",
+									"src": "/home/julian/Pictures/Screenshot from 2022-09-02 13-27-22.png"
+								},
+								{
+									"key": "campaign_ads[0][id]",
+									"value": "14",
+									"type": "text"
+								},
+								{
+									"key": "jeda",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "_method",
+									"value": "PATCH",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/campaigns/21",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"campaigns",
+								"21"
+							]
+						}
+					},
+					"response": []
+				},
 				{
 					"name": "list",
 					"request": {
