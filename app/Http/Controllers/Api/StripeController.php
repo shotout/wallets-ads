@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Payment;
+use App\Models\StripePayment;
 use Exception;
 use Illuminate\Http\Request;
 use Stripe\SetupIntent;
@@ -53,7 +55,7 @@ class StripeController extends Controller
     {
         try{
 
-            Stripe::setApiKey(env('STRIPE_LIVE_API_KEY'));
+            Stripe::setApiKey(env('STRIPE_TEST_API_KEY'));
 
             $session = \Stripe\Checkout\Session::create([
                 'payment_method_types'  => ['card'],
@@ -70,7 +72,17 @@ class StripeController extends Controller
                 'customer_email' => auth('sanctum')->user()->email,
                 'success_url' => "https://dashboard.walletads.io/create-campaign/?id=".$request->campaign_id."&status=success",
                 'cancel_url' =>  "https://dashboard.walletads.io/create-campaign/?id=".$request->campaign_id."&status=fail"
-                ]);         
+                ]);
+                
+                $newpayment = new StripePayment();
+                $newpayment->stripe_id = $session->id;
+                $newpayment->campaign_id = $request->campaign_id;
+                $newpayment->invoice = 'INV_001';
+                $newpayment->amount = $request->total_budget;
+                $newpayment->email = auth('sanctum')->user()->email;
+                $newpayment->name =  $request->campaign_name;
+                $newpayment->status = 0;
+                $newpayment->save();
 
                 return response()->json($session, 200);
         }
