@@ -19,7 +19,7 @@ class WebhookHandler extends ProcessWebhookJob
         $data = $this->webhookCall->payload;
         logger($data);
 
-        if ($request->type === 'checkout.session.completed' && $request->data->payment_status === 'paid') {
+        if ($request->type === 'checkout.session.completed' && $request->data['object']['payment_status'] === 'paid') {
             
             $client = New Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
             $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
