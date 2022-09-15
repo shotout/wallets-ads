@@ -327,11 +327,6 @@ class CampaignController extends Controller
             return $campaign;
         });
 
-        return response()->json([
-            'status' => 'success',
-            'data' => $campaign
-        ], 201);
-
         //contentful env
         $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
         $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
