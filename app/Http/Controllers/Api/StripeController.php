@@ -55,7 +55,7 @@ class StripeController extends Controller
     {
         try{
 
-            Stripe::setApiKey(env('STRIPE_LIVE_API_KEY'));
+            Stripe::setApiKey(env('STRIPE_TEST_API_KEY'));
 
             $session = \Stripe\Checkout\Session::create([
                 'payment_method_types'  => ['card'],
