@@ -12,47 +12,48 @@ class WebhookHandler extends ProcessWebhookJob
 {
        
 
-    public function handle( )
+    public function handle()
     {
         $data = $this->webhookCall->payload;
+        logger($data);
 
-        if($data['sys']['type'] == 'Entry')
-            {
-                if($data['sys']['contentType']['sys']['id'] == 'blacklistedWalletAddress')
-                {
-                    //retrieve data from contentful
-                    $entry_id = $data['sys']['id'];
-                    $walletaddress = $data['fields']['walletAddress']['en-US'];
+        // if($data['sys']['type'] == 'Entry')
+        //     {
+        //         if($data['sys']['contentType']['sys']['id'] == 'blacklistedWalletAddress')
+        //         {
+        //             //retrieve data from contentful
+        //             $entry_id = $data['sys']['id'];
+        //             $walletaddress = $data['fields']['walletAddress']['en-US'];
                     
-                    //insert into database
-                    $blacklist = new Blacklisted;
-                    $blacklist->entry_id = $entry_id;
-                    $blacklist->walletaddress = $walletaddress;
-                    $blacklist->save();
+        //             //insert into database
+        //             $blacklist = new Blacklisted;
+        //             $blacklist->entry_id = $entry_id;
+        //             $blacklist->walletaddress = $walletaddress;
+        //             $blacklist->save();
 
-                }
+        //         }
 
-                if($data['sys']['contentType']['sys']['id'] == 'users')
-                {
-                    //retrieve data from contentful
-                    $entry_id = $data['sys']['id'];
+        //         if($data['sys']['contentType']['sys']['id'] == 'users')
+        //         {
+        //             //retrieve data from contentful
+        //             $entry_id = $data['sys']['id'];
                     
-                    //retrieve user from database
-                    $user = User::where('entry_id', $entry_id)->first();
+        //             //retrieve user from database
+        //             $user = User::where('entry_id', $entry_id)->first();
                     
-                    SendConfirmEmail::dispatch($user, 'register')->onQueue('apiCampaign');
+        //             SendConfirmEmail::dispatch($user, 'register')->onQueue('apiCampaign');
 
-                    $user->status = '1';
-                    $user->save();
+        //             $user->status = '1';
+        //             $user->save();
                     
 
-                }
+        //         }
 
 
 
 
 
-            }
+        //     }
         
     }
 }
