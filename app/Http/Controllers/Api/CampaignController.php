@@ -436,7 +436,7 @@ class CampaignController extends Controller
                 $package = "Upload Own Audience Targeting";
 
                 $file = new \Contentful\Core\File\RemoteUploadFile(
-                    'Audience.xlsx',
+                    $campaign->name.'_'.$audience->name.'.xlsx',
                     'xlsx/xls/csv',
                     'http://backend.walletads.io' . $url_file->url
                 );
