@@ -129,7 +129,7 @@ class UploadCampaignToContentful implements ShouldQueue
  
              foreach ($audience as $aud) {
  
-                 $detail_audience = DetailTarget::where('audience_id', $aud->id)->first();
+                //  $detail_audience = DetailTarget::where('audience_id', $aud->id)->first();
  
                  //upload image
                  $url_image = Media::where('owner_id', $ad->id)->where('type', 'ads_nft')->orderby('id', 'desc')->first();
@@ -193,12 +193,12 @@ class UploadCampaignToContentful implements ShouldQueue
                  $entry_ads->setField('totalUser', 'en-US', $aud->total_user);
                  $entry_ads->setField('adsImage', 'en-US', $asset_image->asLink());
                  // $entry_ads->setField('cryptocurrenciesUsed', 'en-US', $detail_audience->cryptocurrency_used);
-                 $entry_ads->setField('accountAge', 'en-US', $detail_audience->account_age_year . ' years ' . $detail_audience->account_age_month . ' months ' . $detail_audience->account_age_day . ' days');
-                 $entry_ads->setField('availableCreditInWallet', 'en-US', $detail_audience->available_credit_wallet);
-                 $entry_ads->setField('tradingVolume', 'en-US', $detail_audience->trading_volume);
-                 $entry_ads->setField('airdropsReceived', 'en-US', $detail_audience->airdrops_received);
-                 $entry_ads->setField('amountOfTransaction', 'en-US', $detail_audience->amount_transaction . ' Within ' . $detail_audience->amount_transaction_day . ' days');
-                 $entry_ads->setField('nftPurchases', 'en-US', $detail_audience->nft_purchases);
+                //  $entry_ads->setField('accountAge', 'en-US', $detail_audience->account_age_year . ' years ' . $detail_audience->account_age_month . ' months ' . $detail_audience->account_age_day . ' days');
+                //  $entry_ads->setField('availableCreditInWallet', 'en-US', $detail_audience->available_credit_wallet);
+                //  $entry_ads->setField('tradingVolume', 'en-US', $detail_audience->trading_volume);
+                //  $entry_ads->setField('airdropsReceived', 'en-US', $detail_audience->airdrops_received);
+                //  $entry_ads->setField('amountOfTransaction', 'en-US', $detail_audience->amount_transaction . ' Within ' . $detail_audience->amount_transaction_day . ' days');
+                //  $entry_ads->setField('nftPurchases', 'en-US', $detail_audience->nft_purchases);
                  $environment->create($entry_ads);
  
                  //publish ads to contentful
