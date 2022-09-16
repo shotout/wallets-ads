@@ -97,7 +97,7 @@ class UploadCampaignToContentful implements ShouldQueue
          $entry_ads_page->setField('totalBudget', 'en-US', Audience::where('campaign_id', $campaign->id)->sum('price'));
          $entry_ads_page->setField('paymentMethod', 'en-US', 'Card');
          $entry_ads_page->setField('paymentStatus', 'en-US', false);
-         $entry_ads_page->setField('collectionPageName', 'en-US', $url_logo2.'-'.$url_logo->name.'-'.$campaign->id.'-'.$newadspage->id.'-'.$url_logo->id);
+         $entry_ads_page->setField('collectionPageName', 'en-US', $newadspage->name);
          $entry_ads_page->setField('collectionPageText', 'en-US', $newadspage->description);
          $entry_ads_page->setField('collectionPageWebsite', 'en-US', $newadspage->website);
          $entry_ads_page->setField('collectionPageDiscord', 'en-US', $newadspage->discord);
@@ -133,7 +133,7 @@ class UploadCampaignToContentful implements ShouldQueue
  
                  //upload image
                  $url_image = Media::where('owner_id', $ad->id)->where('type', 'ads_nft')->orderby('id', 'desc')->first();
-                 $url_file  = Media::where('owner_id', $aud->id)->first();
+                 $url_file  = Media::where('owner_id', $aud->id)->where('type', 'audience_file')->first();
  
                  $image = new \Contentful\Core\File\RemoteUploadFile(
                      $campaign->name . 'Media',
@@ -159,7 +159,7 @@ class UploadCampaignToContentful implements ShouldQueue
                      $package = "Upload Own Audience Targeting";
  
                      $file = new \Contentful\Core\File\RemoteUploadFile(
-                         $campaign->name . '_' . $aud->name . '.xlsx',
+                         $campaign->name . '_Audience_file_' . $url_file->name,
                          'xlsx/xls/csv',
                          'http://backend.walletads.io' . $url_file->url
                      );
