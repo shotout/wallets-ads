@@ -111,109 +111,111 @@ class CampaignController extends Controller
                 foreach ($request->campaign_audiences as $i => $audience) {
                     $audience = (object) $audience;
 
-                    $adc = new Audience;
-                    $adc->campaign_id = $campaign->id;
-                    if (isset($audience->fe_id)) {
-                        $adc->fe_id = $audience->fe_id;
-                    }
-                    $adc->name = "Audience " . $i + 1;
-                    if (isset($audience->price)) {
-                        $adc->price = $audience->price;
-                    }
-                    if (isset($audience->price_airdrop)) {
-                        $adc->price_airdrop = $audience->price_airdrop;
-                    }
-                    if (isset($audience->total_user)) {
-                        $adc->total_user = $audience->total_user;
-                    }
-                    $adc->save();
+                    if (isset($audience->price) && isset($audience->price_airdrop) && isset($audience->total_user)) {
 
-                    // $optimizeTarget = new OptimizeTarget;
-                    // $optimizeTarget->audience_id = $adc->id;
-                    // $optimizeTarget->price = $audience->optimized_targeting_price;
-                    // $optimizeTarget->description = $audience->optimized_targeting_description;
-                    // $optimizeTarget->save();
+                        $adc = new Audience;
+                        $adc->campaign_id = $campaign->id;
+                        if (isset($audience->fe_id)) {
+                            $adc->fe_id = $audience->fe_id;
+                        }
+                        $adc->name = "Audience " . $i + 1;
+                        if (isset($audience->price)) {
+                            $adc->price = $audience->price;
+                        }
+                        if (isset($audience->price_airdrop)) {
+                            $adc->price_airdrop = $audience->price_airdrop;
+                        }
+                        if (isset($audience->total_user)) {
+                            $adc->total_user = $audience->total_user;
+                        }
+                        $adc->save();
 
-                    // $balanceTarget = new BalanceTarget;
-                    // $balanceTarget->audience_id = $adc->id;
-                    // $balanceTarget->price = $audience->balanced_targeting_price;
-                    // $balanceTarget->description = $audience->balanced_targeting_description;
-                    // $balanceTarget->cryptocurrency_used = $audience->balanced_targeting_cryptocurrency;
-                    // $balanceTarget->account_age_year = $audience->balanced_targeting_year;
-                    // $balanceTarget->account_age_month = $audience->balanced_targeting_month;
-                    // $balanceTarget->account_age_day = $audience->balanced_targeting_day;
-                    // $balanceTarget->airdrops_received = $audience->balanced_targeting_airdrops;
+                        // $optimizeTarget = new OptimizeTarget;
+                        // $optimizeTarget->audience_id = $adc->id;
+                        // $optimizeTarget->price = $audience->optimized_targeting_price;
+                        // $optimizeTarget->description = $audience->optimized_targeting_description;
+                        // $optimizeTarget->save();
 
-                    // if (isset($audience->balanced_targeting_wallet) && $audience->balanced_targeting_wallet != '') {
-                    //     $balanceTarget->wallet_type = $audience->balanced_targeting_wallet;
-                    // }
-                    // if (isset($audience->balanced_targeting_location) && $audience->balanced_targeting_location != '') {
-                    //     $balanceTarget->location = $audience->balanced_targeting_location;
-                    // }
+                        // $balanceTarget = new BalanceTarget;
+                        // $balanceTarget->audience_id = $adc->id;
+                        // $balanceTarget->price = $audience->balanced_targeting_price;
+                        // $balanceTarget->description = $audience->balanced_targeting_description;
+                        // $balanceTarget->cryptocurrency_used = $audience->balanced_targeting_cryptocurrency;
+                        // $balanceTarget->account_age_year = $audience->balanced_targeting_year;
+                        // $balanceTarget->account_age_month = $audience->balanced_targeting_month;
+                        // $balanceTarget->account_age_day = $audience->balanced_targeting_day;
+                        // $balanceTarget->airdrops_received = $audience->balanced_targeting_airdrops;
 
-                    // $balanceTarget->save();
+                        // if (isset($audience->balanced_targeting_wallet) && $audience->balanced_targeting_wallet != '') {
+                        //     $balanceTarget->wallet_type = $audience->balanced_targeting_wallet;
+                        // }
+                        // if (isset($audience->balanced_targeting_location) && $audience->balanced_targeting_location != '') {
+                        //     $balanceTarget->location = $audience->balanced_targeting_location;
+                        // }
 
-                    $detailTarget = new DetailTarget;
-                    $detailTarget->audience_id = $adc->id;
-                    $detailTarget->campaign_id = $campaign->id;
-                    // $detailTarget->price = $audience->detailed_targeting_price;
-                    // $detailTarget->description = $audience->detailed_targeting_description;
-                    if (isset($audience->detailed_targeting_cryptocurrency)) {
-                        $detailTarget->cryptocurrency_used = $audience->detailed_targeting_cryptocurrency;
-                    }
-                    if (isset($audience->detailed_targeting_year)) {
-                        $detailTarget->account_age_year = $audience->detailed_targeting_year;
-                    }
-                    if (isset($audience->detailed_targeting_month)) {
-                        $detailTarget->account_age_month = $audience->detailed_targeting_month;
-                    }
-                    if (isset($audience->detailed_targeting_day)) {
-                        $detailTarget->account_age_day = $audience->detailed_targeting_day;
-                    }
+                        // $balanceTarget->save();
 
-                    if (isset($audience->detailed_targeting_available_credit_wallet)) {
-                        $detailTarget->available_credit_wallet = $audience->detailed_targeting_available_credit_wallet;
-                    }
-                    if (isset($audience->detailed_targeting_trading_volume)) {
-                        $detailTarget->trading_volume = $audience->detailed_targeting_trading_volume;
-                    }
-                    if (isset($audience->detailed_targeting_airdrops)) {
-                        $detailTarget->airdrops_received = $audience->detailed_targeting_airdrops;
-                    }
+                        $detailTarget = new DetailTarget;
+                        $detailTarget->audience_id = $adc->id;
+                        $detailTarget->campaign_id = $campaign->id;
+                        // $detailTarget->price = $audience->detailed_targeting_price;
+                        // $detailTarget->description = $audience->detailed_targeting_description;
+                        if (isset($audience->detailed_targeting_cryptocurrency)) {
+                            $detailTarget->cryptocurrency_used = $audience->detailed_targeting_cryptocurrency;
+                        }
+                        if (isset($audience->detailed_targeting_year)) {
+                            $detailTarget->account_age_year = $audience->detailed_targeting_year;
+                        }
+                        if (isset($audience->detailed_targeting_month)) {
+                            $detailTarget->account_age_month = $audience->detailed_targeting_month;
+                        }
+                        if (isset($audience->detailed_targeting_day)) {
+                            $detailTarget->account_age_day = $audience->detailed_targeting_day;
+                        }
 
-                    if (isset($audience->detailed_targeting_amount_transaction)) {
-                        $detailTarget->amount_transaction = $audience->detailed_targeting_amount_transaction;
-                    }
-                    if (isset($audience->detailed_targeting_amount_transaction_day)) {
-                        $detailTarget->amount_transaction_day = $audience->detailed_targeting_amount_transaction_day;
-                    }
-                    if (isset($audience->detailed_targeting_nft_purchases)) {
-                        $detailTarget->nft_purchases = $audience->detailed_targeting_nft_purchases;
-                    }
+                        if (isset($audience->detailed_targeting_available_credit_wallet)) {
+                            $detailTarget->available_credit_wallet = $audience->detailed_targeting_available_credit_wallet;
+                        }
+                        if (isset($audience->detailed_targeting_trading_volume)) {
+                            $detailTarget->trading_volume = $audience->detailed_targeting_trading_volume;
+                        }
+                        if (isset($audience->detailed_targeting_airdrops)) {
+                            $detailTarget->airdrops_received = $audience->detailed_targeting_airdrops;
+                        }
 
-                    if (isset($audience->file) && $audience->file != '') {
-                        $filename = uniqid();
-                        $fileExt = $audience->file->getClientOriginalExtension();
-                        $fileNameToStore = $filename.'_'.time().'.'.$fileExt;
-                        $audience->file->move(public_path().'/assets/files/audience/', $fileNameToStore);
+                        if (isset($audience->detailed_targeting_amount_transaction)) {
+                            $detailTarget->amount_transaction = $audience->detailed_targeting_amount_transaction;
+                        }
+                        if (isset($audience->detailed_targeting_amount_transaction_day)) {
+                            $detailTarget->amount_transaction_day = $audience->detailed_targeting_amount_transaction_day;
+                        }
+                        if (isset($audience->detailed_targeting_nft_purchases)) {
+                            $detailTarget->nft_purchases = $audience->detailed_targeting_nft_purchases;
+                        }
+                        $detailTarget->save();
 
-                        // $file_parts = explode(";base64,", $audience->file);
-                        // $file_type_aux = explode("@file/", $file_parts[0]);
-                        // $file_type = $file_type_aux[1];
-                        // $file_base64 = base64_decode($file_parts[1]);
-                        // $fileNameToStore = uniqid() . '_' . time() . '.xlsx';
-                        // $fileURL = "/assets/files/audience/" . $fileNameToStore;
-                        // Storage::disk('public_uploads')->put($fileURL, $file_base64);
+                        if (isset($audience->file) && $audience->file != '') {
+                            $filename = uniqid();
+                            $fileExt = $audience->file->getClientOriginalExtension();
+                            $fileNameToStore = $filename.'_'.time().'.'.$fileExt;
+                            $audience->file->move(public_path().'/assets/files/audience/', $fileNameToStore);
 
-                        $media = new Media;
-                        $media->owner_id = $adc->id;
-                        $media->type = "audience_file";
-                        $media->name = $fileNameToStore;
-                        $media->url = '/assets/files/audience/' .$fileNameToStore;
-                        $media->save();
+                            // $file_parts = explode(";base64,", $audience->file);
+                            // $file_type_aux = explode("@file/", $file_parts[0]);
+                            // $file_type = $file_type_aux[1];
+                            // $file_base64 = base64_decode($file_parts[1]);
+                            // $fileNameToStore = uniqid() . '_' . time() . '.xlsx';
+                            // $fileURL = "/assets/files/audience/" . $fileNameToStore;
+                            // Storage::disk('public_uploads')->put($fileURL, $file_base64);
+
+                            $media = new Media;
+                            $media->owner_id = $adc->id;
+                            $media->type = "audience_file";
+                            $media->name = $fileNameToStore;
+                            $media->url = '/assets/files/audience/' .$fileNameToStore;
+                            $media->save();
+                        }
                     }
-
-                    $detailTarget->save();
                 }
             }
 
@@ -291,7 +293,10 @@ class CampaignController extends Controller
 
                     if (count($ads->fe_id) > 0) {
                         foreach ($ads->fe_id as $id) {
-                            $audience = Audience::where('fe_id', $id)->first();
+                            $audience = Audience::where('campaign_id', $campaign->id)
+                                ->where('fe_id', $id)
+                                ->first();
+
                             if ($audience) {
                                 $audience->ads_id = $newAds->id;
                                 $audience->fe_id = null;
@@ -559,95 +564,97 @@ class CampaignController extends Controller
                 foreach ($request->campaign_audiences as $audience) {
                     $audience = (object) $audience;
 
-                    if (isset($audience->fe_id) && $audience->fe_id != '') {
-                        $adc = new Audience;
-                        if (isset($audience->fe_id)) {
-                            $adc->fe_id = $audience->fe_id;
-                        }
+                    if (isset($audience->price) && isset($audience->price_airdrop) && isset($audience->total_user)) {
 
-                        $counter = Audience::where('campaign_id', $campaign->id)->count();
-                        $adc->name = "Audience " . $counter + 1;
-                    } else {
-                        $adc = Audience::find($audience->id);
-                    }
+                        if (isset($audience->fe_id) && $audience->fe_id != '') {
+                            $adc = new Audience;
+                            if (isset($audience->fe_id)) {
+                                $adc->fe_id = $audience->fe_id;
+                            }
 
-                    $adc->campaign_id = $campaign->id;
-                    if (isset($audience->price)) {
-                        $adc->price = $audience->price;
-                    }
-                    if (isset($audience->price_airdrop)) {
-                        $adc->price_airdrop = $audience->price_airdrop;
-                    }
-                    if (isset($audience->total_user)) {
-                        $adc->total_user = $audience->total_user;
-                    }
-                    $adc->save();
-
-
-                    if (isset($audience->fe_id) && $audience->fe_id != '') {
-                        $detailTarget = new DetailTarget;
-                        $detailTarget->audience_id = $adc->id;
-                        $detailTarget->campaign_id = $campaign->id;
-                    } else {
-                        $detailTarget = DetailTarget::where('audience_id', $adc->id)->first();
-                    }
-                    if (isset($audience->detailed_targeting_cryptocurrency)) {
-                        $detailTarget->cryptocurrency_used = $audience->detailed_targeting_cryptocurrency;
-                    }
-                    if (isset($audience->detailed_targeting_year)) {
-                        $detailTarget->account_age_year = $audience->detailed_targeting_year;
-                    }
-                    if (isset($audience->detailed_targeting_month)) {
-                        $detailTarget->account_age_month = $audience->detailed_targeting_month;
-                    }
-                    if (isset($audience->detailed_targeting_day)) {
-                        $detailTarget->account_age_day = $audience->detailed_targeting_day;
-                    }
-
-                    if (isset($audience->detailed_targeting_available_credit_wallet)) {
-                        $detailTarget->available_credit_wallet = $audience->detailed_targeting_available_credit_wallet;
-                    }
-                    if (isset($audience->detailed_targeting_trading_volume)) {
-                        $detailTarget->trading_volume = $audience->detailed_targeting_trading_volume;
-                    }
-                    if (isset($audience->detailed_targeting_airdrops)) {
-                        $detailTarget->airdrops_received = $audience->detailed_targeting_airdrops;
-                    }
-
-                    if (isset($audience->detailed_targeting_amount_transaction)) {
-                        $detailTarget->amount_transaction = $audience->detailed_targeting_amount_transaction;
-                    }
-                    if (isset($audience->detailed_targeting_amount_transaction_day)) {
-                        $detailTarget->amount_transaction_day = $audience->detailed_targeting_amount_transaction_day;
-                    }
-                    if (isset($audience->detailed_targeting_nft_purchases)) {
-                        $detailTarget->nft_purchases = $audience->detailed_targeting_nft_purchases;
-                    }
-
-                    if (isset($audience->file) && $audience->file != '') {
-                        $media = Media::where('owner_id', $adc->id)
-                            ->where('type', 'audience_file')
-                            ->first();
-
-                        if ($media) {
-                            unlink(public_path() . $media->url);
+                            $counter = Audience::where('campaign_id', $campaign->id)->count();
+                            $adc->name = "Audience " . $counter + 1;
                         } else {
-                            $media = new Media;
-                            $media->owner_id = $adc->id;
-                            $media->type = "audience_file";
+                            $adc = Audience::find($audience->id);
                         }
 
-                        $filename = uniqid();
-                        $fileExt = $audience->file->getClientOriginalExtension();
-                        $fileNameToStore = $filename.'_'.time().'.'.$fileExt;
-                        $audience->file->move(public_path().'/assets/files/audience/', $fileNameToStore);
+                        $adc->campaign_id = $campaign->id;
+                        if (isset($audience->price)) {
+                            $adc->price = $audience->price;
+                        }
+                        if (isset($audience->price_airdrop)) {
+                            $adc->price_airdrop = $audience->price_airdrop;
+                        }
+                        if (isset($audience->total_user)) {
+                            $adc->total_user = $audience->total_user;
+                        }
+                        $adc->save();
 
-                        $media->name = $fileNameToStore;
-                        $media->url = '/assets/files/audience/' .$fileNameToStore;
-                        $media->save();
+                        if (isset($audience->fe_id) && $audience->fe_id != '') {
+                            $detailTarget = new DetailTarget;
+                            $detailTarget->audience_id = $adc->id;
+                            $detailTarget->campaign_id = $campaign->id;
+                        } else {
+                            $detailTarget = DetailTarget::where('audience_id', $adc->id)->first();
+                        }
+                        if (isset($audience->detailed_targeting_cryptocurrency)) {
+                            $detailTarget->cryptocurrency_used = $audience->detailed_targeting_cryptocurrency;
+                        }
+                        if (isset($audience->detailed_targeting_year)) {
+                            $detailTarget->account_age_year = $audience->detailed_targeting_year;
+                        }
+                        if (isset($audience->detailed_targeting_month)) {
+                            $detailTarget->account_age_month = $audience->detailed_targeting_month;
+                        }
+                        if (isset($audience->detailed_targeting_day)) {
+                            $detailTarget->account_age_day = $audience->detailed_targeting_day;
+                        }
+
+                        if (isset($audience->detailed_targeting_available_credit_wallet)) {
+                            $detailTarget->available_credit_wallet = $audience->detailed_targeting_available_credit_wallet;
+                        }
+                        if (isset($audience->detailed_targeting_trading_volume)) {
+                            $detailTarget->trading_volume = $audience->detailed_targeting_trading_volume;
+                        }
+                        if (isset($audience->detailed_targeting_airdrops)) {
+                            $detailTarget->airdrops_received = $audience->detailed_targeting_airdrops;
+                        }
+
+                        if (isset($audience->detailed_targeting_amount_transaction)) {
+                            $detailTarget->amount_transaction = $audience->detailed_targeting_amount_transaction;
+                        }
+                        if (isset($audience->detailed_targeting_amount_transaction_day)) {
+                            $detailTarget->amount_transaction_day = $audience->detailed_targeting_amount_transaction_day;
+                        }
+                        if (isset($audience->detailed_targeting_nft_purchases)) {
+                            $detailTarget->nft_purchases = $audience->detailed_targeting_nft_purchases;
+                        }
+                        $detailTarget->save();
+
+                        if (isset($audience->file) && $audience->file != '') {
+                            $media = Media::where('owner_id', $adc->id)
+                                ->where('type', 'audience_file')
+                                ->first();
+
+                            if ($media) {
+                                unlink(public_path() . $media->url);
+                            } else {
+                                $media = new Media;
+                                $media->owner_id = $adc->id;
+                                $media->type = "audience_file";
+                            }
+
+                            $filename = uniqid();
+                            $fileExt = $audience->file->getClientOriginalExtension();
+                            $fileNameToStore = $filename.'_'.time().'.'.$fileExt;
+                            $audience->file->move(public_path().'/assets/files/audience/', $fileNameToStore);
+
+                            $media->name = $fileNameToStore;
+                            $media->url = '/assets/files/audience/' .$fileNameToStore;
+                            $media->save();
+                        }
+
                     }
-
-                    $detailTarget->save();
                 }
             }
 
@@ -722,17 +729,25 @@ class CampaignController extends Controller
                     if (isset($ads->audience_id) && count($ads->audience_id) > 0) {
                         foreach ($ads->audience_id as $adc_id) {
                             $audience = Audience::find($adc_id);
-                            $audience->ads_id = $oldAds->id;
-                            $audience->update();
+                            
+                            if ($audience) {
+                                $audience->ads_id = $oldAds->id;
+                                $audience->update();
+                            }
                         }
                     }
 
                     if (isset($ads->fe_id) && count($ads->fe_id) > 0) {
                         foreach ($ads->fe_id as $fe_id) {
-                            $audience = Audience::where('fe_id', $fe_id)->first();
-                            $audience->ads_id = $oldAds->id;
-                            $audience->fe_id = null;
-                            $audience->update();
+                            $audience = Audience::where('campaign_id', $campaign->id)
+                                ->where('fe_id', $fe_id)
+                                ->first();
+
+                            if ($audience) {
+                                $audience->ads_id = $oldAds->id;
+                                $audience->fe_id = null;
+                                $audience->update();
+                            }
                         }
                     }
 
