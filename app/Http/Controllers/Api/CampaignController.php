@@ -20,6 +20,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Contentful\Management\Resource\Asset;
 use Contentful\Management\Resource\Entry;
+use App\Jobs\UploadCampaignToContentful;
 
 class CampaignController extends Controller
 {
@@ -500,6 +501,9 @@ class CampaignController extends Controller
                 $i++;
             }
         }
+
+        UploadCampaignToContentful::dispatch($campaign);
+
         return response()->json([
             'status' => 'success',
             'data' => $campaign
