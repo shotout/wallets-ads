@@ -11,6 +11,7 @@ use App\Models\StripePayment;
 use App\Models\User;
 use Contentful\Management\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class WebhookHandler extends ProcessWebhookJob 
 {
@@ -19,6 +20,7 @@ class WebhookHandler extends ProcessWebhookJob
     public function handle(Request $request)
     {
         $data = $this->webhookCall->payload;
+        Log::webhook_log($data);
        
         if ($request->type === 'checkout.session.completed' && $request->data['object']['payment_status'] === 'paid') {
 
