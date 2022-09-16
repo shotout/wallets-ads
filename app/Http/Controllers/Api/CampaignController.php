@@ -501,7 +501,8 @@ class CampaignController extends Controller
                 $i++;
             }
         }
-
+        
+        //start upload to contenful
         UploadCampaignToContentful::dispatch($campaign);
 
         return response()->json([
