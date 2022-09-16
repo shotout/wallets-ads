@@ -12,13 +12,14 @@ use App\Models\DetailTarget;
 use Illuminate\Http\Request;
 use App\Models\BalanceTarget;
 use App\Models\OptimizeTarget;
-use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
 use App\Jobs\UpdateCryptoPaymet;
 use Contentful\Management\Client;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 use Contentful\Management\Resource\Asset;
 use Contentful\Management\Resource\Entry;
-use Illuminate\Support\Facades\Storage;
 
 class CampaignController extends Controller
 {
@@ -79,6 +80,8 @@ class CampaignController extends Controller
             'campaign_end_date_type' => 'required',
         ]);
 
+        Log::info($request->all());
+
         $campaign = DB::transaction(function () use ($request) {
 
             $campaign = new Campaign;
@@ -109,106 +112,113 @@ class CampaignController extends Controller
 
             if ($request->has('campaign_audiences') && count($request->campaign_audiences) > 0) {
                 foreach ($request->campaign_audiences as $i => $audience) {
+
                     $audience = (object) $audience;
 
-                    $adc = new Audience;
-                    $adc->campaign_id = $campaign->id;
-                    if (isset($audience->fe_id)) {
-                        $adc->fe_id = $audience->fe_id;
-                    }
-                    $adc->name = "Audience " . $i + 1;
-                    if (isset($audience->price)) {
-                        $adc->price = $audience->price;
-                    }
-                    if (isset($audience->price_airdrop)) {
-                        $adc->price_airdrop = $audience->price_airdrop;
-                    }
-                    if (isset($audience->total_user)) {
-                        $adc->total_user = $audience->total_user;
-                    }
-                    $adc->save();
+                    if (isset($audience->price) && isset($audience->price_airdrop) && isset($audience->total_user)) {
 
-                    // $optimizeTarget = new OptimizeTarget;
-                    // $optimizeTarget->audience_id = $adc->id;
-                    // $optimizeTarget->price = $audience->optimized_targeting_price;
-                    // $optimizeTarget->description = $audience->optimized_targeting_description;
-                    // $optimizeTarget->save();
+                        $adc = new Audience;
+                        $adc->campaign_id = $campaign->id;
+                        if (isset($audience->fe_id)) {
+                            $adc->fe_id = $audience->fe_id;
+                        }
+                        $adc->name = "Audience " . $i + 1;
+                        if (isset($audience->price)) {
+                            $adc->price = $audience->price;
+                        }
+                        if (isset($audience->price_airdrop)) {
+                            $adc->price_airdrop = $audience->price_airdrop;
+                        }
+                        if (isset($audience->total_user)) {
+                            $adc->total_user = $audience->total_user;
+                        }
+                        $adc->save();
 
-                    // $balanceTarget = new BalanceTarget;
-                    // $balanceTarget->audience_id = $adc->id;
-                    // $balanceTarget->price = $audience->balanced_targeting_price;
-                    // $balanceTarget->description = $audience->balanced_targeting_description;
-                    // $balanceTarget->cryptocurrency_used = $audience->balanced_targeting_cryptocurrency;
-                    // $balanceTarget->account_age_year = $audience->balanced_targeting_year;
-                    // $balanceTarget->account_age_month = $audience->balanced_targeting_month;
-                    // $balanceTarget->account_age_day = $audience->balanced_targeting_day;
-                    // $balanceTarget->airdrops_received = $audience->balanced_targeting_airdrops;
+                        // $optimizeTarget = new OptimizeTarget;
+                        // $optimizeTarget->audience_id = $adc->id;
+                        // $optimizeTarget->price = $audience->optimized_targeting_price;
+                        // $optimizeTarget->description = $audience->optimized_targeting_description;
+                        // $optimizeTarget->save();
 
-                    // if (isset($audience->balanced_targeting_wallet) && $audience->balanced_targeting_wallet != '') {
-                    //     $balanceTarget->wallet_type = $audience->balanced_targeting_wallet;
-                    // }
-                    // if (isset($audience->balanced_targeting_location) && $audience->balanced_targeting_location != '') {
-                    //     $balanceTarget->location = $audience->balanced_targeting_location;
-                    // }
+                        // $balanceTarget = new BalanceTarget;
+                        // $balanceTarget->audience_id = $adc->id;
+                        // $balanceTarget->price = $audience->balanced_targeting_price;
+                        // $balanceTarget->description = $audience->balanced_targeting_description;
+                        // $balanceTarget->cryptocurrency_used = $audience->balanced_targeting_cryptocurrency;
+                        // $balanceTarget->account_age_year = $audience->balanced_targeting_year;
+                        // $balanceTarget->account_age_month = $audience->balanced_targeting_month;
+                        // $balanceTarget->account_age_day = $audience->balanced_targeting_day;
+                        // $balanceTarget->airdrops_received = $audience->balanced_targeting_airdrops;
 
-                    // $balanceTarget->save();
+                        // if (isset($audience->balanced_targeting_wallet) && $audience->balanced_targeting_wallet != '') {
+                        //     $balanceTarget->wallet_type = $audience->balanced_targeting_wallet;
+                        // }
+                        // if (isset($audience->balanced_targeting_location) && $audience->balanced_targeting_location != '') {
+                        //     $balanceTarget->location = $audience->balanced_targeting_location;
+                        // }
 
-                    $detailTarget = new DetailTarget;
-                    $detailTarget->audience_id = $adc->id;
-                    $detailTarget->campaign_id = $campaign->id;
-                    // $detailTarget->price = $audience->detailed_targeting_price;
-                    // $detailTarget->description = $audience->detailed_targeting_description;
-                    if (isset($audience->detailed_targeting_cryptocurrency)) {
-                        $detailTarget->cryptocurrency_used = $audience->detailed_targeting_cryptocurrency;
-                    }
-                    if (isset($audience->detailed_targeting_year)) {
-                        $detailTarget->account_age_year = $audience->detailed_targeting_year;
-                    }
-                    if (isset($audience->detailed_targeting_month)) {
-                        $detailTarget->account_age_month = $audience->detailed_targeting_month;
-                    }
-                    if (isset($audience->detailed_targeting_day)) {
-                        $detailTarget->account_age_day = $audience->detailed_targeting_day;
+                        // $balanceTarget->save();
+
+                        // $detailTarget = new DetailTarget;
+                        // $detailTarget->audience_id = $adc->id;
+                        // $detailTarget->campaign_id = $campaign->id;
+
+                        // $detailTarget->price = $audience->detailed_targeting_price;
+                        // $detailTarget->description = $audience->detailed_targeting_description;
+
+                        // if (isset($audience->detailed_targeting_cryptocurrency)) {
+                        //     $detailTarget->cryptocurrency_used = $audience->detailed_targeting_cryptocurrency;
+                        // }
+                        // if (isset($audience->detailed_targeting_year)) {
+                        //     $detailTarget->account_age_year = $audience->detailed_targeting_year;
+                        // }
+                        // if (isset($audience->detailed_targeting_month)) {
+                        //     $detailTarget->account_age_month = $audience->detailed_targeting_month;
+                        // }
+                        // if (isset($audience->detailed_targeting_day)) {
+                        //     $detailTarget->account_age_day = $audience->detailed_targeting_day;
+                        // }
+
+                        // if (isset($audience->detailed_targeting_available_credit_wallet)) {
+                        //     $detailTarget->available_credit_wallet = $audience->detailed_targeting_available_credit_wallet;
+                        // }
+                        // if (isset($audience->detailed_targeting_trading_volume)) {
+                        //     $detailTarget->trading_volume = $audience->detailed_targeting_trading_volume;
+                        // }
+                        // if (isset($audience->detailed_targeting_airdrops)) {
+                        //     $detailTarget->airdrops_received = $audience->detailed_targeting_airdrops;
+                        // }
+
+                        // if (isset($audience->detailed_targeting_amount_transaction)) {
+                        //     $detailTarget->amount_transaction = $audience->detailed_targeting_amount_transaction;
+                        // }
+                        // if (isset($audience->detailed_targeting_amount_transaction_day)) {
+                        //     $detailTarget->amount_transaction_day = $audience->detailed_targeting_amount_transaction_day;
+                        // }
+                        // if (isset($audience->detailed_targeting_nft_purchases)) {
+                        //     $detailTarget->nft_purchases = $audience->detailed_targeting_nft_purchases;
+                        // }
+
+                        // $detailTarget->save();
+
+                        if (isset($audience->file) && $audience->file != '') {
+                            $file_parts = explode(";base64,", $audience->file);
+                            // $file_type_aux = explode("@file/", $file_parts[0]);
+                            // $file_type = $file_type_aux[1];
+                            $file_base64 = base64_decode($file_parts[1]);
+                            $fileNameToStore = uniqid() . '_' . time() . '.xlsx';
+                            $fileURL = "/assets/files/audience/" . $fileNameToStore;
+                            Storage::disk('public_uploads')->put($fileURL, $file_base64);
+
+                            $media = new Media;
+                            $media->owner_id = $adc->id;
+                            $media->type = "audience_file";
+                            $media->name = $fileNameToStore;
+                            $media->url = $fileURL;
+                            $media->save();
+                        }
                     }
 
-                    if (isset($audience->detailed_targeting_available_credit_wallet)) {
-                        $detailTarget->available_credit_wallet = $audience->detailed_targeting_available_credit_wallet;
-                    }
-                    if (isset($audience->detailed_targeting_trading_volume)) {
-                        $detailTarget->trading_volume = $audience->detailed_targeting_trading_volume;
-                    }
-                    if (isset($audience->detailed_targeting_airdrops)) {
-                        $detailTarget->airdrops_received = $audience->detailed_targeting_airdrops;
-                    }
-
-                    if (isset($audience->detailed_targeting_amount_transaction)) {
-                        $detailTarget->amount_transaction = $audience->detailed_targeting_amount_transaction;
-                    }
-                    if (isset($audience->detailed_targeting_amount_transaction_day)) {
-                        $detailTarget->amount_transaction_day = $audience->detailed_targeting_amount_transaction_day;
-                    }
-                    if (isset($audience->detailed_targeting_nft_purchases)) {
-                        $detailTarget->nft_purchases = $audience->detailed_targeting_nft_purchases;
-                    }
-
-                    if (isset($audience->file) && $audience->file != '') {
-                        $file_parts = explode(";base64,", $audience->file);
-                        // $file_type_aux = explode("@file/", $file_parts[0]);
-                        // $file_type = $file_type_aux[1];
-                        $file_base64 = base64_decode($file_parts[1]);
-                        $fileNameToStore = uniqid() . '_' . time() . '.xlsx';
-                        $fileURL = "/assets/files/audience/" . $fileNameToStore;
-                        Storage::disk('public_uploads')->put($fileURL, $file_base64);
-
-                        $media = new Media;
-                        $media->owner_id = $adc->id;
-                        $media->type = "audience_file";
-                        $media->name = $fileNameToStore;
-                        $media->url = $fileURL;
-                        $media->save();
-                    }
-
-                    $detailTarget->save();
                 }
             }
 
