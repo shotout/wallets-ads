@@ -81,8 +81,6 @@ class CampaignController extends Controller
             'campaign_end_date_type' => 'required',
         ]);
 
-        Log::info($request->all());
-
         $campaign = DB::transaction(function () use ($request) {
 
             $campaign = new Campaign;
