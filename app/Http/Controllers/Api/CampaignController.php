@@ -296,7 +296,10 @@ class CampaignController extends Controller
 
                     if (count($ads->fe_id) > 0) {
                         foreach ($ads->fe_id as $id) {
-                            $audience = Audience::where('fe_id', $id)->first();
+                            $audience = Audience::where('campaign_id', $campaign->id)
+                                ->where('fe_id', $id)
+                                ->first();
+
                             if ($audience) {
                                 $audience->ads_id = $newAds->id;
                                 $audience->fe_id = null;
@@ -737,17 +740,23 @@ class CampaignController extends Controller
                     if (isset($ads->audience_id) && count($ads->audience_id) > 0) {
                         foreach ($ads->audience_id as $adc_id) {
                             $audience = Audience::find($adc_id);
-                            $audience->ads_id = $oldAds->id;
-                            $audience->update();
+                            if ($audience) {
+                                $audience->ads_id = $oldAds->id;
+                                $audience->update();
+                            }
                         }
                     }
 
                     if (isset($ads->fe_id) && count($ads->fe_id) > 0) {
                         foreach ($ads->fe_id as $fe_id) {
-                            $audience = Audience::where('fe_id', $fe_id)->first();
-                            $audience->ads_id = $oldAds->id;
-                            $audience->fe_id = null;
-                            $audience->update();
+                            $audience = Audience::where('campaign_id', $campaign->id)
+                                ->where('fe_id', $fe_id)
+                                ->first();
+                            if ($audience) {
+                                $audience->ads_id = $oldAds->id;
+                                $audience->fe_id = null;
+                                $audience->update();
+                            }
                         }
                     }
 
