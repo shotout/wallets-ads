@@ -415,7 +415,7 @@ class CampaignController extends Controller
 
         foreach ($adv as $ad) {
 
-            $audience = Audience::where('ads_id', $adv->id)->get();
+            $audience = Audience::where('ads_id', $ad->id)->get();
 
 
             foreach ($audience as $aud) {
