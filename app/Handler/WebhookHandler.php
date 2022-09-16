@@ -19,8 +19,7 @@ class WebhookHandler extends ProcessWebhookJob
     public function handle(Request $request)
     {
         $data = $this->webhookCall->payload;
-        logger($data);
-
+       
         if ($request->type === 'checkout.session.completed' && $request->data['object']['payment_status'] === 'paid') {
 
             $paymentid = StripePayment::where('stripe_id', $request->data['object']['id'])->first();
@@ -29,11 +28,28 @@ class WebhookHandler extends ProcessWebhookJob
             $client = New Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
             $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
 
+            $updatepayment = StripePayment::where('stripe_id', $request->data['object']['id'])->first();
+            $updatepayment->payment_status = '1';
+            $updatepayment->save();
+
             $entry = $environment->getEntry($campaign->entry_id);
             $entry->setField('paymentStatus', 'en-US', true);
             $entry->update();
             $entry->publish();     
         }
+
+        if($data['sys']['contentType']['sys']['id'] == 'users')
+                {
+                    //retrieve data from contentful
+                    $entry_id = $data['sys']['id'];
+                    
+                    //retrieve user from database
+                    $user = User::where('entry_id', $entry_id)->first();
+                    SendConfirmEmail::dispatch($user, 'register')->onQueue('apiCampaign');
+
+                    
+
+                }
         
     }
 }
