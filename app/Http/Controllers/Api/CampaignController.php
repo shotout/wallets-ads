@@ -339,14 +339,15 @@ class CampaignController extends Controller
         $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
         $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
 
+        $campaign = Campaign::find($campaign->id);
         //retrieve data from database
         $newadspage = AdsPage::where('campaign_id', $campaign->id)->first();
 
-        $url_logo = Media::where('owner_id', $newadspage->id)->where('type', 'ads_logo')->first();
-        $url_banner = Media::where('owner_id', $newadspage->id)->where('type', 'ads_banner')->first();
+        $url_logo = Media::where('owner_id', '33')->where('type', 'ads_logo')->first();
+        $url_banner = Media::where('owner_id', '33')->where('type', 'ads_banner')->first();
 
         $logo = new \Contentful\Core\File\RemoteUploadFile(
-            $campaign->name . 'CollectionLogo',
+            $campaign->name . 'Collection Logo',
             'JPEG,JPG,PNG',
             'http://backend.walletads.io' . $url_logo->url
         );
@@ -498,12 +499,11 @@ class CampaignController extends Controller
                 $entry_ads->publish();
                 $i++;
             }
-
-            return response()->json([
-                'status' => 'success',
-                'data' => $campaign
-            ], 201);
         }
+        return response()->json([
+            'status' => 'success',
+            'data' => $campaign
+        ], 201);
     }
 
     public function show($id)
