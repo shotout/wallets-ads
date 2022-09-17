@@ -333,6 +333,7 @@ class CampaignController extends Controller
             return $campaign;
         });
 
+        //start upload to contenful
         UploadCampaignToContentful::dispatch($campaign);
                 
         return response()->json([

@@ -52,7 +52,7 @@ class UploadCampaignToContentful implements ShouldQueue
  
          $url_logo = Media::where('owner_id', $newadspage->id)->where('type', 'ads_logo')->first();
          $url_banner = Media::where('owner_id', $newadspage->id)->where('type', 'ads_banner')->first();
-         $url_logo2 = 'http://backend.walletads.io'.$url_logo->url;
+         $url_logo2 = 'http://backend-dev.walletads.io'.$url_logo->url;
  
          $logo = new \Contentful\Core\File\RemoteUploadFile(
              $campaign->name . $url_logo->name,
@@ -63,7 +63,7 @@ class UploadCampaignToContentful implements ShouldQueue
          $banner = new \Contentful\Core\File\RemoteUploadFile(
              $campaign->name . 'Collection Banner',
              'JPEG,JPG,PNG',
-             'http://backend.walletads.io' . $url_banner->url
+             'http://backend-dev.walletads.io' . $url_banner->url
          );
  
          // Prepare uploadig image
