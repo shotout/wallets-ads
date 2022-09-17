@@ -138,7 +138,7 @@ class UploadCampaignToContentful implements ShouldQueue
                  $image = new \Contentful\Core\File\RemoteUploadFile(
                      $campaign->name . 'Media',
                      'JPEG,JPG,PNG,GIF',
-                     'http://backend.walletads.io' . $url_image->url
+                     'http://backend-dev.walletads.io' . $url_image->url
                  );
  
  
@@ -161,7 +161,7 @@ class UploadCampaignToContentful implements ShouldQueue
                      $file = new \Contentful\Core\File\RemoteUploadFile(
                          $campaign->name . '_Audience_file_' . $url_file->name,
                          'xlsx/xls/csv',
-                         'http://backend.walletads.io' . $url_file->url
+                         'http://backend-dev.walletads.io' . $url_file->url
                      );
  
                      $asset_file = new Asset();
