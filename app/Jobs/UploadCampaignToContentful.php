@@ -52,7 +52,7 @@ class UploadCampaignToContentful implements ShouldQueue
  
          $url_logo = Media::where('owner_id', $newadspage->id)->where('type', 'ads_logo')->first();
          $url_banner = Media::where('owner_id', $newadspage->id)->where('type', 'ads_banner')->first();
-         $url_logo2 = 'http://backend.walletads.io'.$url_logo->url;
+         $url_logo2 = env("APP_URL").$url_logo->url;
  
          $logo = new \Contentful\Core\File\RemoteUploadFile(
              $campaign->name . $url_logo->name,
@@ -63,7 +63,7 @@ class UploadCampaignToContentful implements ShouldQueue
          $banner = new \Contentful\Core\File\RemoteUploadFile(
              $campaign->name . 'Collection Banner',
              'JPEG,JPG,PNG',
-             'http://backend.walletads.io' . $url_banner->url
+             env("APP_URL").$url_banner->url
          );
  
          // Prepare uploadig image
@@ -138,7 +138,7 @@ class UploadCampaignToContentful implements ShouldQueue
                  $image = new \Contentful\Core\File\RemoteUploadFile(
                      $campaign->name . 'Media',
                      'JPEG,JPG,PNG,GIF',
-                     'http://backend.walletads.io' . $url_image->url
+                     env("APP_URL").$url_image->url
                  );
  
  
@@ -161,7 +161,7 @@ class UploadCampaignToContentful implements ShouldQueue
                      $file = new \Contentful\Core\File\RemoteUploadFile(
                          $campaign->name . '_Audience_file_' . $url_file->name,
                          'xlsx/xls/csv',
-                         'http://backend.walletads.io' . $url_file->url
+                         env("APP_URL").$url_file->url
                      );
  
                      $asset_file = new Asset();

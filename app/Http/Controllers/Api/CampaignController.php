@@ -497,7 +497,6 @@ class CampaignController extends Controller
                             $media->url = '/assets/files/audience/' .$fileNameToStore;
                             $media->save();
                         }
-
                     }
                 }
             }
