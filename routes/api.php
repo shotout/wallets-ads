@@ -104,4 +104,15 @@ Route::group(
 );
 
 
+Route::group(
+    [
+        'middleware' => 'auth:sanctum',
+        'prefix' => 'v1/invoices',
+        'name' => 'invoices.'
+    ],
+    function() {
+         Route::get('/', [CampaignController::class, 'invoices'])->name('invoices');             
+    }
+);
+
 

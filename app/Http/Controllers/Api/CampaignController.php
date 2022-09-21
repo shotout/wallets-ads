@@ -16,9 +16,11 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Jobs\UpdateCryptoPaymet;
 use App\Jobs\UploadCampaignToContentful;
+use App\Models\Invoice;
 use Contentful\Management\Client;
 use Contentful\Management\Resource\Asset;
 use Contentful\Management\Resource\Entry;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class CampaignController extends Controller
@@ -641,5 +643,17 @@ class CampaignController extends Controller
             'status' => 'error',
             'message' => 'Something went wrong'
         ], 400);
+    }
+
+
+    public function invoices()
+    {
+        $invoices = Invoice::where('user_id', auth('sanctum')->user()->id)->get();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $invoices
+        ], 200);
+
     }
 }
