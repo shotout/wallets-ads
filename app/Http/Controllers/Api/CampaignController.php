@@ -14,9 +14,14 @@ use App\Models\BalanceTarget;
 use App\Models\OptimizeTarget;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Jobs\SendInvoiceEmail;
+use App\Jobs\SendNotifRegister;
+use App\Jobs\SendResetEmail;
+use App\Jobs\SendScheduleCampaign;
 use App\Jobs\UpdateCryptoPaymet;
 use App\Jobs\UploadCampaignToContentful;
 use App\Models\Invoice;
+use App\Models\User;
 use Contentful\Management\Client;
 use Contentful\Management\Resource\Asset;
 use Contentful\Management\Resource\Entry;
@@ -649,6 +654,13 @@ class CampaignController extends Controller
     public function invoices()
     {
         $invoices = Invoice::where('user_id', auth('sanctum')->user()->id)->get();
+
+        $total_budget = '400';
+        $total_sendout = '1200';
+
+        $campaign = campaign::where('user_id', auth('sanctum')->user()->id)->first();
+
+        SendScheduleCampaign::dispatch($campaign,$total_budget,$total_sendout);
 
         return response()->json([
             'status' => 'success',

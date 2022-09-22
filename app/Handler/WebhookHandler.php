@@ -4,6 +4,8 @@ namespace App\Handler;
 
 use App\Jobs\SendConfirmEmail;
 use App\Jobs\SendInvoiceEmail;
+use App\Jobs\SendScheduleCampaign;
+use App\Models\Audience;
 use Spatie\WebhookClient\Jobs\ProcessWebhookJob;
 use Contentful\Delivery\Client as DeliveryClient;
 use App\Models\Blacklisted;
@@ -65,7 +67,7 @@ class WebhookHandler extends ProcessWebhookJob
 
         if ($data['sys']['type'] == 'Entry') {
 
-            if ($data['sys']['contentType']['sys']['id'] == 'adsPage' && isset($data['fields']['invoiceFile'])) {
+            if ($data['sys']['contentType']['sys']['id'] == 'adsPage' && isset($data['fields']['invoiceFile']) ) {
 
                 logger($data);
                 //get data campaign
@@ -112,6 +114,25 @@ class WebhookHandler extends ProcessWebhookJob
                 
                 SendInvoiceEmail::dispatch($invoice)->onQueue('invoiceEmail');
                 
+            }
+
+
+            if($data['fields']['scheduledCampaign']['en-US'] == true){
+
+                $entry_id = $data['sys']['id'];
+                $campaign = Campaign::where('entry_id', $entry_id)->first();
+
+                $total_budget = $data['fields']['totalBudget']['en-US'];
+                $total_sendout = Audience::where('campaign_id', $campaign->id)->sum('total_user');
+
+                    if( $campaign->is_scheduled == 0){
+                        $campaign->is_scheduled = 1;
+                        $campaign->save();
+
+                        SendScheduleCampaign::dispatch($campaign, $total_budget, $total_sendout)->onQueue('scheduleCampaign');
+
+                    }
+
             }
             
         }
