@@ -75,7 +75,7 @@ class WebhookHandler extends ProcessWebhookJob
                 $campaign = Campaign::where('entry_id', $entry_id)->first();
                 $invoice = Invoice::where('campaign_id', $campaign->id)->first();
 
-                if (!empty($invoice)) {
+                if (empty($invoice)) {
 
 
                     if ($data['fields']['paymentStatus']['en-US'] == false) { {
