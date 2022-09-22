@@ -3,6 +3,7 @@
 namespace App\Handler;
 
 use App\Jobs\SendConfirmEmail;
+use App\Jobs\SendInvoiceEmail;
 use Spatie\WebhookClient\Jobs\ProcessWebhookJob;
 use Contentful\Delivery\Client as DeliveryClient;
 use App\Models\Blacklisted;
@@ -106,6 +107,10 @@ class WebhookHandler extends ProcessWebhookJob
                 $newinvoice->invoice_url = $invoice_url;
                 $newinvoice->save();
 
+                //send invoice email                
+                $invoice = $newinvoice;
+                
+                SendInvoiceEmail::dispatch($invoice)->onQueue('invoiceEmail');
                 
             }
             
