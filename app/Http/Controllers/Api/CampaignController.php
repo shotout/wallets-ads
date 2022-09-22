@@ -655,13 +655,7 @@ class CampaignController extends Controller
     {
         $invoices = Invoice::where('user_id', auth('sanctum')->user()->id)->get();
 
-        $total_budget = '400';
-        $total_sendout = '1200';
-
-        $campaign = campaign::where('user_id', auth('sanctum')->user()->id)->first();
-
-        SendScheduleCampaign::dispatch($campaign,$total_budget,$total_sendout);
-
+    
         return response()->json([
             'status' => 'success',
             'data' => $invoices
