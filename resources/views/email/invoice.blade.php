@@ -59,8 +59,8 @@
                                                         </h1>
                                                     </div>
                                                 </div>
-                                                <div style="Margin-left:20px;Margin-right:20px">
-                                                    <table>
+                                                <div style="Margin-left:20px;Margin-right:20px; background:rgba(203, 180, 223, 0.25);">
+                                                    <table style="opacity:1;">
                                                         <tbody>
                                                             <tr>
                                                                 <td style="font-weight: bold;">Invoice: <a style="font-weight: normal;">{{$invoice->invoice_number}}</a></td>
