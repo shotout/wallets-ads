@@ -60,13 +60,13 @@
                                                     </div>
                                                 </div>
                                                 <div style="Margin-left:20px;Margin-right:20px; background:rgba(203, 180, 223, 0.25);">
-                                                    <table style="opacity:1;">
+                                                    <table>
                                                         <tbody>
                                                             <tr>
-                                                                <td style="font-weight: bold;">Invoice: <a style="font-weight: normal;">{{$invoice->invoice_number}}</a></td>
+                                                                <td style="font-weight: 800;">Invoice: <a style="font-weight: normal;">{{$invoice->invoice_number}}</a></td>
                                                             </tr>
                                                             <tr>
-                                                                <td style="font-weight: bold;">Date: <a style="font-weight: normal;">{{$invoice->date}}</a></td>
+                                                                <td style="font-weight: 800;">Date: <a style="font-weight: normal;">{{$invoice->date}}</a></td>
                                                             </tr>
                                                             <tr>
                                                         </tbody>
@@ -74,14 +74,14 @@
                                                     <hr>
                                                     <table>
                                                         <tr>
-                                                            <td style="font-weight: bold;">Billed to:</td>
+                                                            <td style="font-weight: 800;">Billed to:</td>
                                                         </tr>
                                                         <tr>
                                                             <td>{{$user->company}}</td>
                                                         </tr>
                                                         <tr>
-                                                            <td style="font-weight: bold; padding-right: 120px;">Payment method</td>
-                                                            <td style="font-weight: bold;">Amount billed:</td>
+                                                            <td style="font-weight: 800; padding-right: 120px;">Payment method</td>
+                                                            <td style="font-weight: 800;">Amount billed:</td>
                                                         </tr>
                                                         <tr>
                                                             <td style="padding-right: 120px;">{{$invoice->payment_method}}</td>
@@ -89,17 +89,13 @@
                                                         </tr>
                                                     </table>
                                                 </div>
-                                                </br>
-                                                </br>
-                                                </br>
+                                                <br>
+                                                <br>
                                                 <div style="Margin-left:20px;Margin-right:20px">
                                                     <div style="Margin-bottom:20px;text-align:center">
                                                         <a href="{{env('FE_URL')}}/{{$user->remember_token}}" style="border-radius:4px;display:inline-block;font-size:14px;font-weight:bold;line-height:24px;padding:12px 75px;text-align:center;text-decoration:none!important;color:#ffffff!important;background-color:#7089FF;font-family:sans-serif;text-transform: uppercase;" target="_blank">See invoice dashboard</a>
                                                     </div>
-                                                </div>
-                                                <div style="Margin-left:20px;Margin-right:20px">
-                                                    <p></p>
-                                                </div>
+                                                </div>                                                
                                             </div>
                                         </div>
                                     </div>
