@@ -67,57 +67,61 @@ class WebhookHandler extends ProcessWebhookJob
 
         if ($data['sys']['type'] == 'Entry') {
 
-            if ($data['sys']['contentType']['sys']['id'] == 'adsPage' && isset($data['fields']['invoiceFile']) ) {
+            if ($data['sys']['contentType']['sys']['id'] == 'adsPage' && isset($data['fields']['invoiceFile'])) {
 
                 logger($data);
                 //get data campaign
                 $entry_id = $data['sys']['id'];
                 $campaign = Campaign::where('entry_id', $entry_id)->first();
+                $invoice = Invoice::where('campaign_id', $campaign->id)->first();
 
-                if ($data['fields']['paymentStatus']['en-US'] == false) { {
-                        $payment_status = '0';
+                if ($invoice) {
+
+
+                    if ($data['fields']['paymentStatus']['en-US'] == false) { {
+                            $payment_status = '0';
+                        }
+                    } else {
+                        $payment_status = '1';
                     }
-                } else {
-                    $payment_status = '1';
+
+                    $invoice_file = $data['fields']['invoiceFile']['en-US']['sys']['id'];
+
+                    $response = Http::get('https://cdn.contentful.com/spaces/m6gjbuid69la/environments/master/assets/' . $invoice_file . '?access_token=' . env('CONTENTFUL_DELIVERY_TOKEN'));
+
+                    logger($response->json());
+
+                    $invoice_link = 'Https:' . $response['fields']['file']['url'];
+                    $invoice_name = time() . $response['fields']['file']['fileName'];
+
+                    $file = file_get_contents($invoice_link);
+                    Storage::disk('public')->put('invoices/' . $invoice_name, $file);
+
+                    $invoice_url = '/storage/invoices/' . $invoice_name;
+
+
+                    //save invoice data 
+                    $newinvoice = new Invoice();
+                    $newinvoice->campaign_id = $campaign->id;
+                    $newinvoice->user_id = $campaign->user_id;
+                    $newinvoice->invoice_number = $data['fields']['invoiceNumber']['en-US'];
+                    $newinvoice->invoice_date = $data['fields']['invoiceDate']['en-US'];
+                    $newinvoice->campaign_name = $data['fields']['campaignName']['en-US'];
+                    $newinvoice->amount = $data['fields']['totalBudget']['en-US'];
+                    $newinvoice->payment_method = $data['fields']['paymentMethod']['en-US'];
+                    $newinvoice->payment_status = $payment_status;
+                    $newinvoice->invoice_url = $invoice_url;
+                    $newinvoice->save();
+
+                    //send invoice email                
+                    $invoice = $newinvoice;
+
+                    SendInvoiceEmail::dispatch($invoice)->onQueue('invoiceEmail');
                 }
-
-                $invoice_file = $data['fields']['invoiceFile']['en-US']['sys']['id'];
-                        
-                $response = Http::get('https://cdn.contentful.com/spaces/m6gjbuid69la/environments/master/assets/'.$invoice_file.'?access_token='.env('CONTENTFUL_DELIVERY_TOKEN'));            
-                
-                logger($response->json());
-                        
-                $invoice_link = 'Https:'.$response['fields']['file']['url'];
-                $invoice_name = time().$response['fields']['file']['fileName'];
-                
-                $file = file_get_contents($invoice_link);
-                Storage::disk('public')->put('invoices/'.$invoice_name, $file);
-
-                $invoice_url ='/storage/invoices/'.$invoice_name;
-                
-
-                //save invoice data 
-                $newinvoice = new Invoice();
-                $newinvoice->campaign_id = $campaign->id;
-                $newinvoice->user_id = $campaign->user_id;
-                $newinvoice->invoice_number = $data['fields']['invoiceNumber']['en-US'];
-                $newinvoice->invoice_date = $data['fields']['invoiceDate']['en-US'];
-                $newinvoice->campaign_name = $data['fields']['campaignName']['en-US'];
-                $newinvoice->amount = $data['fields']['totalBudget']['en-US'];
-                $newinvoice->payment_method = $data['fields']['paymentMethod']['en-US'];
-                $newinvoice->payment_status = $payment_status;
-                $newinvoice->invoice_url = $invoice_url;
-                $newinvoice->save();
-
-                //send invoice email                
-                $invoice = $newinvoice;
-                
-                SendInvoiceEmail::dispatch($invoice)->onQueue('invoiceEmail');
-                
             }
 
 
-            if($data['fields']['scheduledCampaign']['en-US'] == true){
+            if ($data['fields']['scheduledCampaign']['en-US'] == true) {
 
                 $entry_id = $data['sys']['id'];
                 $campaign = Campaign::where('entry_id', $entry_id)->first();
@@ -125,16 +129,13 @@ class WebhookHandler extends ProcessWebhookJob
                 $total_budget = $data['fields']['totalBudget']['en-US'];
                 $total_sendout = Audience::where('campaign_id', $campaign->id)->sum('total_user');
 
-                    if( $campaign->is_scheduled == 0){
-                        $campaign->is_scheduled = 1;
-                        $campaign->save();
+                if ($campaign->is_scheduled == 0) {
+                    $campaign->is_scheduled = 1;
+                    $campaign->save();
 
-                        SendScheduleCampaign::dispatch($campaign, $total_budget, $total_sendout)->onQueue('scheduleCampaign');
-
-                    }
-
+                    SendScheduleCampaign::dispatch($campaign, $total_budget, $total_sendout)->onQueue('scheduleCampaign');
+                }
             }
-            
         }
     }
 }
