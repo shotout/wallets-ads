@@ -47,7 +47,7 @@ class UpdateCryptoPaymet implements ShouldQueue
             $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
 
             $entry = $environment->getEntry($entry_id);
-            $entry->setField('paymentMethod', 'en-US', 'Crypto');
+            $entry->setField('paymentMethod', 'en-US', 'Cryptocurrencies');
             $entry->update();
             $entry->publish();       
 

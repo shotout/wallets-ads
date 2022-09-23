@@ -7,7 +7,7 @@
     <title>{{$user->email_message}}</title>
 </head>
 
-<body>
+<body style="font-family: inter">
     <div style="overflow: hidden;">
         <div style="margin:0;padding:0">
             <table cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;table-layout:fixed;min-width:320px;width:100%;background-color:#f2f4f6">
@@ -31,7 +31,7 @@
                                                 </div>
                                                 <div style="Margin-left:20px;Margin-right:20px">
                                                     <div>
-                                                        <p style="Margin-top:0;Margin-bottom:20px">Hi, {{$user->name}}</p>
+                                                        <p style="Margin-top:0;Margin-bottom:20px">Hi {{$user->name}},</p>
                                                     </div>
                                                 </div>
                                                 <div style="Margin-left:20px;Margin-right:20px">
@@ -63,29 +63,29 @@
                                                     <table>
                                                         <tbody>
                                                             <tr>
-                                                                <td style="font-weight: 800;">Invoice: <a style="font-weight: normal;">{{$invoice->invoice_number}}</a></td>
+                                                                <td style="font-weight: 800; margin-left: 30px;">Invoice: <a style="font-weight: normal;">{{$invoice->invoice_number}}</a></td>
                                                             </tr>
                                                             <tr>
-                                                                <td style="font-weight: 800;">Date: <a style="font-weight: normal;">{{$invoice->date}}</a></td>
+                                                                <td style="font-weight: 800; margin-left: 30px;">Date: <a style="font-weight: normal;">{{$invoice->date}}</a></td>
                                                             </tr>
                                                             <tr>
                                                         </tbody>
                                                     </table>
-                                                    <hr>
+                                                    <hr style="margin-left: 10px;margin-right: 10px;">
                                                     <table>
                                                         <tr>
-                                                            <td style="font-weight: 800;">Billed to:</td>
+                                                            <td style="font-weight: 800; margin-left: 15px;">Billed to:</td>
                                                         </tr>
                                                         <tr>
-                                                            <td>{{$user->company}}</td>
+                                                            <td style="margin-left: 10px;">{{$user->company}}</td>
                                                         </tr>
                                                         <tr>
-                                                            <td style="font-weight: 800; padding-right: 120px;">Payment method</td>
-                                                            <td style="font-weight: 800;">Amount billed:</td>
+                                                            <td style="font-weight: 800; padding-right: 120px; margin-left: 10px;">Payment method</td>
+                                                            <td style="font-weight: 800; margin-left: 10px; margin-left: 10px;">Amount billed:</td>
                                                         </tr>
                                                         <tr>
-                                                            <td style="padding-right: 120px;">{{$invoice->payment_method}}</td>
-                                                            <td>${{$invoice->amount}}</td>
+                                                            <td style="padding-right: 120px; margin-left: 10px;">{{$invoice->payment_method}}</td>
+                                                            <td style="margin-left: 10px;">${{$invoice->amount}}</td>
                                                         </tr>
                                                     </table>
                                                 </div>
@@ -93,9 +93,9 @@
                                                 <br>
                                                 <div style="Margin-left:20px;Margin-right:20px">
                                                     <div style="Margin-bottom:20px;text-align:center">
-                                                        <a href="{{env('FE_URL')}}/{{$user->remember_token}}" style="border-radius:4px;display:inline-block;font-size:14px;font-weight:bold;line-height:24px;padding:12px 75px;text-align:center;text-decoration:none!important;color:#ffffff!important;background-color:#7089FF;font-family:sans-serif;text-transform: uppercase;" target="_blank">See invoice dashboard</a>
+                                                        <a href="{{env('FE_URL')}}/invoices" style="border-radius:4px;display:inline-block;font-size:14px;font-weight:bold;line-height:24px;padding:12px 75px;text-align:center;text-decoration:none!important;color:#ffffff!important;background-color:#7089FF;font-family:sans-serif;text-transform: uppercase;" target="_blank">See invoice dashboard</a>
                                                     </div>
-                                                </div>                                                
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
