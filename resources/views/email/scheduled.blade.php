@@ -85,7 +85,6 @@
                                                         <p style="Margin-top:0;Margin-bottom:20px">You can click the button below to setup another campaign.</p>
                                                     </div>
                                                 </div>
-                                                <br>
                                                 <div style="Margin-left:20px;Margin-right:20px">
                                                     <div style="Margin-bottom:20px;text-align:center">
                                                         <a href="{{env('FE_URL')}}/create-campaign" style="border-radius:4px;display:inline-block;font-size:14px;font-weight:bold;line-height:24px;padding:12px 75px;text-align:center;text-decoration:none!important;color:#ffffff!important;background-color:#7089FF;font-family:sans-serif;text-transform: uppercase;" target="_blank">CREATE ANOTHER CAMPAIGN</a>
