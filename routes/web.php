@@ -18,3 +18,4 @@ Route::get('/', function () {
 });
 
 Route::webhooks('webhook-receiving-url');
+Route::webhooks('stripe-webhook');
