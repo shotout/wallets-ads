@@ -46,11 +46,15 @@ class SendInvoiceEmail implements ShouldQueue
         $this->user->name = $user_name->first_name ." ".$user_name->last_name;
         $this->user->email = $user_name->email;
         $this->user->company = $user_name->company_name;
+        $this->user->budget = number_format( $this->invoice->amount , 0 , '.' , ',' );
+
+
         $invoice->date = date('d-m-Y', strtotime($invoice->invoice_date));
+        
 
         Mail::send('email.invoice', ['user' => $this->user, 'invoice' => $invoice], function($message) {
             $message->to($this->user->email, $this->user->name)->subject($this->user->email_message);
-            $message->from(env('MAIL_FROM_ADDRESS'))->attach(env('APP_URL').$this->invoice->invoice_url);
+            $message->from(env('MAIL_FROM_ADDRESS'));
         });
     }
 }
