@@ -30,12 +30,12 @@
                                                         &nbsp;
                                                     </div>
                                                 </div>
-                                                <div style="Margin-left:20px;Margin-right:20px">
+                                                <div style="Margin-left:5%;Margin-right:5%">
                                                     <div>
                                                         <p style="Margin-top:0;Margin-bottom:20px">Hi {{$user->name}},</p>
                                                     </div>
                                                 </div>
-                                                <div style="Margin-left:20px;Margin-right:20px">
+                                                <div style="Margin-left:5%;Margin-right:5%">
                                                     <div style="line-height:1px;font-size:1px">
                                                         &nbsp;
                                                     </div>

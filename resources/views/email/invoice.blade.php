@@ -81,7 +81,7 @@
                                                             <td style="margin-left: 10px;">{{$user->company}}</td>
                                                         </tr>
                                                         <tr>
-                                                            <td style="font-weight: 700; margin-left: 5px; font-size: 16px; padding-right: 3vw;">Payment method</td>
+                                                            <td style="font-weight: 700; margin-left: 5px; font-size: 16px; ">Payment method:</td>
                                                             <td style="font-weight: 700; padding-left: 7vw; width:auto; ">Amount billed:</td>
                                                         </tr>
                                                         <tr>
