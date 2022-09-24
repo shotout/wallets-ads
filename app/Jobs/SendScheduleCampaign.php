@@ -39,8 +39,10 @@ class SendScheduleCampaign implements ShouldQueue
     {
         $this->user->email_message = 'Your campaign has been scheduled';
         $this->user->name = $this->user->first_name.' '.$this->user->last_name;
+        $budget = number_format(  $this->total_budget , 0 , '.' , ',' );
+        $sendout = number_format(  $this->total_sendout , 0 , '.' , ',' );
 
-        Mail::send('email.scheduled', ['user' => $this->user, 'campaign' => $this->campaign, 'budget'=>$this->total_budget, 'sendout' => $this->total_sendout], function($message) {
+        Mail::send('email.scheduled', ['user' => $this->user, 'campaign' => $this->campaign, 'budget'=>$budget, 'sendout' => $sendout], function($message) {
             $message->to($this->user->email, $this->user->name)->subject($this->user->email_message);
             $message->from(env('MAIL_FROM_ADDRESS'));
         });

@@ -4,6 +4,7 @@
 <head>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{$user->email_message}}</title>
 </head>
 
@@ -18,7 +19,7 @@
                                 <div style="background-color:#ffffff">
                                     <div style="Margin:0 auto;max-width:600px;min-width:320px;width:320px;width:calc(28000% - 167400px);word-wrap:break-word;word-break:break-word">
                                         <div style="width: 200px;margin: 0 auto;">
-                                            <a href="{{env('APP_URL')}}" target="_blank">
+                                            <a href="{{env('FE_URL')}}" target="_blank">
                                                 <img src="{{env('APP_URL')}}/assets/images/logo.png" style="margin-top: 50px;margin-bottom: 20%;width: 100%;text-align: center;">
                                             </a>
                                         </div>
@@ -52,42 +53,44 @@
                                                         &nbsp;
                                                     </div>
                                                 </div>
-                                                <div style="Margin-left:20px;Margin-right:20px">
+                                                <div style="Margin-left:5%;Margin-right:5%">
                                                     <div>
                                                         <h1 style="Margin-top:0;Margin-bottom:20px;font-style:normal;font-weight:normal;color:#111324;font-size:16px;line-height:31px;text-align:justify">
                                                                 We would like to inform you that your <span style="font-weight: bold;"> WALLETADS </span> campaign <span style="font-weight: bold;"> {{$campaign->name}} </span> has successfully been scheduled.
                                                         </h1>
                                                     </div>
                                                 </div>
-                                                <div style="Margin-left:20px;Margin-right:20px; background:rgba(203, 180, 223, 0.25);">
-                                                    <table style = "padding-left: 20px;">
+                                                <div style="Margin-left:5% ;Margin-right:5%; background:rgba(203, 180, 223, 0.25);">
+                                                    <table>
                                                         <tbody>
                                                             <tr>
-                                                                <td style="font-weight: 800; margin-left: 30px;">{{$campaign->name}}</td>
+                                                                <td style="font-weight: 800; ">{{$campaign->name}}</td>
                                                             </tr>
                                                             
                                                             <tr>
                                                         </tbody>
                                                     </table style = "padding-left: 20px;">
                                                     <hr style="margin-left: 10px;margin-right: 10px;">
-                                                    <table style = "padding-left: 20px;">
+                                                    <table style = "max-width: 600px;">
                                                         <tr>
-                                                            <td style="font-weight: 600; margin-left: 15px;">Sendouts:</td> <td style="font-weight: 600; padding-left: 120px;">Total Budget:</td>
+                                                            <td style="font-weight: 600; margin-left: 15px;">Sendouts:</td> <td style="font-weight: 600; padding-left: 9vw; display:inline-block;">Total Budget:</td>
                                                         </tr>
                                                         <tr>
-                                                            <td style="margin-left: 10px; font-weight: 500;">{{$sendout}} sendouts</td> <td style="font-weight: 500; padding-left: 120px;">${{$budget}}</td>
+                                                            <td style="margin-left: 10px; font-weight: 500;">{{$sendout}} sendouts</td> <td style="font-weight: 500; padding-left: 9vw; display:inline-block">${{$budget}}</td>
                                                         </tr>
                                                     </table>
                                                 </div>
                                                 <br>
-                                                <div style="Margin-left:20px;Margin-right:20px">
+                                                <div style="Margin-left:5%;Margin-right:5%">
                                                     <div>
                                                         <p style="Margin-top:0;Margin-bottom:20px">You can click the button below to setup another campaign.</p>
                                                     </div>
                                                 </div>
-                                                <div style="Margin-left:20px;Margin-right:20px">
-                                                    <div style="Margin-bottom:20px;text-align:center">
-                                                        <a href="{{env('FE_URL')}}/create-campaign" style="border-radius:4px;display:inline-block;font-size:14px;font-weight:bold;line-height:24px;padding:12px 75px;text-align:center;text-decoration:none!important;color:#ffffff!important;background-color:#7089FF;font-family:sans-serif;text-transform: uppercase;" target="_blank">CREATE ANOTHER CAMPAIGN</a>
+                                                <div>
+                                                    <div style="Margin-bottom:30px;text-align:center;">
+                                                        <button style="background-color: #7089FF; border: none; color: white; padding: 18px 50px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; font-weight: bold; border-radius: 5px; margin: 2px 2px; cursor: pointer;" >
+                                                        <a style="text-decoration: none; font-weight: bold; color: white;" href="{{env('FE_URL')}}/create-campaign" target="_blank">Create Another Campaign<a>                                                                          
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
