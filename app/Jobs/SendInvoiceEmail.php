@@ -47,10 +47,9 @@ class SendInvoiceEmail implements ShouldQueue
         $this->user->email = $user_name->email;
         $this->user->company = $user_name->company_name;
         $this->user->budget = number_format( $this->invoice->amount , 0 , '.' , ',' );
-        $invoice->date = date('m/d/Y', strtotime($invoice->date));
 
 
-        $invoice->date = date('d-m-Y', strtotime($invoice->invoice_date));
+        $invoice->date = date('m/d/Y', strtotime($invoice->invoice_date));
         
 
         Mail::send('email.invoice', ['user' => $this->user, 'invoice' => $invoice], function($message) {
