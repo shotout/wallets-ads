@@ -82,6 +82,17 @@ Route::group(
 Route::group(
     [
         'middleware' => 'auth:sanctum',
+        'prefix' => 'v1/helpers',
+        'name' => 'helper.'
+    ],
+    function() {
+        Route::post('/upload', [CampaignController::class, 'singleUpload'])->name('singleUpload');
+    }
+);
+
+Route::group(
+    [
+        'middleware' => 'auth:sanctum',
         'prefix' => 'v1/payment',
         'name' => 'payment.'
     ],
