@@ -115,8 +115,6 @@ class WebhookHandler extends ProcessWebhookJob
 
                     //send invoice email                
                     $invoice = $newinvoice;
-
-                    SendInvoiceEmail::dispatch($invoice)->onQueue('invoiceEmail');
                 }
 
                 if ($invoice) {
@@ -132,6 +130,10 @@ class WebhookHandler extends ProcessWebhookJob
                     $invoice->payment_status = $payment_status;
                     $invoice->invoice_url = $invoice_url;
                     $invoice->update();
+                }
+
+
+                if ($data['fields']['sendInvoiceEmail']['en-US'] == true) {
 
                     SendInvoiceEmail::dispatch($invoice)->onQueue('invoiceEmail');
                 }
