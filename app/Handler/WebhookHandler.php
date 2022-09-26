@@ -92,7 +92,7 @@ class WebhookHandler extends ProcessWebhookJob
                     logger($response->json());
 
                     $invoice_link = 'Https:' . $response['fields']['file']['url'];
-                    $invoice_name = time() . $response['fields']['file']['fileName'];
+                    $invoice_name = $response['fields']['file']['fileName'];
 
                     $file = file_get_contents($invoice_link);
                     Storage::disk('public')->put('invoices/' . $invoice_name, $file);
