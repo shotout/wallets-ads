@@ -31,6 +31,9 @@ class WebhookHandler extends ProcessWebhookJob
         $data = $this->webhookCall->payload;
         logger($data);
 
+        $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
+        $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
+
         if ($request->type === 'checkout.session.completed' && $request->data['object']['payment_status'] === 'paid') {
 
             $paymentid = StripePayment::where('stripe_id', $request->data['object']['id'])->first();
@@ -153,6 +156,31 @@ class WebhookHandler extends ProcessWebhookJob
                     $campaign->save();
 
                     SendScheduleCampaign::dispatch($campaign, $total_budget, $total_sendout)->onQueue('scheduleCampaign');
+                }
+            }
+        }
+        
+
+        if ($data['sys']['type'] == 'DeletedEntry') {
+
+            if ($data['sys']['contentType']['sys']['id'] == 'adsPage') {
+
+
+                $entry_id = $data['sys']['id'];
+                $campaign = Campaign::where('entry_id', $entry_id)->first();
+
+                if ($campaign) {
+                    $campaign->is_deleted = 1;
+                    $campaign->save();
+
+                    $audiences = Audience::where('campaign_id', $campaign->id)->get();
+
+                    foreach ($audiences as $audience) {
+
+                        $entry_audience = $environment->getEntry($audience->entry_id);
+                        $entry_audience->unpublish();
+                        $entry_audience->delete();
+                    }
                 }
             }
         }
