@@ -204,9 +204,11 @@ class UploadCampaignToContentful implements ShouldQueue
                 //publish ads to contentful
                 $entry_id = $entry_ads->getId();
                 $entry_ads = $environment->getEntry($entry_id);
-                $aud->entry_id = $entry_ads;
-                $aud->save();
                 $entry_ads->publish();
+
+                //update ads data
+                $aud->entry_id = $entry_id;
+                $aud->update();
                 $i++;
             }
         }
