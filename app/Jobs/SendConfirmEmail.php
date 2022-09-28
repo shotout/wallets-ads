@@ -41,21 +41,21 @@ class SendConfirmEmail implements ShouldQueue
 
             Mail::send('email.confirm', ['user' => $this->user, 'flag' => $this->flag], function($message) {
                 $message->to($this->user->email, $this->user->name)->subject($this->user->email_message);
-                $message->from(env('MAIL_FROM_ADDRESS'));
+                $message->from(env('MAIL_FROM_ADDRESS'),env('MAIL_FROM_NAME'));
             });
         }
         if ($this->flag === 'login') {
             $this->user->email_message = 'NFT Daily Sign In';
             Mail::send('email.confirm', ['user' => $this->user, 'flag' => $this->flag], function($message) {
                 $message->to($this->user->email, $this->user->name)->subject($this->user->email_message);
-                $message->from(env('MAIL_FROM_ADDRESS'));
+                $message->from(env('MAIL_FROM_ADDRESS'),env('MAIL_FROM_NAME'));
             });
         }
         if ($this->flag === 'unregister') {
             $this->user->email_message = 'NFT Daily Account Deletion';
             Mail::send('email.confirm', ['user' => $this->user, 'flag' => $this->flag], function($message) {
                 $message->to($this->user->email, $this->user->name)->subject($this->user->email_message);
-                $message->from(env('MAIL_FROM_ADDRESS'));
+                $message->from(env('MAIL_FROM_ADDRESS',env('MAIL_FROM_NAME')));
             });
         }
     }

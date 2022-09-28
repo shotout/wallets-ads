@@ -38,7 +38,7 @@ class SendResetEmail implements ShouldQueue
 
         Mail::send('email.reset', ['user' => $this->user], function($message) {
             $message->to($this->user->email, $this->user->name)->subject($this->user->email_message);
-            $message->from(env('MAIL_FROM_ADDRESS'));
+            $message->from(env('MAIL_FROM_ADDRESS'),env('MAIL_FROM_NAME'));
         });
     }
 }
