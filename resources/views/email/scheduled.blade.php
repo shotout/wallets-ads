@@ -105,6 +105,7 @@
                                                             <a style="text-decoration: none; font-weight: bold; color: white;" href="{{env('FE_URL')}}/create-campaign" target="_blank">CREATE ANOTHER CAMPAIGN<a>
                                                     </div>
                                                 </div>
+                                                <br/>
                                             </div>
                                         </div>
                                     </div>

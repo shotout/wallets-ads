@@ -14,6 +14,7 @@ use App\Models\BalanceTarget;
 use App\Models\OptimizeTarget;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Jobs\SendCampaignNotificationEmail;
 use App\Jobs\SendInvoiceEmail;
 use App\Jobs\SendNotifRegister;
 use App\Jobs\SendResetEmail;
@@ -748,7 +749,6 @@ class CampaignController extends Controller
     {
         $invoices = Invoice::where('user_id', auth('sanctum')->user()->id)->get();
 
-    
         return response()->json([
             'status' => 'success',
             'data' => $invoices

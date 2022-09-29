@@ -65,7 +65,7 @@
                                     </div>
                                     <div style="Margin-left:20px;Margin-right:20px">
                                         <div style="Margin-bottom:20px;text-align:center">
-                                            <a href="{{env('FE_URL')}}/{{$user->remember_token}}" style="border-radius:4px;display:inline-block;font-size:14px;font-weight:bold;line-height:24px;padding:12px 54px;text-align:center;text-decoration:none!important;color:#ffffff!important;background-color:#7856ff;font-family:sans-serif;text-transform: uppercase;"
+                                            <a href="{{env('FE_URL')}}/change-password?verify={{$user->remember_token}}" style="border-radius:4px;display:inline-block;font-size:14px;font-weight:bold;line-height:24px;padding:12px 54px;text-align:center;text-decoration:none!important;color:#ffffff!important;background-color:#7856ff;font-family:sans-serif;text-transform: uppercase;"
                                                 target="_blank">Reset Password</a>
                                         </div>
                                     </div>

@@ -44,7 +44,7 @@ class SendNotifRegister implements ShouldQueue
         foreach ($list as $item) {
             Mail::send('email.notif', ['user' => $this->user], function($message) use ($item) {
                 $message->to($item, $item)->subject($this->user->email_message);
-                $message->from(env('MAIL_FROM_ADDRESS'));
+                $message->from(env('MAIL_FROM_ADDRESS'),env('MAIL_FROM_NAME'));
             });
         }
     }
