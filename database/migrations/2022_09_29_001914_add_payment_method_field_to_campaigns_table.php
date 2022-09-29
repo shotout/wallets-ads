@@ -14,7 +14,7 @@ class AddPaymentMethodFieldToCampaignsTable extends Migration
     public function up()
     {
         Schema::table('campaigns', function (Blueprint $table) {
-            $table->string('payment_method')->nullable();
+            $table->string('payment_method')->nullable()->after('status');
         });
     }
 
