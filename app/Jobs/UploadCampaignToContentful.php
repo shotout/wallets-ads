@@ -143,7 +143,7 @@ class UploadCampaignToContentful implements ShouldQueue
 
 
                 $asset_image = new Asset();
-                $asset_image->setTitle('en-US', 'Collection Logo of ' . $campaign->name);
+                $asset_image->setTitle('en-US', 'Media '.$aud->name.' '. $campaign->name);
                 $asset_image->setFile('en-US', $image);
 
                 //process Image
@@ -212,5 +212,7 @@ class UploadCampaignToContentful implements ShouldQueue
                 $i++;
             }
         }
+
+        SendCampaignNotificationEmail::dispatch($campaign->id)->delay(now()->addMinutes(1));
     }
 }
