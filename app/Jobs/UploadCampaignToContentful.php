@@ -213,6 +213,9 @@ class UploadCampaignToContentful implements ShouldQueue
             }
         }
 
-        SendCampaignNotificationEmail::dispatch($campaign->id)->delay(now()->addMinutes(1));
+        $campaign->payment_method = 'Card';
+        $campaign->save();
+        
+        SendCampaignNotificationEmail::dispatch($campaign)->delay(now()->addMinutes(1));
     }
 }
