@@ -2,6 +2,7 @@
 
 namespace App\Handler;
 
+use App\Jobs\SendCampaignNotificationEmail;
 use App\Jobs\SendConfirmEmail;
 use App\Jobs\SendInvoiceEmail;
 use App\Jobs\SendScheduleCampaign;
@@ -54,6 +55,8 @@ class WebhookHandler extends ProcessWebhookJob
             $updatestatus = StripePayment::where('stripe_id', $request->data['object']['id'])->first();
             $updatestatus->status = '1';
             $updatestatus->save();
+
+            SendCampaignNotificationEmail::dispatch($campaign)->delay(now()->addMinutes(1));
 
             return response()->json(['success' => true], 200);
         }

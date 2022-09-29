@@ -343,8 +343,6 @@ class CampaignController extends Controller
 
         //start upload campaign to contenful
         UploadCampaignToContentful::dispatch($campaign);
-
-        SendCampaignNotificationEmail::dispatch($campaign);
                 
         return response()->json([
             'status' => 'success',

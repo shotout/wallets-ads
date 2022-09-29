@@ -53,7 +53,9 @@ class UpdateCryptoPaymet implements ShouldQueue
             $entry = $environment->getEntry($entry_id);
             $entry->setField('paymentMethod', 'en-US', 'Cryptocurrencies');
             $entry->update();
-            $entry->publish();       
+            $entry->publish();  
+            
+            SendCampaignNotificationEmail::dispatch($campaign)->delay(now()->addMinutes(1));
 
     }
 }
