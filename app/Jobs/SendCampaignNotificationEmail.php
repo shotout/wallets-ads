@@ -24,6 +24,7 @@ class SendCampaignNotificationEmail implements ShouldQueue
     protected $collection;
     protected $invoice;
     protected $ads;
+    protected $amount;
     /**
      * Create a new job instance.
      *
@@ -36,6 +37,7 @@ class SendCampaignNotificationEmail implements ShouldQueue
         $this->collection = AdsPage::where('campaign_id', $campaign->id)->first();
         $this->invoice = Invoice::where('campaign_id', $campaign->id)->first();
         $this->ads = DB::table('ads')->join('audiences', 'ads.id', '=', 'audiences.ads_id')->where('ads.campaign_id', $campaign->id)->get(['ads.*', 'audiences.name as audience_name']);
+        $this->amount = Audience::where('campaign_id', $campaign->id)->sum('price');
     }
 
     /**
@@ -47,6 +49,7 @@ class SendCampaignNotificationEmail implements ShouldQueue
     {
         $this->user->email_message = 'walletads - New campaign';
         $this->campaign->date = date('m/d/Y', strtotime($this->campaign->start_date));
+        $this->campaign->amount = $this->amount;
                 
         Mail::send('email.newcampaign', ['user' => $this->user, 'campaign' => $this->campaign,'adspage' => $this->collection, 'invoice' => $this->invoice, 'ads' => $this->ads], function($message) {
             $message->to($this->user->email, $this->user->name)->subject($this->user->email_message);

@@ -64,10 +64,10 @@
                                                     <table>
                                                         <tbody>
                                                             <tr>
-                                                                <td style="font-weight: 700; margin-left: 30px;">Payment: <a style="font-weight: normal;">{{$invoice->payment_method}}</a></td>
+                                                                <td style="font-weight: 700; margin-left: 30px;">Payment: <a style="font-weight: normal;">{{$campaign->payment_method}}</a></td>
                                                             </tr>
                                                             <tr>
-                                                                <td style="font-weight: 700; margin-left: 30px;">Amount: <a style="font-weight: normal;">{{$invoice->amount}}</a></td>
+                                                                <td style="font-weight: 700; margin-left: 30px;">Amount: <a style="font-weight: normal;">{{$campaign->amount}}</a></td>
                                                             </tr>
                                                             <tr>
                                                                 <td style="font-weight: 700; margin-left: 30px;">Campaign Name: <a style="font-weight: normal;">{{$campaign->name}}</a></td>
