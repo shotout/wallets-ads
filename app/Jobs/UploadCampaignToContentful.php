@@ -8,6 +8,7 @@ use App\Models\Audience;
 use App\Models\Campaign;
 use App\Models\DetailTarget;
 use App\Models\Media;
+use App\Models\User;
 use Contentful\Management\Client;
 use Contentful\Management\Resource\Asset;
 use Contentful\Management\Resource\Entry;
@@ -46,6 +47,8 @@ class UploadCampaignToContentful implements ShouldQueue
         //contentful env
         $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
         $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
+
+        $user = User::find($campaign->user_id);
 
         //retrieve data from database
         $newadspage = AdsPage::where('campaign_id', $campaign->id)->first();
@@ -90,7 +93,7 @@ class UploadCampaignToContentful implements ShouldQueue
 
         //add collection page to contentful
         $entry_ads_page = new Entry('adsPage');
-        $entry_ads_page->setField('usersemail', 'en-US', auth('sanctum')->user()->email);
+        $entry_ads_page->setField('usersemail', 'en-US', $user->email);
         $entry_ads_page->setField('campaignName', 'en-US', $campaign->name);
         $entry_ads_page->setField('availability', 'en-US', $campaign->availability);
         $entry_ads_page->setField('startDate', 'en-US', $campaign->start_date);
@@ -113,7 +116,7 @@ class UploadCampaignToContentful implements ShouldQueue
         $entry_ads_page->publish();
 
         //update Campaign Data
-        $updatecampaign = Campaign::where('user_id', auth('sanctum')->user()->id)->orderBy('id', 'desc')->first();
+        $updatecampaign = Campaign::where('id', $campaign->id)->orderBy('id', 'desc')->first();
         $updatecampaign->entry_id = $entry_id;
         $updatecampaign->save();
 
@@ -177,7 +180,7 @@ class UploadCampaignToContentful implements ShouldQueue
 
 
                 $entry_ads = new Entry('adsCreation');
-                $entry_ads->setField('userEmail', 'en-US', auth('sanctum')->user()->email);
+                $entry_ads->setField('userEmail', 'en-US', $user->email);
                 $entry_ads->setField('adsCreation', 'en-US', $aud->name);
                 $entry_ads->setField('campaignName', 'en-US', $campaign->name);
                 $entry_ads->setField('campaignAvailability', 'en-US', $campaign->availability);
