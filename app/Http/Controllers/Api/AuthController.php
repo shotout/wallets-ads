@@ -150,7 +150,7 @@ class AuthController extends Controller
         //     'status' => 'success',
         //     'data' => $user
         // ], 200);
-        return redirect()->to(env('FE_URL').'?'.$user->id);
+        return redirect()->to(env('FE_URL').'/login?verified=true');
     }
 
     public function checkEmail(Request $request)
