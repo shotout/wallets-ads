@@ -637,8 +637,14 @@ class CampaignController extends Controller
     public function paymethod(Request $request)
     {
         $campaign_id = $request->campaign_id;
-        if (UpdateCryptoPaymet::dispatch($campaign_id)) {
+        if ($campaign_id) {
 
+            $campaign = Campaign::find($campaign_id);
+            $campaign->payment_method = 'Cryptocurrencies';
+            $campaign->save();
+
+            UpdateCryptoPaymet::dispatch($campaign_id)->delay(Carbon::now()->addMinutes(3));
+            
             return response()->json([
                 'status' => 'success',
                 'message' => 'Payment method updated successfully'
