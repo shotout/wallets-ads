@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Campaign;
+use Carbon\Carbon;
 use Contentful\Management\Client;
 use Contentful\Management\Resource\Entry;
 use Illuminate\Bus\Queueable;
@@ -55,7 +56,7 @@ class UpdateCryptoPaymet implements ShouldQueue
             $entry->update();
             $entry->publish();  
             
-            SendCampaignNotificationEmail::dispatch($campaign)->delay(now()->addMinutes(1));
+            SendCampaignNotificationEmail::dispatch($campaign)->delay(Carbon::now()->addSeconds(10));
 
     }
 }
