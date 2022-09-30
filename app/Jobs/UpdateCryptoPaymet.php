@@ -56,7 +56,7 @@ class UpdateCryptoPaymet implements ShouldQueue
             $entry->update();
             $entry->publish();  
             
-            SendCampaignNotificationEmail::dispatch($campaign)->delay(Carbon::now()->addSeconds(10));
+            SendCampaignNotificationEmail::dispatch($campaign)->delay(Carbon::now()->addMinutes(3));
 
     }
 }
