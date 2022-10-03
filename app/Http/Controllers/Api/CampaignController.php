@@ -112,7 +112,7 @@ class CampaignController extends Controller
             // if ($request->campaign_end_date_type == 2) {
             //     $campaign->end_date = $request->campaign_end_date;
             // }
-
+            $campaign->payment_method = 'Card';
             $campaign->status = 1;
             $campaign->save();
 
@@ -342,7 +342,7 @@ class CampaignController extends Controller
         });
 
         //start upload campaign to contenful
-        UploadCampaignToContentful::dispatch($campaign)->delay(Carbon::now()->addSeconds(30));
+        UploadCampaignToContentful::dispatch($campaign)->delay(Carbon::now()->addSeconds(60));
                 
         return response()->json([
             'status' => 'success',
@@ -643,8 +643,6 @@ class CampaignController extends Controller
             $campaign->payment_method = 'Cryptocurrencies';
             $campaign->save();
 
-            UpdateCryptoPaymet::dispatch($campaign_id)->delay(Carbon::now()->addsSeconds(60));
-            
             return response()->json([
                 'status' => 'success',
                 'message' => 'Payment method updated successfully'
