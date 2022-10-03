@@ -57,7 +57,6 @@ class WebhookHandler extends ProcessWebhookJob
             $updatestatus->status = '1';
             $updatestatus->save();
 
-            SendCampaignNotificationEmail::dispatch($campaign)->delay(now()->addseconds(10));
             return response()->json(['success' => true], 200);
         }
 
