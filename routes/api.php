@@ -47,6 +47,9 @@ Route::group(
     ],
     function() {
         Route::get('/', [UserController::class, 'show'])->name('show');
+        Route::patch('/subscribe', [UserController::class, 'subscribe'])
+            ->withoutMiddleware('auth:sanctum')
+            ->name('subscribe');
         Route::patch('/', [UserController::class, 'update'])->name('update');
     }
 );

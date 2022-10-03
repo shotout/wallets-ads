@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\User;
 use App\Models\Media;
+use App\Models\Blacklisted;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Jobs\SendConfirmEmail;
+use Contentful\Management\Client;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Contentful\Management\Client;
 
 class UserController extends Controller
 {
@@ -116,5 +117,55 @@ class UserController extends Controller
             'status' => 'success',
             'data' => $user
         ], 200);
+    }
+
+    public function subscribe(Request $request)
+    {
+        $request->validate([
+            'flag' => 'required|string',
+            'wallet_address' => 'required|string',
+        ]);
+
+        if ($request->flag == 'snooze') {
+            $request->validate([
+                'snooze_ads' => 'required|integer',
+            ]);
+
+            $bl = Blacklisted::where('walletaddress', $request->wallet_address)->first();
+
+            if (!$bl) {
+                $bl = new Blacklisted;
+                $bl->walletaddress = $request->wallet_address;
+            }
+    
+            $bl->snooze_ads = $request->snooze_ads;
+            $bl->save();
+    
+            return response()->json([
+                'status' => 'success',
+                'data' => $bl
+            ], 200);
+        }
+
+        if ($request->flag == 'subscribe') {
+            $request->validate([
+                'is_subscribe' => 'required|integer',
+            ]);
+
+            $bl = Blacklisted::where('walletaddress', $request->wallet_address)->first();
+
+            if (!$bl) {
+                $bl = new Blacklisted;
+                $bl->walletaddress = $request->wallet_address;
+            }
+    
+            $bl->is_subscribe = $request->is_subscribe;
+            $bl->save();
+    
+            return response()->json([
+                'status' => 'success',
+                'data' => $bl
+            ], 200);
+        }
     }
 }
