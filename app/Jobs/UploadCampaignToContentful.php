@@ -215,5 +215,7 @@ class UploadCampaignToContentful implements ShouldQueue
                 $i++;
             }
         }        
+
+        SendCampaignNotificationEmail::dispatch($campaign->id);
     }
 }
