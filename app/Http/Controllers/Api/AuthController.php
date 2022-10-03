@@ -145,7 +145,7 @@ class AuthController extends Controller
         }
 
         $user->email_verified_at = now();
-        $user->remember_token = null;
+        $user->status = 1;        
         $user->update();
 
         // return response()->json([
