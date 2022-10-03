@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Campaign;
+use Carbon\Carbon;
 use Contentful\Management\Client;
 use Contentful\Management\Resource\Entry;
 use Illuminate\Bus\Queueable;
@@ -44,8 +45,6 @@ class UpdateCryptoPaymet implements ShouldQueue
             $entry_id = Campaign::find($id)->entry_id;
 
             $campaign = Campaign::find($id);
-            $campaign->payment_method = 'Cryptocurrencies';
-            $campaign->save();
 
             $client = New Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
             $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
@@ -55,7 +54,7 @@ class UpdateCryptoPaymet implements ShouldQueue
             $entry->update();
             $entry->publish();  
             
-            SendCampaignNotificationEmail::dispatch($campaign)->delay(now()->addMinutes(1));
+            SendCampaignNotificationEmail::dispatch($campaign)->delay(Carbon::now()->addSeconds(5));
 
     }
 }

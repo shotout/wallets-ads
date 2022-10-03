@@ -14,6 +14,7 @@ use App\Models\Campaign;
 use App\Models\Invoice;
 use App\Models\StripePayment;
 use App\Models\User;
+use Carbon\Carbon;
 use Contentful\Management\Client;
 use Illuminate\Http\Request;
 use Illuminate\Log\Logger;
@@ -56,8 +57,7 @@ class WebhookHandler extends ProcessWebhookJob
             $updatestatus->status = '1';
             $updatestatus->save();
 
-            SendCampaignNotificationEmail::dispatch($campaign)->delay(now()->addMinutes(1));
-
+            SendCampaignNotificationEmail::dispatch($campaign)->delay(now()->addseconds(10));
             return response()->json(['success' => true], 200);
         }
 
@@ -67,7 +67,7 @@ class WebhookHandler extends ProcessWebhookJob
 
             //retrieve user from database
             $user = User::where('entry_id', $entry_id)->first();
-            SendConfirmEmail::dispatch($user, 'register')->onQueue('apiCampaign');
+            SendConfirmEmail::dispatch($user, 'register')->delay(Carbon::now()->addseconds(10));
         }
 
 
@@ -142,7 +142,7 @@ class WebhookHandler extends ProcessWebhookJob
 
                     if ($data['fields']['sendInvoiceEmail']['en-US'] == true) {
 
-                        SendInvoiceEmail::dispatch($invoice)->onQueue('invoiceEmail');
+                        SendInvoiceEmail::dispatch($invoice)->delay(Carbon::now()->addseconds(10));
                     }
                 }
 
@@ -159,7 +159,7 @@ class WebhookHandler extends ProcessWebhookJob
                         $campaign->is_scheduled = 1;
                         $campaign->save();
 
-                        SendScheduleCampaign::dispatch($campaign, $total_budget, $total_sendout)->onQueue('scheduleCampaign');
+                        SendScheduleCampaign::dispatch($campaign, $total_budget, $total_sendout)->delay(Carbon::now()->addseconds(10));
                     }
                 }
             }

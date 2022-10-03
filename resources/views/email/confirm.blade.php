@@ -17,7 +17,7 @@
                             <div style="background-color:#ffffff">
                                 <div style="Margin:0 auto;max-width:600px;min-width:320px;width:320px;width:calc(28000% - 167400px);word-wrap:break-word;word-break:break-word">
                                     <div style="width: 200px;margin: 0 auto;">
-                                    <a href ="{{env('APP_URL')}}" target="_blank">
+                                    <a href ="{{env('FE_URL')}}" target="_blank">
                                         <img src="{{env('APP_URL')}}/assets/images/logo.png" style="margin-top: 50px;margin-bottom: 20%;width: 100%;text-align: center;">
                                     </a>
                                     </div>
