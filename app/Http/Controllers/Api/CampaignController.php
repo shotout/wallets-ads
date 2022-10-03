@@ -97,15 +97,15 @@ class CampaignController extends Controller
 
             $campaign->type = $request->campaign_end_date_type;
             if ($request->campaign_end_date_type == 1) {
-                $campaign->end_date = Carbon::now()->addDay(90);
+                $campaign->end_date = Carbon::parse($request->campaign_start_date)->addDay(90);
                 $campaign->availability = '90';
             }
             if ($request->campaign_end_date_type == 2) {
-                $campaign->end_date = Carbon::now()->addDay(21);
+                $campaign->end_date = Carbon::parse($request->campaign_start_date)->addDay(21);
                 $campaign->availability = '21';
             }
             if ($request->campaign_end_date_type == 3) {
-                $campaign->end_date = Carbon::now()->addDay($request->campaign_end_date_day);
+                $campaign->end_date = Carbon::parse($request->campaign_start_date)->addDay($request->campaign_end_date_day);
                 $campaign->day = $request->campaign_end_date_day;
                 $campaign->availability = $request->campaign_end_date_day;
             }
@@ -413,15 +413,15 @@ class CampaignController extends Controller
 
             $campaign->type = $request->campaign_end_date_type;
             if ($request->campaign_end_date_type == 1) {
-                $campaign->end_date = Carbon::now()->addDay(90);
+                $campaign->end_date = Carbon::parse($request->campaign_start_date)->addDay(90);
                 $campaign->availability = '90';
             }
             if ($request->campaign_end_date_type == 2) {
-                $campaign->end_date = Carbon::now()->addDay(21);
+                $campaign->end_date = Carbon::parse($request->campaign_start_date)->addDay(21);
                 $campaign->availability = '21';
             }
             if ($request->campaign_end_date_type == 3) {
-                $campaign->end_date = Carbon::now()->addDay($request->campaign_end_date_day);
+                $campaign->end_date = Carbon::parse($request->campaign_start_date)->addDay($request->campaign_end_date_day);
                 $campaign->day = $request->campaign_end_date_day;
                 $campaign->availability = $request->campaign_end_date_day;
             }
