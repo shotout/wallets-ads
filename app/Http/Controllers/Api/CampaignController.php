@@ -643,7 +643,7 @@ class CampaignController extends Controller
             $campaign->payment_method = 'Cryptocurrencies';
             $campaign->save();
 
-            UpdateCryptoPaymet::dispatch($campaign_id)->delay(Carbon::now()->addMinutes(3));
+            UpdateCryptoPaymet::dispatch($campaign_id)->delay(Carbon::now()->addsSeconds(60));
             
             return response()->json([
                 'status' => 'success',
