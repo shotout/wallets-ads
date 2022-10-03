@@ -140,6 +140,8 @@ class AuthController extends Controller
                 'status' => 'failed',
                 'message' => 'token expired',
             ], 401);
+
+            return redirect()->to(env('FE_URL'));
         }
 
         $user->email_verified_at = now();
@@ -150,7 +152,7 @@ class AuthController extends Controller
         //     'status' => 'success',
         //     'data' => $user
         // ], 200);
-        return redirect()->to(env('FE_URL').'/login?verified=true');
+        return redirect()->to(env('FE_URL').'/login?verify=true');
     }
 
     public function checkEmail(Request $request)
