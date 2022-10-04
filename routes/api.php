@@ -47,10 +47,11 @@ Route::group(
     ],
     function() {
         Route::get('/', [UserController::class, 'show'])->name('show');
+        Route::patch('/', [UserController::class, 'update'])->name('update');
         Route::patch('/subscribe', [UserController::class, 'subscribe'])
             ->withoutMiddleware('auth:sanctum')
             ->name('subscribe');
-        Route::patch('/', [UserController::class, 'update'])->name('update');
+        Route::post('/voucher', [UserController::class, 'voucher'])->name('voucher');
     }
 );
 

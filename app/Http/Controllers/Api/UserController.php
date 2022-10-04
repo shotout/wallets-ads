@@ -4,7 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\User;
 use App\Models\Media;
+use App\Models\Voucher;
+use App\Models\Audience;
+use App\Models\Campaign;
 use App\Models\Blacklisted;
+use App\Models\UserVoucher;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Jobs\SendConfirmEmail;
@@ -167,5 +171,75 @@ class UserController extends Controller
                 'data' => $bl
             ], 200);
         }
+    }
+
+    public function voucher(Request $request)
+    {
+        $request->validate([
+            'code' => 'required|string',
+            'campaign_id' => 'required',
+        ]);
+
+        // is code valid -------
+            $voucher = Voucher::where('code', $request->code)->where('status', 2)->first();
+
+            if (!$voucher) {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Your entered promo code is not known.',
+                ], 404);
+            }
+        // --------------
+
+        // is min budget ----
+            $campaign = Campaign::find($request->campaign_id);
+
+            if (!$campaign) {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Your campaign is not known.',
+                ], 404);
+            }
+
+            $userBudget = Audience::where('campaign_id', $campaign->id)->sum('price');
+
+            if ($userBudget < $voucher->min_budget) {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Minimum amount not reached.',
+                ], 400);
+            }
+        // -------------
+
+        // is new user -----
+            $userVoucher = UserVoucher::where('user_id', auth('sanctum')->user()->id)
+                ->where('type', 1)
+                ->first();
+
+            if ($userVoucher) {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'This promo code is only for new users.',
+                ], 400);
+            }
+        // -----------
+
+        $uv = new UserVoucher;
+        $uv->user_id = auth('sanctum')->user()->id;
+        $uv->voucher_id = $voucher->id;
+        $uv->campaign_id = $campaign->id;
+        $uv->type = 1;
+        $uv->status = 1;
+        $uv->save();
+
+        $data = (object) array(
+            'code' => $voucher->code,
+            'amount' => $voucher->value
+        );
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $data,
+        ], 200);
     }
 }

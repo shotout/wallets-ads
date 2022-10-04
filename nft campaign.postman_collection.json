@@ -1081,6 +1081,58 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "voucher",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|g6G1D0yy5vewtrkemzrBrNC3erErd6OJA7fNQCgt",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "code",
+									"value": "julian1234abcd",
+									"type": "text"
+								},
+								{
+									"key": "campaign_id",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/user/voucher",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"voucher"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
