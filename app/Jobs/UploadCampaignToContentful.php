@@ -98,7 +98,7 @@ class UploadCampaignToContentful implements ShouldQueue
         $entry_ads_page->setField('availability', 'en-US', $campaign->availability);
         $entry_ads_page->setField('startDate', 'en-US', $campaign->start_date);
         $entry_ads_page->setField('totalBudget', 'en-US', Audience::where('campaign_id', $campaign->id)->sum('price'));
-        $entry_ads_page->setField('paymentMethod', 'en-US', 'Card');
+        $entry_ads_page->setField('paymentMethod', 'en-US', $campaign->payment_method);
         $entry_ads_page->setField('paymentStatus', 'en-US', false);
         $entry_ads_page->setField('collectionPageName', 'en-US', $newadspage->name);
         $entry_ads_page->setField('collectionPageText', 'en-US', $newadspage->description);
@@ -214,10 +214,8 @@ class UploadCampaignToContentful implements ShouldQueue
                 $aud->update();
                 $i++;
             }
-        }
+        }        
 
-        $campaign->payment_method = 'Card';
-        $campaign->save();
-        
+        SendCampaignNotificationEmail::dispatch($campaign);
     }
 }
