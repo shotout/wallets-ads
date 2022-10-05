@@ -54,8 +54,8 @@ class SendCampaignNotificationEmail implements ShouldQueue
         $email = array( "jannik@kuningan.de", "edo@stebasia.com");
                 
         foreach ($email as $item) {
-            Mail::send('email.newcampaign', ['user' => $this->user, 'campaign' => $this->campaign,'adspage' => $this->collection, 'invoice' => $this->invoice, 'ads' => $this->ads], function($message) {
-                $message->to($this->user->email, $this->user->name)->subject($this->user->email_message);
+            Mail::send('email.newcampaign', ['user' => $this->user, 'campaign' => $this->campaign,'adspage' => $this->collection, 'invoice' => $this->invoice, 'ads' => $this->ads], function($message) use ($item) {
+                $message->to($item, $item)->subject($this->user->email_message);
                 $message->from(env('MAIL_FROM_ADDRESS'),env('MAIL_FROM_NAME'));
             });
         }       
