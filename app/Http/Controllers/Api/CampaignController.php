@@ -97,15 +97,15 @@ class CampaignController extends Controller
 
             $campaign->type = $request->campaign_end_date_type;
             if ($request->campaign_end_date_type == 1) {
-                $campaign->end_date = Carbon::now()->addDay(90);
+                $campaign->end_date = Carbon::parse($request->campaign_start_date)->addDay(90);
                 $campaign->availability = '90';
             }
             if ($request->campaign_end_date_type == 2) {
-                $campaign->end_date = Carbon::now()->addDay(21);
+                $campaign->end_date = Carbon::parse($request->campaign_start_date)->addDay(21);
                 $campaign->availability = '21';
             }
             if ($request->campaign_end_date_type == 3) {
-                $campaign->end_date = Carbon::now()->addDay($request->campaign_end_date_day);
+                $campaign->end_date = Carbon::parse($request->campaign_start_date)->addDay($request->campaign_end_date_day);
                 $campaign->day = $request->campaign_end_date_day;
                 $campaign->availability = $request->campaign_end_date_day;
             }
@@ -242,7 +242,13 @@ class CampaignController extends Controller
             $adsPage->external_page = $request->ads_page_external_page;
             $adsPage->save();
 
-            if ($request->has('ads_page_logo') && $request->ads_page_logo != '') {
+            if ($request->has('ads_page_logo_url') && $request->ads_page_logo_url != '') {
+                $media = Media::where('url', $request->ads_page_logo_url)->first();
+                if ($media) {
+                    $media->owner_id = $adsPage->id;
+                    $media->save();
+                }
+            } elseif ($request->has('ads_page_logo') && $request->ads_page_logo != '') {
                 $filename = uniqid();
                 $fileExt = $request->ads_page_logo->getClientOriginalExtension();
                 $fileNameToStore = $filename.'_'.time().'.'.$fileExt;
@@ -264,7 +270,13 @@ class CampaignController extends Controller
                 $media->save();
             }
 
-            if ($request->has('ads_page_banner') && $request->ads_page_banner != '') {
+            if ($request->has('ads_page_banner_url') && $request->ads_page_banner_url != '') {
+                $media = Media::where('url', $request->ads_page_banner_url)->first();
+                if ($media) {
+                    $media->owner_id = $adsPage->id;
+                    $media->save();
+                }
+            } elseif ($request->has('ads_page_banner') && $request->ads_page_banner != '') {
                 $filename = uniqid();
                 $fileExt = $request->ads_page_banner->getClientOriginalExtension();
                 $fileNameToStore = $filename.'_'.time().'.'.$fileExt;
@@ -314,7 +326,13 @@ class CampaignController extends Controller
                         }
                     }
 
-                    if (isset($ads->image) && $ads->image != '') {
+                    if (isset($ads->image_url) && $ads->image_url != '') {
+                        $media = Media::where('url', $ads->image_url)->first();
+                        if ($media) {
+                            $media->owner_id = $newAds->id;
+                            $media->save();
+                        }
+                    } elseif (isset($ads->image) && $ads->image != '') {
                         // $image_parts = explode(";base64,", $ads->image);
                         // $image_type_aux = explode("image/", $image_parts[0]);
                         // $image_type = $image_type_aux[1];
@@ -395,15 +413,15 @@ class CampaignController extends Controller
 
             $campaign->type = $request->campaign_end_date_type;
             if ($request->campaign_end_date_type == 1) {
-                $campaign->end_date = Carbon::now()->addDay(90);
+                $campaign->end_date = Carbon::parse($request->campaign_start_date)->addDay(90);
                 $campaign->availability = '90';
             }
             if ($request->campaign_end_date_type == 2) {
-                $campaign->end_date = Carbon::now()->addDay(21);
+                $campaign->end_date = Carbon::parse($request->campaign_start_date)->addDay(21);
                 $campaign->availability = '21';
             }
             if ($request->campaign_end_date_type == 3) {
-                $campaign->end_date = Carbon::now()->addDay($request->campaign_end_date_day);
+                $campaign->end_date = Carbon::parse($request->campaign_start_date)->addDay($request->campaign_end_date_day);
                 $campaign->day = $request->campaign_end_date_day;
                 $campaign->availability = $request->campaign_end_date_day;
             }
@@ -521,7 +539,21 @@ class CampaignController extends Controller
             $adsPage->external_page = $request->ads_page_external_page;
             $adsPage->save();
 
-            if ($request->has('ads_page_logo') && $request->ads_page_logo != '') {
+            if ($request->has('ads_page_logo_url') && $request->ads_page_logo_url != '') {
+                $media = Media::where('owner_id', $adsPage->id)
+                    ->where('type', 'ads_logo')
+                    ->first();
+
+                if ($media) {
+                    unlink(public_path() . $media->url);
+                } else {
+                    $media = Media::where('url', $request->ads_page_logo_url)->first();
+                    if ($media) {
+                        $media->owner_id = $adsPage->id;
+                        $media->save();
+                    }
+                }
+            } elseif ($request->has('ads_page_logo') && $request->ads_page_logo != '') {
                 $media = Media::where('owner_id', $adsPage->id)->where('type', 'ads_logo')->first();
                 if ($media) {
                     unlink(public_path() . $media->url);
@@ -541,7 +573,21 @@ class CampaignController extends Controller
                 $media->save();
             }
 
-            if ($request->has('ads_page_banner') && $request->ads_page_banner != '') {
+            if ($request->has('ads_page_banner_url') && $request->ads_page_banner_url != '') {
+                $media = Media::where('owner_id', $adsPage->id)
+                    ->where('type', 'ads_banner')
+                    ->first();
+
+                if ($media) {
+                    unlink(public_path() . $media->url);
+                } else {
+                    $media = Media::where('url', $request->ads_page_banner_url)->first();
+                    if ($media) {
+                        $media->owner_id = $adsPage->id;
+                        $media->save();
+                    }
+                }
+            } elseif ($request->has('ads_page_banner') && $request->ads_page_banner != '') {
                 $media = Media::where('owner_id', $adsPage->id)->where('type', 'ads_banner')->first();
                 if ($media) {
                     unlink(public_path() . $media->url);
@@ -601,7 +647,21 @@ class CampaignController extends Controller
                         }
                     }
 
-                    if (isset($ads->image) && $ads->image != '') {
+                    if (isset($ads->image_url) && $ads->image_url != '') {
+                        $media = Media::where('owner_id', $oldAds->id)
+                            ->where('type', 'ads_nft')
+                            ->first();
+
+                        if ($media) {
+                            unlink(public_path() . $media->url);
+                        } else {
+                            $media = Media::where('url', $ads->image_url)->first();
+                            if ($media) {
+                                $media->owner_id = $oldAds->id;
+                                $media->save();
+                            }
+                        }
+                    } elseif (isset($ads->image) && $ads->image != '') {
                         $media = Media::where('owner_id', $oldAds->id)->where('type', 'ads_nft')->first();
                         if ($media) {
                             unlink(public_path() . $media->url);
@@ -632,6 +692,39 @@ class CampaignController extends Controller
             'status' => 'success',
             'data' => $data
         ], 200);
+    }
+
+    public function singleUpload(Request $request)
+    {
+        $request->validate([
+            'upload' => 'required',
+            'type' => 'required',
+        ]);
+
+        if ($request->hasFile('upload')) {
+            if ($request->has('type') && $request->type != '') {
+                $filename = uniqid();
+                $fileExt = $request->upload->getClientOriginalExtension();
+                $fileNameToStore = $filename.'_'.time().'.'.$fileExt;
+                $request->upload->move(public_path().'/assets/images/'.$request->type.'/', $fileNameToStore);
+
+                $media = new Media;
+                $media->type = "ads_".$request->type;
+                $media->name = $fileNameToStore;
+                $media->url = '/assets/images/'.$request->type.'/'.$fileNameToStore;
+                $media->save();
+
+                return response()->json([
+                    'status' => 'success',
+                    'data' => $media->url
+                ], 201);
+            }
+        }
+
+        return response()->json([
+            'status' => 'failed',
+            'message' => 'Bad request'
+        ], 400);
     }
 
     public function paymethod(Request $request)

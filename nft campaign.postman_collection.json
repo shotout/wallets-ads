@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "44d29723-df8c-4b2c-add6-e327c340755c",
+		"_postman_id": "f8f91bdc-79f7-4f0b-986a-7513599c0ee5",
 		"name": "nft campaign",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "12074833"
@@ -221,7 +221,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "1|xIIM9SXiEQm2C6rgurDxWBYYDZG4B1U8F6g4tymG",
+									"value": "2|mm6BSlXdJsf9XAKT2wpW02iUpvqkCLNq5yp4NIiM",
 									"type": "string"
 								}
 							]
@@ -375,14 +375,26 @@
 									"type": "text"
 								},
 								{
+									"key": "ads_page_logo_url",
+									"value": "/assets/images/logo/6331180f30398_1664161807.png",
+									"type": "text"
+								},
+								{
 									"key": "ads_page_logo",
 									"type": "file",
-									"src": "/home/julian/Downloads/Logo NFT Daily.jpg"
+									"src": [],
+									"disabled": true
+								},
+								{
+									"key": "ads_page_banner_url",
+									"value": "/assets/images/banner/6331182ac3064_1664161834.png",
+									"type": "text"
 								},
 								{
 									"key": "ads_page_banner",
 									"type": "file",
-									"src": "/home/julian/Pictures/Screenshot from 2022-08-30 08-26-17.png"
+									"src": [],
+									"disabled": true
 								},
 								{
 									"key": "jeda",
@@ -406,9 +418,15 @@
 									"type": "text"
 								},
 								{
+									"key": "campaign_ads[0][image_url]",
+									"value": "/assets/images/nft/6331203d12837_1664163901.png",
+									"type": "text"
+								},
+								{
 									"key": "campaign_ads[0][image]",
 									"type": "file",
-									"src": "/home/julian/Downloads/m1.png"
+									"src": [],
+									"disabled": true
 								}
 							]
 						},
@@ -419,6 +437,57 @@
 							],
 							"path": [
 								"campaigns"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "upload",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "2|mm6BSlXdJsf9XAKT2wpW02iUpvqkCLNq5yp4NIiM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "upload",
+									"type": "file",
+									"src": "/home/julian/Downloads/logo.png",
+									"disabled": true
+								},
+								{
+									"key": "type",
+									"value": "logo",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/helpers/upload",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"helpers",
+								"upload"
 							]
 						}
 					},
@@ -693,7 +762,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "1|xIIM9SXiEQm2C6rgurDxWBYYDZG4B1U8F6g4tymG",
+									"value": "2|mm6BSlXdJsf9XAKT2wpW02iUpvqkCLNq5yp4NIiM",
 									"type": "string"
 								}
 							]
@@ -707,13 +776,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/campaigns/1",
+							"raw": "{{base_url}}/campaigns/13",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"campaigns",
-								"1"
+								"13"
 							]
 						}
 					},
@@ -946,6 +1015,120 @@
 							],
 							"path": [
 								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "subscribe",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "_method",
+									"value": "PATCH",
+									"type": "text"
+								},
+								{
+									"key": "flag",
+									"value": "snooze",
+									"type": "text"
+								},
+								{
+									"key": "wallet_address",
+									"value": "1234abc",
+									"type": "text"
+								},
+								{
+									"key": "is_subscribe",
+									"value": "1",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "snooze_ads",
+									"value": "90",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/user/subscribe",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"subscribe"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "voucher",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|g6G1D0yy5vewtrkemzrBrNC3erErd6OJA7fNQCgt",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "code",
+									"value": "julian1234abcd",
+									"type": "text"
+								},
+								{
+									"key": "campaign_id",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/user/voucher",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"voucher"
 							]
 						}
 					},
