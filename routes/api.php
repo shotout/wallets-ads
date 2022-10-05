@@ -48,6 +48,10 @@ Route::group(
     function() {
         Route::get('/', [UserController::class, 'show'])->name('show');
         Route::patch('/', [UserController::class, 'update'])->name('update');
+        Route::patch('/subscribe', [UserController::class, 'subscribe'])
+            ->withoutMiddleware('auth:sanctum')
+            ->name('subscribe');
+        Route::post('/voucher', [UserController::class, 'voucher'])->name('voucher');
     }
 );
 
@@ -76,6 +80,17 @@ Route::group(
         Route::post('/', [CampaignController::class, 'store'])->name('store');
         Route::get('/{id}', [CampaignController::class, 'show'])->name('show');
         Route::patch('/{id}', [CampaignController::class, 'update'])->name('update');
+    }
+);
+
+Route::group(
+    [
+        'middleware' => 'auth:sanctum',
+        'prefix' => 'v1/helpers',
+        'name' => 'helper.'
+    ],
+    function() {
+        Route::post('/upload', [CampaignController::class, 'singleUpload'])->name('singleUpload');
     }
 );
 
