@@ -187,6 +187,17 @@ class WebhookHandler extends ProcessWebhookJob
                     }
                 }
             }
+
+
+            if ($data['sys']['contentType']['sys']['id'] == 'users') {
+
+                $entry_id = $data['sys']['id'];
+                $user = User::where('entry_id', $entry_id)->first();
+
+                if ($user) {
+                    $user->delete();
+                }
+            }
         }
     }
 }
