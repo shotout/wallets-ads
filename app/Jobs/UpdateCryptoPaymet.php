@@ -16,7 +16,6 @@ use Illuminate\Queue\SerializesModels;
 class UpdateCryptoPaymet implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
     protected $campaign_id;
     /**
      * Create a new job instance.
@@ -26,7 +25,7 @@ class UpdateCryptoPaymet implements ShouldQueue
 
    
 
-    public function __construct($campaign_id)
+    public function __construct($campaign_id,$promo_code)
     {
         $this->campaign_id = $campaign_id;
     }   
@@ -51,6 +50,7 @@ class UpdateCryptoPaymet implements ShouldQueue
 
             $entry = $environment->getEntry($entry_id);
             $entry->setField('paymentMethod', 'en-US', 'Cryptocurrencies');
+            $entry->setField('promoCode', 'en-US', $campaign->promo_code);
             $entry->update();
             $entry->publish();  
             

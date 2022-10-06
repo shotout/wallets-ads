@@ -206,8 +206,8 @@ class CampaignController extends Controller
                         if (isset($audience->file) && $audience->file != '') {
                             $filename = uniqid();
                             $fileExt = $audience->file->getClientOriginalExtension();
-                            $fileNameToStore = $filename.'_'.time().'.'.$fileExt;
-                            $audience->file->move(public_path().'/assets/files/audience/', $fileNameToStore);
+                            $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
+                            $audience->file->move(public_path() . '/assets/files/audience/', $fileNameToStore);
 
                             // $file_parts = explode(";base64,", $audience->file);
                             // $file_type_aux = explode("@file/", $file_parts[0]);
@@ -221,7 +221,7 @@ class CampaignController extends Controller
                             $media->owner_id = $adc->id;
                             $media->type = "audience_file";
                             $media->name = $fileNameToStore;
-                            $media->url = '/assets/files/audience/' .$fileNameToStore;
+                            $media->url = '/assets/files/audience/' . $fileNameToStore;
                             $media->save();
                         }
                     }
@@ -251,8 +251,8 @@ class CampaignController extends Controller
             } elseif ($request->has('ads_page_logo') && $request->ads_page_logo != '') {
                 $filename = uniqid();
                 $fileExt = $request->ads_page_logo->getClientOriginalExtension();
-                $fileNameToStore = $filename.'_'.time().'.'.$fileExt;
-                $request->ads_page_logo->move(public_path().'/assets/images/logo/', $fileNameToStore);
+                $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
+                $request->ads_page_logo->move(public_path() . '/assets/images/logo/', $fileNameToStore);
 
                 // $image_parts = explode(";base64,", $request->ads_page_logo);
                 // $image_type_aux = explode("image/", $image_parts[0]);
@@ -266,7 +266,7 @@ class CampaignController extends Controller
                 $media->owner_id = $adsPage->id;
                 $media->type = "ads_logo";
                 $media->name = $fileNameToStore;
-                $media->url = '/assets/images/logo/'.$fileNameToStore;
+                $media->url = '/assets/images/logo/' . $fileNameToStore;
                 $media->save();
             }
 
@@ -279,8 +279,8 @@ class CampaignController extends Controller
             } elseif ($request->has('ads_page_banner') && $request->ads_page_banner != '') {
                 $filename = uniqid();
                 $fileExt = $request->ads_page_banner->getClientOriginalExtension();
-                $fileNameToStore = $filename.'_'.time().'.'.$fileExt;
-                $request->ads_page_banner->move(public_path().'/assets/images/banner/', $fileNameToStore);
+                $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
+                $request->ads_page_banner->move(public_path() . '/assets/images/banner/', $fileNameToStore);
 
                 // $image_parts = explode(";base64,", $request->ads_page_banner);
                 // $image_type_aux = explode("image/", $image_parts[0]);
@@ -294,7 +294,7 @@ class CampaignController extends Controller
                 $media->owner_id = $adsPage->id;
                 $media->type = "ads_banner";
                 $media->name = $fileNameToStore;
-                $media->url = '/assets/images/banner/'.$fileNameToStore;
+                $media->url = '/assets/images/banner/' . $fileNameToStore;
                 $media->save();
             }
 
@@ -343,14 +343,14 @@ class CampaignController extends Controller
 
                         $filename = uniqid();
                         $fileExt = $ads->image->getClientOriginalExtension();
-                        $fileNameToStore = $filename.'_'.time().'.'.$fileExt;
-                        $ads->image->move(public_path().'/assets/images/nft/', $fileNameToStore);
+                        $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
+                        $ads->image->move(public_path() . '/assets/images/nft/', $fileNameToStore);
 
                         $media = new Media;
                         $media->owner_id = $newAds->id;
                         $media->type = "ads_nft";
                         $media->name = $fileNameToStore;
-                        $media->url = '/assets/images/nft/' .$fileNameToStore;
+                        $media->url = '/assets/images/nft/' . $fileNameToStore;
                         $media->save();
                     }
                 }
@@ -361,7 +361,7 @@ class CampaignController extends Controller
 
         //start upload campaign to contenful
         UploadCampaignToContentful::dispatch($campaign)->delay(Carbon::now()->addSeconds(60));
-                
+
         return response()->json([
             'status' => 'success',
             'data' => $campaign
@@ -514,14 +514,13 @@ class CampaignController extends Controller
 
                             $filename = uniqid();
                             $fileExt = $audience->file->getClientOriginalExtension();
-                            $fileNameToStore = $filename.'_'.time().'.'.$fileExt;
-                            $audience->file->move(public_path().'/assets/files/audience/', $fileNameToStore);
+                            $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
+                            $audience->file->move(public_path() . '/assets/files/audience/', $fileNameToStore);
 
                             $media->name = $fileNameToStore;
-                            $media->url = '/assets/files/audience/' .$fileNameToStore;
+                            $media->url = '/assets/files/audience/' . $fileNameToStore;
                             $media->save();
                         }
-
                     }
                 }
             }
@@ -565,11 +564,11 @@ class CampaignController extends Controller
 
                 $filename = uniqid();
                 $fileExt = $request->ads_page_logo->getClientOriginalExtension();
-                $fileNameToStore = $filename.'_'.time().'.'.$fileExt;
-                $request->ads_page_logo->move(public_path().'/assets/images/logo/', $fileNameToStore);
+                $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
+                $request->ads_page_logo->move(public_path() . '/assets/images/logo/', $fileNameToStore);
 
                 $media->name = $fileNameToStore;
-                $media->url = '/assets/images/logo/'.$fileNameToStore;
+                $media->url = '/assets/images/logo/' . $fileNameToStore;
                 $media->save();
             }
 
@@ -599,11 +598,11 @@ class CampaignController extends Controller
 
                 $filename = uniqid();
                 $fileExt = $request->ads_page_banner->getClientOriginalExtension();
-                $fileNameToStore = $filename.'_'.time().'.'.$fileExt;
-                $request->ads_page_banner->move(public_path().'/assets/images/banner/', $fileNameToStore);
+                $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
+                $request->ads_page_banner->move(public_path() . '/assets/images/banner/', $fileNameToStore);
 
                 $media->name = $fileNameToStore;
-                $media->url = '/assets/images/banner/'.$fileNameToStore;
+                $media->url = '/assets/images/banner/' . $fileNameToStore;
                 $media->save();
             }
 
@@ -625,7 +624,7 @@ class CampaignController extends Controller
                     if (isset($ads->audience_id) && count($ads->audience_id) > 0) {
                         foreach ($ads->audience_id as $adc_id) {
                             $audience = Audience::find($adc_id);
-                            
+
                             if ($audience) {
                                 $audience->ads_id = $oldAds->id;
                                 $audience->update();
@@ -705,13 +704,13 @@ class CampaignController extends Controller
             if ($request->has('type') && $request->type != '') {
                 $filename = uniqid();
                 $fileExt = $request->upload->getClientOriginalExtension();
-                $fileNameToStore = $filename.'_'.time().'.'.$fileExt;
-                $request->upload->move(public_path().'/assets/images/'.$request->type.'/', $fileNameToStore);
+                $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
+                $request->upload->move(public_path() . '/assets/images/' . $request->type . '/', $fileNameToStore);
 
                 $media = new Media;
-                $media->type = "ads_".$request->type;
+                $media->type = "ads_" . $request->type;
                 $media->name = $fileNameToStore;
-                $media->url = '/assets/images/'.$request->type.'/'.$fileNameToStore;
+                $media->url = '/assets/images/' . $request->type . '/' . $fileNameToStore;
                 $media->save();
 
                 return response()->json([
@@ -734,7 +733,15 @@ class CampaignController extends Controller
 
             $campaign = Campaign::find($campaign_id);
             $campaign->payment_method = 'Cryptocurrencies';
+
+            if (isset($request->promo)) {
+                $campaign->promo_code = $request->promo;
+                $promo_code = $request->promo;
+            }
+
             $campaign->save();
+
+            UpdateCryptoPaymet::dispatch($campaign_id);
 
             return response()->json([
                 'status' => 'success',
@@ -757,6 +764,5 @@ class CampaignController extends Controller
             'status' => 'success',
             'data' => $invoices
         ], 200);
-
     }
 }
