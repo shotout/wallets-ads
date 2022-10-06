@@ -216,7 +216,7 @@ class WebhookHandler extends ProcessWebhookJob
 
             if ($data['sys']['contentType']['sys']['id'] == 'promoCodes') {
 
-                $coupon = Voucher::where('coupon_id', $data['fields']['stripeCouponId']['en-US'])->first();
+                $coupon = Voucher::where('entry_id', $data['sys']['id'])->first();
 
                 if ($coupon) {
                     $coupon->delete();
