@@ -34,7 +34,7 @@ class UpdateStatusPayment implements ShouldQueue
         $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
         $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
 
-        $entry = $environment->getEntry($this->Campaign->entry_id);
+        $entry = $environment->getEntry($this->campaign->entry_id);
         $entry->setField('paymentStatus', 'en-US', true);
         $entry->update();
         $entry->publish();

@@ -15,6 +15,7 @@ use App\Jobs\SendConfirmEmail;
 use Contentful\Management\Client;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\StripePayment;
 
 class UserController extends Controller
 {
@@ -215,18 +216,33 @@ class UserController extends Controller
                 ], 400);
             }
         // -------------
+            
+            //if alreadyhascampaign
 
-        // is new user -----
-            $userVoucher = UserVoucher::where('user_id', auth('sanctum')->user()->id)
-                ->where('type', 1)
-                ->first();
+            $alreadyhascampaign = Campaign::where('user_id', auth('sanctum')->user()->id)->first();
+            $paymentcheck = StripePayment::where('email', auth('sanctum')->user()->email)->where('status', 1)->first();
 
-            if ($userVoucher) {
+            if($alreadyhascampaign && $paymentcheck){
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'This promo code is only for new users.',
+                    'message' =>  'This promo code is only for new users.',
                 ], 400);
             }
+
+
+        // // is new user -----
+        //     $userVoucher = UserVoucher::where('user_id', auth('sanctum')->user()->id)
+        //         ->where('type', 1)
+        //         ->first();
+
+        //     if ($userVoucher) {
+        //         return response()->json([
+        //             'status' => 'failed',
+        //             'message' => 'This promo code is only for new users.',
+        //         ], 400);
+        //     }
+
+            
         // -----------
 
         $uv = new UserVoucher;
