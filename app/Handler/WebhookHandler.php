@@ -60,17 +60,17 @@ class WebhookHandler extends ProcessWebhookJob
             return response()->json(['success' => true], 200);
         }
 
-        if ($data['sys']['contentType']['sys']['id'] == 'users') {
-            //retrieve data from contentful
-            $entry_id = $data['sys']['id'];
-
-            //retrieve user from database
-            $user = User::where('entry_id', $entry_id)->first();
-            SendConfirmEmail::dispatch($user, 'register')->delay(Carbon::now()->addseconds(10));
-        }
-
 
         if ($data['sys']['type'] == 'Entry') {
+
+            if ($data['sys']['contentType']['sys']['id'] == 'users') {
+                //retrieve data from contentful
+                $entry_id = $data['sys']['id'];
+
+                //retrieve user from database
+                $user = User::where('entry_id', $entry_id)->first();
+                SendConfirmEmail::dispatch($user, 'register')->delay(Carbon::now()->addseconds(10));
+            }
 
             if ($data['sys']['contentType']['sys']['id'] == 'adsPage') {
 
