@@ -21,7 +21,7 @@ class UserController extends Controller
 {
     public function show()
     {
-        $user = User::with('photo','payment')->find(auth('sanctum')->user()->id);
+        $user = User::with('photo', 'payment')->find(auth('sanctum')->user()->id);
 
         if (!$user) {
             return response()->json([
@@ -117,7 +117,7 @@ class UserController extends Controller
         }
 
         $user = User::with('photo')->find($user->id);
-        
+
         return response()->json([
             'status' => 'success',
             'data' => $user
@@ -142,10 +142,10 @@ class UserController extends Controller
                 $bl = new Blacklisted;
                 $bl->walletaddress = $request->wallet_address;
             }
-    
+
             $bl->snooze_ads = $request->snooze_ads;
             $bl->save();
-    
+
             return response()->json([
                 'status' => 'success',
                 'data' => $bl
@@ -163,10 +163,10 @@ class UserController extends Controller
                 $bl = new Blacklisted;
                 $bl->walletaddress = $request->wallet_address;
             }
-    
+
             $bl->is_subscribe = $request->is_subscribe;
             $bl->save();
-    
+
             return response()->json([
                 'status' => 'success',
                 'data' => $bl
@@ -182,54 +182,61 @@ class UserController extends Controller
         ]);
 
         // is code valid -------
-            $voucher = Voucher::where('code', $request->code)->where('status', 2)->first();
+        $voucher = Voucher::where('code', $request->code)->where('status', 2)->first();
 
-            if (!$voucher) {
-                return response()->json([
-                    'status' => 'failed',
-                    'message' => 'Your entered promo code is not known.',
-                ], 404);
-            }
+        if (!$voucher) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Your entered promo code is not known.',
+            ], 404);
+        }
         // --------------
-            if($voucher->code == 'COUPONMASTER22'){
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Your entered master promo code is valid.',
-                ], 200);
-            }
+        if ($voucher->code == 'COUPONMASTER22') {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Your entered master promo code is valid.',
+            ], 200);
+        }
         // is min budget ----
-            $campaign = Campaign::find($request->campaign_id);
+        $campaign = Campaign::find($request->campaign_id);
 
-            if (!$campaign) {
-                return response()->json([
-                    'status' => 'failed',
-                    'message' => 'Your campaign is not known.',
-                ], 404);
-            }
+        if (!$campaign) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Your campaign is not known.',
+            ], 404);
+        }
 
-            $userBudget = Audience::where('campaign_id', $campaign->id)->sum('price');
+        $userBudget = Audience::where('campaign_id', $campaign->id)->sum('price');
 
-            if ($userBudget < $voucher->min_budget) {
-                return response()->json([
-                    'status' => 'failed',
-                    'message' => 'Minimum amount not reached.',
-                ], 400);
-            }
+        if ($userBudget < $voucher->min_budget) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Minimum amount not reached.',
+            ], 400);
+        }
         // -------------
-            
-            //if alreadyhascampaign
 
-            $alreadyhascampaign = Campaign::where('user_id', auth('sanctum')->user()->id)->first();
-            $paymentcheck = StripePayment::where('email', auth('sanctum')->user()->email)->where('status', 1)->first();
+        //if alreadyhascampaign pay with cc
 
-            if($alreadyhascampaign && $paymentcheck){
-                return response()->json([
-                    'status' => 'failed',
-                    'message' =>  'This promo code is only for new users.',
-                ], 400);
-            }
+        $alreadyhascampaign = Campaign::where('user_id', auth('sanctum')->user()->id)->where('payment_method', 'Card')->first();
+        $paymentcheck = StripePayment::where('email', auth('sanctum')->user()->email)->where('status', 1)->first();
 
+        if ($alreadyhascampaign && $paymentcheck) {
+            return response()->json([
+                'status' => 'failed',
+                'message' =>  'This promo code is only for new users.',
+            ], 400);
+        }
 
+        //if alreadyhascampaign pay with crypto
+        $campaigncrypto = Campaign::where('user_id', auth('sanctum')->user()->id)->where('payment_method', 'Cryptocurrencies')->first();
+        if ($campaigncrypto) {
+            return response()->json([
+                'status' => 'failed',
+                'message' =>  'This promo code is only for new users.',
+            ], 400);
+        }
         // // is new user -----
         //     $userVoucher = UserVoucher::where('user_id', auth('sanctum')->user()->id)
         //         ->where('type', 1)
@@ -242,7 +249,7 @@ class UserController extends Controller
         //         ], 400);
         //     }
 
-            
+
         // -----------
 
         $uv = new UserVoucher;
