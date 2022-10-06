@@ -190,7 +190,12 @@ class UserController extends Controller
                 ], 404);
             }
         // --------------
-
+            if($voucher->code == 'COUPONMASTER22'){
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Your entered master promo code is valid.',
+                ], 200);
+            }
         // is min budget ----
             $campaign = Campaign::find($request->campaign_id);
 
