@@ -169,14 +169,25 @@ class WebhookHandler extends ProcessWebhookJob
 
                 $entry_id = $data['sys']['id'];
 
-                $newcoupon = new Voucher();
-                $newcoupon->entry_id = $entry_id;
-                $newcoupon->code = $data['fields']['promoCode']['en-US'];
-                $newcoupon->coupon_id = $data['fields']['stripeCouponId']['en-US'];
-                $newcoupon->type = 1;
-                $newcoupon->value = $data['fields']['couponAmount']['en-US'];
-                $newcoupon->min_budget = $data['fields']['minimalSpent']['en-US'];
-                $newcoupon->save();
+                $promo = Voucher::where('entry_id', $entry_id)->first();
+
+                if ($promo) {
+                    $promo->code = $data['fields']['promoCode']['en-US'];
+                    $promo->coupon_id = $data['fields']['stripeCouponId']['en-US'];
+                    $promo->type = 1;
+                    $promo->value = $data['fields']['couponAmount']['en-US'];
+                    $promo->min_budget = $data['fields']['minimalSpent']['en-US'];
+                    $promo->update();
+                } else {
+                    $newcoupon = new Voucher();
+                    $newcoupon->entry_id = $entry_id;
+                    $newcoupon->code = $data['fields']['promoCode']['en-US'];
+                    $newcoupon->coupon_id = $data['fields']['stripeCouponId']['en-US'];
+                    $newcoupon->type = 1;
+                    $newcoupon->value = $data['fields']['couponAmount']['en-US'];
+                    $newcoupon->min_budget = $data['fields']['minimalSpent']['en-US'];
+                    $newcoupon->save();
+                }
             }
         }
 
