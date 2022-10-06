@@ -13,7 +13,7 @@ use Illuminate\Queue\SerializesModels;
 class UpdateStatusPayment implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    private $campaign;
+    protected $campaign;
     /**
      * Create a new job instance.
      *
