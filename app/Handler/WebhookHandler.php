@@ -170,6 +170,7 @@ class WebhookHandler extends ProcessWebhookJob
                 $entry_id = $data['sys']['id'];
 
                 $newcoupon = new Voucher();
+                $newcoupon->entry_id = $entry_id;
                 $newcoupon->code = $data['fields']['promoCode']['en-US'];
                 $newcoupon->coupon_id = $data['fields']['stripeCouponId']['en-US'];
                 $newcoupon->type = 1;
