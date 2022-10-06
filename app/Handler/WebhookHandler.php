@@ -14,6 +14,7 @@ use App\Models\Campaign;
 use App\Models\Invoice;
 use App\Models\StripePayment;
 use App\Models\User;
+use App\Models\Voucher;
 use Carbon\Carbon;
 use Contentful\Management\Client;
 use Illuminate\Http\Request;
@@ -162,6 +163,20 @@ class WebhookHandler extends ProcessWebhookJob
                     }
                 }
             }
+
+
+            if ($data['sys']['contentType']['sys']['id'] == 'promoCodes') {
+
+                $entry_id = $data['sys']['id'];
+
+                $newcoupon = new Voucher();
+                $newcoupon->code = $data['fields']['promoCode']['en-US'];
+                $newcoupon->coupon_id = $data['fields']['stripeCouponId']['en-US'];
+                $newcoupon->type = 1;
+                $newcoupon->value = $data['fields']['couponAmount']['en-US'];
+                $newcoupon->min_budget = $data['fields']['minimalSpent']['en-US'];
+                $newcoupon->save();
+            }
         }
 
 
@@ -195,6 +210,15 @@ class WebhookHandler extends ProcessWebhookJob
 
                 if ($user) {
                     $user->delete();
+                }
+            }
+
+            if ($data['sys']['contentType']['sys']['id'] == 'promoCodes') {
+
+                $coupon = Voucher::where('coupon_id', $data['fields']['stripeCouponId']['en-US'])->first();
+
+                if ($coupon) {
+                    $coupon->delete();
                 }
             }
         }
