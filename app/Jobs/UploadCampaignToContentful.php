@@ -9,6 +9,7 @@ use App\Models\Campaign;
 use App\Models\DetailTarget;
 use App\Models\Media;
 use App\Models\User;
+use App\Models\Voucher;
 use Contentful\Management\Client;
 use Contentful\Management\Resource\Asset;
 use Contentful\Management\Resource\Entry;
@@ -49,6 +50,7 @@ class UploadCampaignToContentful implements ShouldQueue
         $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
 
         $user = User::find($campaign->user_id);
+        $voucher = Voucher::where('code', $campaign->promo_code)->first();
 
         //retrieve data from database
         $newadspage = AdsPage::where('campaign_id', $campaign->id)->first();
@@ -99,6 +101,10 @@ class UploadCampaignToContentful implements ShouldQueue
         $entry_ads_page->setField('startDate', 'en-US', $campaign->start_date);
         $entry_ads_page->setField('totalBudget', 'en-US', Audience::where('campaign_id', $campaign->id)->sum('price'));
         $entry_ads_page->setField('promoCode', 'en-US', $campaign->promo_code);
+<<<<<<< HEAD
+=======
+        $entry_ads_page->setField('promoAmount', 'en-US', $voucher->value);
+>>>>>>> dev
         $entry_ads_page->setField('paymentMethod', 'en-US', $campaign->payment_method);
         $entry_ads_page->setField('paymentStatus', 'en-US', false);
         $entry_ads_page->setField('collectionPageName', 'en-US', $newadspage->name);
