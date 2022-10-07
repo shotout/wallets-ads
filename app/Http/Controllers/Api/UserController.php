@@ -178,7 +178,7 @@ class UserController extends Controller
     {
         $request->validate([
             'code' => 'required|string',
-            'campaign_id' => 'required',
+            'budget' => 'required',
         ]);
 
         // is code valid -------
@@ -197,19 +197,19 @@ class UserController extends Controller
                 'message' => 'Your entered master promo code is valid.',
             ], 200);
         }
-        // is min budget ----
-        $campaign = Campaign::find($request->campaign_id);
+        // // is min budget ----
+        // $campaign = Campaign::find($request->campaign_id);
 
-        if (!$campaign) {
-            return response()->json([
-                'status' => 'failed',
-                'message' => 'Your campaign is not known.',
-            ], 404);
-        }
+        // if (!$campaign) {
+        //     return response()->json([
+        //         'status' => 'failed',
+        //         'message' => 'Your campaign is not known.',
+        //     ], 404);
+        // }
 
-        $userBudget = Audience::where('campaign_id', $campaign->id)->sum('price');
+        // $userBudget = Audience::where('campaign_id', $campaign->id)->sum('price');
 
-        if ($userBudget < $voucher->min_budget) {
+        if ($request->budget < $voucher->min_budget) {
             return response()->json([
                 'status' => 'failed',
                 'message' => 'Minimum amount not reached.',
@@ -255,7 +255,7 @@ class UserController extends Controller
         $uv = new UserVoucher;
         $uv->user_id = auth('sanctum')->user()->id;
         $uv->voucher_id = $voucher->id;
-        $uv->campaign_id = $campaign->id;
+        // $uv->campaign_id = $campaign->id;
         $uv->type = 1;
         $uv->status = 1;
         $uv->save();
