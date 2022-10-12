@@ -142,7 +142,7 @@ class UserController extends Controller
             if (!$bl) {
                 $bl = new Blacklisted;
                 $bl->walletaddress = $request->wallet_address;
-                $bl->is_subscribe = 2;
+                $bl->is_subscribe =  $request->is_subscribe;
             }
             $bl->is_subscribe = $request->is_subscribe;
             $bl->snooze_ads = $request->snooze_ads;
