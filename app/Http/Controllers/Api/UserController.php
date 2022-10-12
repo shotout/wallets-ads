@@ -203,6 +203,9 @@ class UserController extends Controller
             $entry_id = $newblacklisted->getId();
             $entry_blacklisted = $environment->getEntry($entry_id);
             $entry_blacklisted->publish();
+
+            $blacklisted->entry_id = $entry_id;
+            $blacklisted->save();
         }
         return response()->json([
             'status' => 'success',
