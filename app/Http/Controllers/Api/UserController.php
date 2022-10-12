@@ -144,7 +144,7 @@ class UserController extends Controller
                 $bl->walletaddress = $request->wallet_address;
                 $bl->is_subscribe = 2;
             }
-
+            $bl->is_subscribe = $request->is_subscribe;
             $bl->snooze_ads = $request->snooze_ads;
             $bl->save();
 
