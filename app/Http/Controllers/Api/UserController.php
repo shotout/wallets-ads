@@ -16,6 +16,7 @@ use Contentful\Management\Client;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\StripePayment;
+use Contentful\Management\Resource\Entry;
 
 class UserController extends Controller
 {
@@ -141,15 +142,13 @@ class UserController extends Controller
             if (!$bl) {
                 $bl = new Blacklisted;
                 $bl->walletaddress = $request->wallet_address;
+                $bl->is_subscribe = 2;
             }
 
             $bl->snooze_ads = $request->snooze_ads;
             $bl->save();
 
-            return response()->json([
-                'status' => 'success',
-                'data' => $bl
-            ], 200);
+           
         }
 
         if ($request->flag == 'subscribe') {
@@ -167,11 +166,48 @@ class UserController extends Controller
             $bl->is_subscribe = $request->is_subscribe;
             $bl->save();
 
-            return response()->json([
-                'status' => 'success',
-                'data' => $bl
-            ], 200);
         }
+
+        $blacklisted = Blacklisted::where('walletaddress', $request->wallet_address)->first();
+
+        $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
+        $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
+
+        if ($blacklisted->is_subscribe == 1) {
+            $status = 'subscribed';
+        }
+
+        if ($blacklisted->is_subscribe == 0) {
+            $status = 'unsubscribed';
+        }
+
+        if ($blacklisted->is_subscribe == 2) {
+            $status = 'snoozed';
+        }
+
+        if (isset($blacklisted->entry_id)) {
+
+            $entry_blacklisted = $environment->getEntry($blacklisted->entry_id);
+            $entry_blacklisted->setField('walletAddress', 'en-US', $blacklisted->walletaddress);
+            $entry_blacklisted->setField('status', 'en-US', $status);
+            $entry_blacklisted->update();
+            $entry_blacklisted->publish();
+        }
+        if (!isset($blacklisted->entry_id)) {
+
+            $newblacklisted = new Entry('blacklistedWalletAddress');
+            $newblacklisted->setField('walletAddress', 'en-US', $blacklisted->walletaddress);
+            $newblacklisted->setField('status', 'en-US', $status);
+            $environment->create($newblacklisted);
+
+            $entry_id = $newblacklisted->getId();
+            $entry_blacklisted = $environment->getEntry($entry_id);
+            $entry_blacklisted->publish();
+        }
+        return response()->json([
+            'status' => 'success',
+            'data' => $bl
+        ], 200);
     }
 
     public function voucher(Request $request)
