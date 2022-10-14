@@ -175,6 +175,17 @@ class UserController extends Controller
 
         if ($blacklisted->is_subscribe == 1) {
             $status = 'subscribed';
+
+            if($blacklisted->is_subscribe == 1){
+                $subscribe = new Entry('subscribedWallets');
+                $subscribe->setField('walletAddress', 'en-US', $blacklisted->walletaddress);
+                $subscribe->setField('termsAccepted', 'en-US', true);
+                $environment->create($subscribe);
+
+                $entry_id = $subscribe->getId();
+                $entry_subscribe = $environment->getEntry($entry_id);
+                $entry_subscribe->publish();
+            }
         }
 
         if ($blacklisted->is_subscribe == 0) {
@@ -210,17 +221,7 @@ class UserController extends Controller
 
             $blacklisted->entry_id = $entry_id;
             $blacklisted->save();
-
-            if($blacklisted->is_subscribe == 1){
-                $subscribe = new Entry('subscribedWallets');
-                $subscribe->setField('walletAddress', 'en-US', $blacklisted->walletaddress);
-                $subscribe->setField('termsAccepted', 'en-US', true);
-                $environment->create($subscribe);
-
-                $entry_id = $subscribe->getId();
-                $entry_subscribe = $environment->getEntry($entry_id);
-                $entry_subscribe->publish();
-            }
+           
         }
         return response()->json([
             'status' => 'success',
