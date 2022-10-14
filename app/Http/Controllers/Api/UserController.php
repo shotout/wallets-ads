@@ -201,9 +201,7 @@ class UserController extends Controller
             $newblacklisted = new Entry('blacklistedWalletAddress');
             $newblacklisted->setField('walletAddress', 'en-US', $blacklisted->walletaddress);
             $newblacklisted->setField('status', 'en-US', $status);
-            if($blacklisted->is_subscribe == 2){
-                $newblacklisted->setField('terms', 'en-US', true);
-            }
+            $newblacklisted->setField('terms', 'en-US', true);
             $environment->create($newblacklisted);
 
             $entry_id = $newblacklisted->getId();
