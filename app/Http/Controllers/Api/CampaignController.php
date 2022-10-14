@@ -205,6 +205,7 @@ class CampaignController extends Controller
 
                         if (isset($audience->file) && $audience->file != '') {
                             $filename = uniqid();
+                            $originalname = $audience->file->getClientOriginalName();
                             $fileExt = $audience->file->getClientOriginalExtension();
                             $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
                             $audience->file->move(public_path() . '/assets/files/audience/', $fileNameToStore);
@@ -221,6 +222,7 @@ class CampaignController extends Controller
                             $media->owner_id = $adc->id;
                             $media->type = "audience_file";
                             $media->name = $fileNameToStore;
+                            $media->original_name = $originalname;
                             $media->url = '/assets/files/audience/' . $fileNameToStore;
                             $media->save();
                         }
