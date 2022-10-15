@@ -161,7 +161,8 @@ class UserController extends Controller
                 $bl = new Blacklisted;
                 $bl->walletaddress = $request->wallet_address;
             }
-
+            
+            $bl->campaign_id = $request->id;
             $bl->is_subscribe = $request->is_subscribe;
             $bl->save();
         }
@@ -198,6 +199,7 @@ class UserController extends Controller
             $newblacklisted->setField('walletAddress', 'en-US', $blacklisted->walletaddress);
             $newblacklisted->setField('status', 'en-US', 'unsubscribed');
             $newblacklisted->setField('terms', 'en-US', true);
+            $newblacklisted->setField('campaignId', 'en-US', $blacklisted->campaign_id);
             $environment->create($newblacklisted);
 
             $entry_id = $newblacklisted->getId();
