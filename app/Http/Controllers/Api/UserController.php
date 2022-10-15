@@ -146,9 +146,8 @@ class UserController extends Controller
             }
             $bl->is_subscribe = $request->is_subscribe;
             $bl->snooze_ads = $request->snooze_ads;
+            $bl->campaign_id = $request->id;
             $bl->save();
-
-           
         }
 
         if ($request->flag == 'subscribe') {
@@ -165,7 +164,6 @@ class UserController extends Controller
 
             $bl->is_subscribe = $request->is_subscribe;
             $bl->save();
-
         }
 
         $blacklisted = Blacklisted::where('walletaddress', $request->wallet_address)->first();
@@ -173,45 +171,32 @@ class UserController extends Controller
         $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
         $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
 
+        if (isset($blacklisted->entry_id)) {
+            $delete_entry = $environment->getEntry($blacklisted->entry_id);
+            $delete_entry->unpublish();
+            $delete_entry->delete();
+        }
+
         if ($blacklisted->is_subscribe == 1) {
-            $status = 'subscribed';
 
-            if($blacklisted->is_subscribe == 1){
-                $subscribe = new Entry('subscribedWallets');
-                $subscribe->setField('walletAddress', 'en-US', $blacklisted->walletaddress);
-                $subscribe->setField('termsAccepted', 'en-US', true);
-                $environment->create($subscribe);
+            $subscribe = new Entry('subscribedWallets');
+            $subscribe->setField('walletAddress', 'en-US', $blacklisted->walletaddress);
+            $subscribe->setField('termsAccepted', 'en-US', true);
+            $environment->create($subscribe);
 
-                $entry_id = $subscribe->getId();
-                $entry_subscribe = $environment->getEntry($entry_id);
-                $entry_subscribe->publish();
-            }
+            $entry_id = $subscribe->getId();
+            $entry_subscribe = $environment->getEntry($entry_id);
+            $entry_subscribe->publish();
+
+            $blacklisted->entry_id = $entry_id;
+            $blacklisted->save();
         }
 
         if ($blacklisted->is_subscribe == 0) {
-            $status = 'unsubscribed';
-        }
-
-        if ($blacklisted->is_subscribe == 2) {
-            $status = 'snoozed';
-        }
-
-        if (isset($blacklisted->entry_id)) {
-
-            $entry_blacklisted = $environment->getEntry($blacklisted->entry_id);
-            $entry_blacklisted->setField('walletAddress', 'en-US', $blacklisted->walletaddress);
-            $entry_blacklisted->setField('status', 'en-US', $status);
-            if($blacklisted->is_subscribe == 2){
-                $entry_blacklisted->setField('terms', 'en-US', true);
-            }
-            $entry_blacklisted->update();
-            $entry_blacklisted->publish();
-        }
-        if (!isset($blacklisted->entry_id)) {
 
             $newblacklisted = new Entry('blacklistedWalletAddress');
             $newblacklisted->setField('walletAddress', 'en-US', $blacklisted->walletaddress);
-            $newblacklisted->setField('status', 'en-US', $status);
+            $newblacklisted->setField('status', 'en-US', 'unsubscribed');
             $newblacklisted->setField('terms', 'en-US', true);
             $environment->create($newblacklisted);
 
@@ -221,8 +206,26 @@ class UserController extends Controller
 
             $blacklisted->entry_id = $entry_id;
             $blacklisted->save();
-           
+
         }
+
+        if ($blacklisted->is_subscribe == 2) {
+
+            $newblacklisted = new Entry('blacklistedWalletAddress');
+            $newblacklisted->setField('walletAddress', 'en-US', $blacklisted->walletaddress);
+            $newblacklisted->setField('status', 'en-US', 'snoozed');
+            $newblacklisted->setField('terms', 'en-US', true);
+            $newblacklisted->setField('campaignId', 'en-US', $blacklisted->campaign_id);
+            $environment->create($newblacklisted);
+
+            $entry_id = $newblacklisted->getId();
+            $entry_blacklisted = $environment->getEntry($entry_id);
+            $entry_blacklisted->publish();
+
+            $blacklisted->entry_id = $entry_id;
+            $blacklisted->save();
+        }
+
         return response()->json([
             'status' => 'success',
             'data' => $bl
