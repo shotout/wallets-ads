@@ -16,6 +16,7 @@ use Contentful\Management\Client;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\StripePayment;
+use Contentful\Management\Resource\Entry;
 
 class UserController extends Controller
 {
@@ -141,15 +142,12 @@ class UserController extends Controller
             if (!$bl) {
                 $bl = new Blacklisted;
                 $bl->walletaddress = $request->wallet_address;
+                $bl->is_subscribe =  $request->is_subscribe;
             }
-
+            $bl->is_subscribe = $request->is_subscribe;
             $bl->snooze_ads = $request->snooze_ads;
+            $bl->campaign_id = $request->id;
             $bl->save();
-
-            return response()->json([
-                'status' => 'success',
-                'data' => $bl
-            ], 200);
         }
 
         if ($request->flag == 'subscribe') {
@@ -163,15 +161,78 @@ class UserController extends Controller
                 $bl = new Blacklisted;
                 $bl->walletaddress = $request->wallet_address;
             }
-
+            
+            $bl->campaign_id = $request->id;
             $bl->is_subscribe = $request->is_subscribe;
             $bl->save();
-
-            return response()->json([
-                'status' => 'success',
-                'data' => $bl
-            ], 200);
         }
+
+        $blacklisted = Blacklisted::where('walletaddress', $request->wallet_address)->first();
+
+        $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
+        $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
+
+        if (isset($blacklisted->entry_id)) {
+            $delete_entry = $environment->getEntry($blacklisted->entry_id);
+            $delete_entry->unpublish();
+            $delete_entry->delete();
+        }
+
+        if ($blacklisted->is_subscribe == 1) {
+
+            $subscribe = new Entry('subscribedWallets');
+            $subscribe->setField('walletAddress', 'en-US', $blacklisted->walletaddress);
+            $subscribe->setField('termsAccepted', 'en-US', true);
+            $subscribe->setField('campaignid2', 'en-US', $blacklisted->campaign_id);
+            $environment->create($subscribe);
+
+            $entry_id = $subscribe->getId();
+            $entry_subscribe = $environment->getEntry($entry_id);
+            $entry_subscribe->publish();
+
+            $blacklisted->entry_id = $entry_id;
+            $blacklisted->save();
+        }
+
+        if ($blacklisted->is_subscribe == 0) {
+
+            $newblacklisted = new Entry('blacklistedWalletAddress');
+            $newblacklisted->setField('walletAddress', 'en-US', $blacklisted->walletaddress);
+            $newblacklisted->setField('status', 'en-US', 'unsubscribed');
+            $newblacklisted->setField('terms', 'en-US', true);
+            $newblacklisted->setField('campaignId', 'en-US', $blacklisted->campaign_id);
+            $environment->create($newblacklisted);
+
+            $entry_id = $newblacklisted->getId();
+            $entry_blacklisted = $environment->getEntry($entry_id);
+            $entry_blacklisted->publish();
+
+            $blacklisted->entry_id = $entry_id;
+            $blacklisted->save();
+
+        }
+
+        if ($blacklisted->is_subscribe == 2) {
+
+            $newblacklisted = new Entry('blacklistedWalletAddress');
+            $newblacklisted->setField('walletAddress', 'en-US', $blacklisted->walletaddress);
+            $newblacklisted->setField('status', 'en-US', 'snoozed');
+            $newblacklisted->setField('terms', 'en-US', true);
+            $newblacklisted->setField('campaignId', 'en-US', $blacklisted->campaign_id);
+            $environment->create($newblacklisted);
+
+            $entry_id = $newblacklisted->getId();
+            $entry_blacklisted = $environment->getEntry($entry_id);
+            $entry_blacklisted->publish();
+
+            $blacklisted->entry_id = $entry_id;
+            $blacklisted->save();
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $bl
+        ], 200);
     }
 
     public function voucher(Request $request)
