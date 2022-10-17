@@ -183,6 +183,7 @@ class UserController extends Controller
             $subscribe = new Entry('subscribedWallets');
             $subscribe->setField('walletAddress', 'en-US', $blacklisted->walletaddress);
             $subscribe->setField('termsAccepted', 'en-US', true);
+            $subscribe->setField('campaignid2', 'en-US', $blacklisted->campaign_id);
             $environment->create($subscribe);
 
             $entry_id = $subscribe->getId();
