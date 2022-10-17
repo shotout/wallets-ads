@@ -25,7 +25,7 @@ class UpdateCryptoPaymet implements ShouldQueue
 
    
 
-    public function __construct($campaign_id,$promo_code)
+    public function __construct($campaign_id)
     {
         $this->campaign_id = $campaign_id;
     }   
