@@ -170,7 +170,7 @@ class UploadCampaignToContentful implements ShouldQueue
                     $package = "Upload Own Audience Targeting";
 
                     $file = new \Contentful\Core\File\RemoteUploadFile(
-                        $campaign->name . '_Audience_file_' . $url_file->name,
+                        $url_file->original_name,
                         'xlsx/xls/csv',
                         env("APP_URL") . $url_file->url
                     );
