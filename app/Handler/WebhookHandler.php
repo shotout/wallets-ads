@@ -230,6 +230,15 @@ class WebhookHandler extends ProcessWebhookJob
                         $coupon->delete();
                     }
                 }
+
+                if ($data['sys']['contentType']['sys']['id'] == 'blacklistedWalletAddress' || $data['sys']['contentType']['sys']['id'] == 'subscribedWallets') {
+
+                    $wallet = Blacklisted::where('entry_id', $data['sys']['id'])->first();
+
+                    if ($wallet) {
+                        $wallet->delete();
+                    }
+                }
             }
         }
     }
