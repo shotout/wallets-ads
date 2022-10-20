@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\StripePayment;
 use Contentful\Management\Resource\Entry;
+use Illuminate\Support\Facades\Http;
 
 class UserController extends Controller
 {
@@ -130,7 +131,35 @@ class UserController extends Controller
         $request->validate([
             'flag' => 'required|string',
             'wallet_address' => 'required|string',
+          
         ]);
+
+        if($request->flag == 'token'){
+              $request->validate([
+                'token' => 'required|string'
+            ]);
+
+            $tk = Blacklisted::where('token', $request->token)->first();
+
+            if(!$tk)
+            {
+                $tk = new Blacklisted;
+                $tk->token = $request->token;
+                $tk->walletaddress = $request->wallet_address;
+                $tk->save();
+            }
+
+            $tk->token = $request->token;
+            $tk->walletaddress = $request->wallet_address;
+            $tk->save();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Token added successfully'
+            ], 200);
+        }
+
+
 
         if ($request->flag == 'snooze') {
             $request->validate([
@@ -139,11 +168,21 @@ class UserController extends Controller
 
             $bl = Blacklisted::where('walletaddress', $request->wallet_address)->first();
 
+            if($bl->token == " ")
+            {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Invalid Wallet Address'
+                ], 404);
+            }
+
             if (!$bl) {
                 $bl = new Blacklisted;
                 $bl->walletaddress = $request->wallet_address;
                 $bl->is_subscribe =  $request->is_subscribe;
             }
+
+            
             $bl->is_subscribe = $request->is_subscribe;
             $bl->snooze_ads = $request->snooze_ads;
             $bl->campaign_id = $request->id;
