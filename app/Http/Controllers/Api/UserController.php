@@ -131,36 +131,18 @@ class UserController extends Controller
         $request->validate([
             'flag' => 'required|string',
             'wallet_address' => 'required|string',
-          
+            'token' => 'required|string',
         ]);
 
-        if($request->flag == 'token'){
-              $request->validate([
-                'token' => 'required|string'
-            ]);
+        $decode = json_decode(base64_decode(str_replace('_', '/', str_replace('-','+',explode('.', $request->token)[1]))));
 
-            $tk = Blacklisted::where('token', $request->token)->first();
-
-            if(!$tk)
-            {
-                $tk = new Blacklisted;
-                $tk->token = $request->token;
-                $tk->walletaddress = $request->wallet_address;
-                $tk->save();
-            }
-
-            $tk->token = $request->token;
-            $tk->walletaddress = $request->wallet_address;
-            $tk->save();
-
+        if($decode->wallet_address != $request->wallet_address){
             return response()->json([
-                'status' => 'success',
-                'message' => 'Token added successfully'
-            ], 200);
+                'status' => 'failed',
+                'message' => 'invalid Wallet Address',
+            ], 400);
         }
-
-
-
+       
         if ($request->flag == 'snooze') {
             $request->validate([
                 'snooze_ads' => 'required|integer',
