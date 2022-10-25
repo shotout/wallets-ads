@@ -224,7 +224,7 @@ class UserController extends Controller
 
         if ($blacklisted->is_subscribe == 0) {
 
-            if ($blacklisted->entry_id) {
+            if (!$blacklisted->entry_id) {
                 $newblacklisted = new Entry('blacklistedWalletAddress');
                 $newblacklisted->setField('walletAddress', 'en-US', $blacklisted->walletaddress);
                 $newblacklisted->setField('status', 'en-US', 'unsubscribed');
@@ -244,7 +244,7 @@ class UserController extends Controller
 
         if ($blacklisted->is_subscribe == 2) {
 
-            if ($newblacklisted->entry_id) {
+            if (!$blacklisted->entry_id) {
                 $newblacklisted = new Entry('snoozeWalletAddress');
                 $newblacklisted->setField('walletAddress', 'en-US', $blacklisted->walletaddress);
                 $newblacklisted->setField('status', 'en-US', 'snoozed');
