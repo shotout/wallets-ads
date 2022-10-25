@@ -136,6 +136,9 @@ class UserController extends Controller
             'token' => 'required|string',
         ]);
 
+        $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
+        $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
+
         $snoozeend = Carbon::now()->addDays(30)->format('d-m-Y');
 
         $decode = json_decode(base64_decode(str_replace('_', '/', str_replace('-', '+', explode('.', $request->token)[1]))));
@@ -152,7 +155,7 @@ class UserController extends Controller
                 'snooze_ads' => 'required|integer',
             ]);
 
-            $bl = Blacklisted::where('walletaddress', $request->wallet_address)->where('campaign_id', $request->id)->first();
+            $bl = Blacklisted::where('walletaddress', $request->wallet_address)->where('campaign_id', $request->id)->where('is_subscribe', 2)->first();
 
             if (!$bl) {
                 $bl = new Blacklisted;
@@ -172,7 +175,14 @@ class UserController extends Controller
                 'is_subscribe' => 'required|integer',
             ]);
 
-            $bl = Blacklisted::where('walletaddress', $request->wallet_address)->where('campaign_id', $request->id)->first();
+            if ($request->is_subscribe == 1) {
+                $bl = Blacklisted::where('walletaddress', $request->wallet_address)->where('is_subscribe', 1)->first();
+            }
+
+            if ($request->is_subscribe == 0) {
+                $bl = Blacklisted::where('walletaddress', $request->wallet_address)->where('is_subscribe', 0)->first();
+            }
+
 
             if (!$bl) {
                 $bl = new Blacklisted;
@@ -186,16 +196,17 @@ class UserController extends Controller
 
         $blacklisted = Blacklisted::where('walletaddress', $request->wallet_address)->where('campaign_id', $request->id)->first();
 
-        $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
-        $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
-
-        if (isset($blacklisted->entry_id)) {
-            $delete_entry = $environment->getEntry($blacklisted->entry_id);
-            $delete_entry->unpublish();
-            $delete_entry->delete();
-        }
-
         if ($blacklisted->is_subscribe == 1) {
+
+            $check = Blacklisted::where('walletaddress', $request->wallet_address)->wherein('is_subscribe', [0, 2])->get();
+
+            foreach ($check as $c) {
+                $delete_entry = $environment->getEntry($c->entry_id);
+                $delete_entry->unpublish();
+                $delete_entry->delete();
+
+                $c->delete();
+            }
 
             $subscribe = new Entry('subscribedWallets');
             $subscribe->setField('walletAddress', 'en-US', $blacklisted->walletaddress);
@@ -213,41 +224,46 @@ class UserController extends Controller
 
         if ($blacklisted->is_subscribe == 0) {
 
-            $newblacklisted = new Entry('blacklistedWalletAddress');
-            $newblacklisted->setField('walletAddress', 'en-US', $blacklisted->walletaddress);
-            $newblacklisted->setField('status', 'en-US', 'unsubscribed');
-            $newblacklisted->setField('terms', 'en-US', true);
-            $newblacklisted->setField('campaignId', 'en-US', $blacklisted->campaign_id);
-            $environment->create($newblacklisted);
+            if ($blacklisted->entry_id) {
+                $newblacklisted = new Entry('blacklistedWalletAddress');
+                $newblacklisted->setField('walletAddress', 'en-US', $blacklisted->walletaddress);
+                $newblacklisted->setField('status', 'en-US', 'unsubscribed');
+                $newblacklisted->setField('terms', 'en-US', true);
+                $newblacklisted->setField('campaignId', 'en-US', $blacklisted->campaign_id);
+                $environment->create($newblacklisted);
 
-            $entry_id = $newblacklisted->getId();
-            $entry_blacklisted = $environment->getEntry($entry_id);
-            $entry_blacklisted->publish();
+                $entry_id = $newblacklisted->getId();
+                $entry_blacklisted = $environment->getEntry($entry_id);
+                $entry_blacklisted->publish();
 
-            $blacklisted->entry_id = $entry_id;
-            $blacklisted->save();
+                $blacklisted->entry_id = $entry_id;
+                $blacklisted->save();
+            }
         }
 
+
         if ($blacklisted->is_subscribe == 2) {
-            
-            $newblacklisted = new Entry('blacklistedWalletAddress');
-            $newblacklisted->setField('walletAddress', 'en-US', $blacklisted->walletaddress);
-            $newblacklisted->setField('status', 'en-US', 'snoozed');
-            $newblacklisted->setField('terms', 'en-US', true);
-            $newblacklisted->setField('campaignId', 'en-US', $blacklisted->campaign_id);
-            $newblacklisted->setField('snoozeEnd', 'en-US', $snoozeend);
-            $environment->create($newblacklisted);
 
-            $entry_id = $newblacklisted->getId();
-            $entry_blacklisted = $environment->getEntry($entry_id);
-            $entry_blacklisted->publish();
+            if ($newblacklisted->entry_id) {
+                $newblacklisted = new Entry('snoozeWalletAddress');
+                $newblacklisted->setField('walletAddress', 'en-US', $blacklisted->walletaddress);
+                $newblacklisted->setField('status', 'en-US', 'snoozed');
+                $newblacklisted->setField('terms', 'en-US', true);
+                $newblacklisted->setField('campaignId', 'en-US', $blacklisted->campaign_id);
+                $newblacklisted->setField('snoozeEnd', 'en-US', $snoozeend);
+                $environment->create($newblacklisted);
 
-            $blacklisted->entry_id = $entry_id;
-            $blacklisted->save();
+                $entry_id = $newblacklisted->getId();
+                $entry_blacklisted = $environment->getEntry($entry_id);
+                $entry_blacklisted->publish();
 
-            $id = $blacklisted->id;
-            
-            DeleteSnoozeRecord::dispatch($id)->delay(now()->addSeconds(60));
+                $blacklisted->entry_id = $entry_id;
+                $blacklisted->save();
+
+                $id = $blacklisted->id;
+
+                DeleteSnoozeRecord::dispatch($id)->delay(now()->addSeconds(60));
+            }
         }
 
         return response()->json([
