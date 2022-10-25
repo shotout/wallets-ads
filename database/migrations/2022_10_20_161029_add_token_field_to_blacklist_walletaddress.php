@@ -14,7 +14,7 @@ class AddTokenFieldToBlacklistWalletaddress extends Migration
     public function up()
     {
         Schema::table('blacklist_walletaddress', function (Blueprint $table) {
-            $table->string('token')->after('walletaddress');
+            $table->string('token')->after('walletaddress')->nullable();
         });
     }
 

@@ -15,7 +15,9 @@ use App\Jobs\SendConfirmEmail;
 use Contentful\Management\Client;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Jobs\DeleteSnoozeRecord;
 use App\Models\StripePayment;
+use Carbon\Carbon;
 use Contentful\Management\Resource\Entry;
 use Illuminate\Support\Facades\Http;
 
@@ -134,29 +136,23 @@ class UserController extends Controller
             'token' => 'required|string',
         ]);
 
-        $decode = json_decode(base64_decode(str_replace('_', '/', str_replace('-','+',explode('.', $request->token)[1]))));
+        $snoozeend = Carbon::now()->addDays(30)->format('d-m-Y');
 
-        if($decode->wallet_address != $request->wallet_address){
+        $decode = json_decode(base64_decode(str_replace('_', '/', str_replace('-', '+', explode('.', $request->token)[1]))));
+
+        if ($decode->wallet_address != $request->wallet_address) {
             return response()->json([
                 'status' => 'failed',
                 'message' => 'invalid Wallet Address',
             ], 400);
         }
-       
+
         if ($request->flag == 'snooze') {
             $request->validate([
                 'snooze_ads' => 'required|integer',
             ]);
 
-            $bl = Blacklisted::where('walletaddress', $request->wallet_address)->first();
-
-            if($bl->token == " ")
-            {
-                return response()->json([
-                    'status' => 'failed',
-                    'message' => 'Invalid Wallet Address'
-                ], 404);
-            }
+            $bl = Blacklisted::where('walletaddress', $request->wallet_address)->where('campaign_id', $request->id)->first();
 
             if (!$bl) {
                 $bl = new Blacklisted;
@@ -164,7 +160,7 @@ class UserController extends Controller
                 $bl->is_subscribe =  $request->is_subscribe;
             }
 
-            
+
             $bl->is_subscribe = $request->is_subscribe;
             $bl->snooze_ads = $request->snooze_ads;
             $bl->campaign_id = $request->id;
@@ -176,19 +172,19 @@ class UserController extends Controller
                 'is_subscribe' => 'required|integer',
             ]);
 
-            $bl = Blacklisted::where('walletaddress', $request->wallet_address)->first();
+            $bl = Blacklisted::where('walletaddress', $request->wallet_address)->where('campaign_id', $request->id)->first();
 
             if (!$bl) {
                 $bl = new Blacklisted;
                 $bl->walletaddress = $request->wallet_address;
             }
-            
+
             $bl->campaign_id = $request->id;
             $bl->is_subscribe = $request->is_subscribe;
             $bl->save();
         }
 
-        $blacklisted = Blacklisted::where('walletaddress', $request->wallet_address)->first();
+        $blacklisted = Blacklisted::where('walletaddress', $request->wallet_address)->where('campaign_id', $request->id)->first();
 
         $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
         $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
@@ -230,16 +226,16 @@ class UserController extends Controller
 
             $blacklisted->entry_id = $entry_id;
             $blacklisted->save();
-
         }
 
         if ($blacklisted->is_subscribe == 2) {
-
+            
             $newblacklisted = new Entry('blacklistedWalletAddress');
             $newblacklisted->setField('walletAddress', 'en-US', $blacklisted->walletaddress);
             $newblacklisted->setField('status', 'en-US', 'snoozed');
             $newblacklisted->setField('terms', 'en-US', true);
             $newblacklisted->setField('campaignId', 'en-US', $blacklisted->campaign_id);
+            $newblacklisted->setField('snoozeEnd', 'en-US', $snoozeend);
             $environment->create($newblacklisted);
 
             $entry_id = $newblacklisted->getId();
@@ -248,6 +244,10 @@ class UserController extends Controller
 
             $blacklisted->entry_id = $entry_id;
             $blacklisted->save();
+
+            $id = $blacklisted->id;
+            
+            DeleteSnoozeRecord::dispatch($id)->delay(now()->addSeconds(60));
         }
 
         return response()->json([
