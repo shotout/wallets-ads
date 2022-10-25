@@ -194,7 +194,7 @@ class UserController extends Controller
             $bl->save();
         }
 
-        $blacklisted = Blacklisted::where('walletaddress', $request->wallet_address)->where('campaign_id', $request->id)->first();
+        $blacklisted = Blacklisted::where('walletaddress', $request->wallet_address)->where('campaign_id', $request->id)->where('is_subscribe', $request->is_subscribe)->first();
 
         if ($blacklisted->is_subscribe == 1) {
 
