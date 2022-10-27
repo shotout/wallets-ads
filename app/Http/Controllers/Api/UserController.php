@@ -244,9 +244,9 @@ class UserController extends Controller
 
         if ($blacklisted->is_subscribe == 2) {
 
-            $snooze = Blacklisted::where('walletaddress', $request->wallet_address)->where('is_subscribe', 2)->first();
+            $snoozed = Blacklisted::where('walletaddress', $request->wallet_address)->where('is_subscribe', 2)->first();
 
-            if (!$snooze->entry_id) {
+            if (!$snoozed->entry_id) {
                 $snooze = new Entry('snoozeWalletAddress');
                 $snooze->setField('walletAddress', 'en-US', $blacklisted->walletaddress);
                 $snooze->setField('status', 'en-US', 'snoozed');
@@ -255,14 +255,14 @@ class UserController extends Controller
                 $snooze->setField('snoozeEnd', 'en-US', $snoozeend);
                 $environment->create($snooze);
 
-                $entry_id = $newblacklisted->getId();
+                $entry_id = $snooze->getId();
                 $entry_blacklisted = $environment->getEntry($entry_id);
                 $entry_blacklisted->publish();
 
-                $blacklisted->entry_id = $entry_id;
-                $blacklisted->save();
+                $snoozed->entry_id = $entry_id;
+                $snoozed->save();
 
-                $id = $blacklisted->id;
+                $id = $snooze->id;
 
                 DeleteSnoozeRecord::dispatch($id)->delay(now()->addSeconds(60));
             }
