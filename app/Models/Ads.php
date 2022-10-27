@@ -32,4 +32,14 @@ class Ads extends Model
     {
         return self::sum('count_mint');
     }
+
+    public function countImpression()
+    {
+        return self::sum('count_impression');
+    }
+
+    public function countView()
+    {
+        return self::sum('count_view');
+    }
 }

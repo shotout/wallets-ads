@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "f8f91bdc-79f7-4f0b-986a-7513599c0ee5",
+		"_postman_id": "544187ba-15f8-4ff8-afa3-7a92a3eb2315",
 		"name": "nft campaign",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "12074833"
@@ -1150,7 +1150,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "1|RdrcZf2ESayxv1aiEjVHelLYPTj1CnEEmgKFaq99",
+									"value": "1|yN0dWU5BJQcEf3RgxwS7nvJ15qIWTvNgdhxf21mU",
 									"type": "string"
 								}
 							]
@@ -1187,12 +1187,12 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "1|MQlTZh8VFYms8IyGQ4Q9mTqcNtGIoHArgIq8iM9V",
+									"value": "1|yN0dWU5BJQcEf3RgxwS7nvJ15qIWTvNgdhxf21mU",
 									"type": "string"
 								}
 							]
 						},
-						"method": "POST",
+						"method": "GET",
 						"header": [
 							{
 								"key": "Accept",
@@ -1224,7 +1224,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "1|MQlTZh8VFYms8IyGQ4Q9mTqcNtGIoHArgIq8iM9V",
+									"value": "1|yN0dWU5BJQcEf3RgxwS7nvJ15qIWTvNgdhxf21mU",
 									"type": "string"
 								}
 							]
@@ -1262,7 +1262,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "1|MQlTZh8VFYms8IyGQ4Q9mTqcNtGIoHArgIq8iM9V",
+									"value": "1|yN0dWU5BJQcEf3RgxwS7nvJ15qIWTvNgdhxf21mU",
 									"type": "string"
 								}
 							]
