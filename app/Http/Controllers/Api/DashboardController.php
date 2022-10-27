@@ -71,6 +71,8 @@ class DashboardController extends Controller
             "airdrop" => Campaign::where('user_id', auth('sanctum')->user()->id)->sum('count_airdrop'),
             "click" => Campaign::where('user_id', auth('sanctum')->user()->id)->sum('count_click'),
             "mint" => Campaign::where('user_id', auth('sanctum')->user()->id)->sum('count_mint'),
+            "impression" => Campaign::where('user_id', auth('sanctum')->user()->id)->sum('count_impression'),
+            "view" => Campaign::where('user_id', auth('sanctum')->user()->id)->sum('count_view'),
         );
 
         return response()->json([
@@ -97,6 +99,8 @@ class DashboardController extends Controller
             "airdrop" => $audiences[0]->ads->countAirdrop(),
             "click" => $audiences[0]->ads->countClick(),
             "mint" => $audiences[0]->ads->countMint(),
+            "impression" => $audiences[0]->ads->countImpression(),
+            "view" => $audiences[0]->ads->countView(),
         );
 
         // $adc = Audience::where('campaign_id', $id)->with('ads')->get();
@@ -135,6 +139,8 @@ class DashboardController extends Controller
             "airdrop" => $audiences[0]->ads->countAirdrop(),
             "click" => $audiences[0]->ads->countClick(),
             "mint" => $audiences[0]->ads->countMint(),
+            "impression" => $audiences[0]->ads->countImpression(),
+            "view" => $audiences[0]->ads->countView(),
         );
 
         $data = (object) array(
