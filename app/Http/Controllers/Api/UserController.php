@@ -180,7 +180,7 @@ class UserController extends Controller
             }
 
             if ($request->is_subscribe == 0) {
-                $bl = Blacklisted::where('walletaddress', $request->wallet_address)->where('is_subscribe', 0)->first();
+                $bl = Blacklisted::where('walletaddress', $request->wallet_address)->where('is_subscribe', 0)->where('campaign_id', $request->id)->first();
             }
 
 
@@ -272,7 +272,7 @@ class UserController extends Controller
 
                 $id = $snoozed->id;
 
-                DeleteSnoozeRecord::dispatch($id)->delay(now()->addSeconds(60));
+                DeleteSnoozeRecord::dispatch($id)->delay(now()->addDays(30));
             }
         }
 
