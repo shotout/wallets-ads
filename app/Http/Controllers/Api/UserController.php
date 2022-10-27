@@ -155,7 +155,7 @@ class UserController extends Controller
                 'snooze_ads' => 'required|integer',
             ]);
 
-            $bl = Blacklisted::where('walletaddress', $request->wallet_address)->where('campaign_id', $request->id)->where('is_subscribe', 2)->first();
+            $bl = Blacklisted::where('walletaddress', $request->wallet_address)->where('is_subscribe', 2)->first();
 
             if (!$bl) {
                 $bl = new Blacklisted;
@@ -244,14 +244,16 @@ class UserController extends Controller
 
         if ($blacklisted->is_subscribe == 2) {
 
-            if (!$blacklisted->entry_id) {
-                $newblacklisted = new Entry('snoozeWalletAddress');
-                $newblacklisted->setField('walletAddress', 'en-US', $blacklisted->walletaddress);
-                $newblacklisted->setField('status', 'en-US', 'snoozed');
-                $newblacklisted->setField('terms', 'en-US', true);
-                $newblacklisted->setField('campaignId', 'en-US', $blacklisted->campaign_id);
-                $newblacklisted->setField('snoozeEnd', 'en-US', $snoozeend);
-                $environment->create($newblacklisted);
+            $snooze = Blacklisted::where('walletaddress', $request->wallet_address)->where('is_subscribe', 2)->first();
+
+            if (!$snooze->entry_id) {
+                $snooze = new Entry('snoozeWalletAddress');
+                $snooze->setField('walletAddress', 'en-US', $blacklisted->walletaddress);
+                $snooze->setField('status', 'en-US', 'snoozed');
+                $snooze->setField('terms', 'en-US', true);
+                $snooze->setField('campaignId', 'en-US', $blacklisted->campaign_id);
+                $snooze->setField('snoozeEnd', 'en-US', $snoozeend);
+                $environment->create($snooze);
 
                 $entry_id = $newblacklisted->getId();
                 $entry_blacklisted = $environment->getEntry($entry_id);
