@@ -93,7 +93,7 @@ class DashboardController extends Controller
             ], 404); 
         }
 
-        $audiences = Audience::where('campaign_id', $id)->get();
+        $audiences = Audience::where('campaign_id', $id)->with('ads')->get();
 
         $airdrop =  Audience::where('campaign_id', $id)->sum('count_airdrop');
         $click =  Audience::where('campaign_id', $id)->sum('count_click');
@@ -141,12 +141,18 @@ class DashboardController extends Controller
         
         $audiences = Audience::where('campaign_id', $id)->with('ads')->get();
 
+        $airdrop =  Audience::where('campaign_id', $id)->sum('count_airdrop');
+        $click =  Audience::where('campaign_id', $id)->sum('count_click');
+        $mint =  Audience::where('campaign_id', $id)->sum('count_mint');
+        $impression =  Audience::where('campaign_id', $id)->sum('count_impression');
+        $view =  Audience::where('campaign_id', $id)->sum('count_view');
+
         $counter = (object) array(
-            "airdrop" => $audiences[0]->ads->countAirdrop(),
-            "click" => $audiences[0]->ads->countClick(),
-            "mint" => $audiences[0]->ads->countMint(),
-            "impression" => $audiences[0]->ads->countImpression(),
-            "view" => $audiences[0]->ads->countView(),
+            "airdrop" => $airdrop,
+            "click" => $click,
+            "mint" => $mint,
+            "impression" => $impression,
+            "view" => $view,
         );
 
         $data = (object) array(
