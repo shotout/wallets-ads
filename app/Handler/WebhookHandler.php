@@ -7,6 +7,7 @@ use App\Jobs\SendConfirmEmail;
 use App\Jobs\SendInvoiceEmail;
 use App\Jobs\SendScheduleCampaign;
 use App\Jobs\UpdateStatusPayment;
+use App\Models\Ads;
 use App\Models\Audience;
 use Spatie\WebhookClient\Jobs\ProcessWebhookJob;
 use Contentful\Delivery\Client as DeliveryClient;
@@ -159,6 +160,24 @@ class WebhookHandler extends ProcessWebhookJob
                             SendScheduleCampaign::dispatch($campaign, $total_budget, $total_sendout)->delay(Carbon::now()->addseconds(10));
                         }
                     }
+
+
+                    if (isset($data['fields']['campaignStatus']['en-US'])) {
+                        $entry_id = $data['sys']['id'];
+                        $campaign = Campaign::where('entry_id', $entry_id)->first();
+
+                        if ($data['fields']['campaignStatus']['en-US'] == false) {
+                            $campaign->status = 2;
+                        }
+                        if ($data['fields']['campaignStatus']['en-US'] == true) {
+                            $campaign->status = 3;
+                        }
+                    }
+
+                    if (isset($data['fields']['campaignAirdrops']['en-US'])) {
+                        $entry_id = $data['sys']['id'];
+                        $campaign = Campaign::where('entry_id', $entry_id)->first();
+                    }
                 }
 
 
@@ -185,6 +204,71 @@ class WebhookHandler extends ProcessWebhookJob
                         $newcoupon->min_budget = $data['fields']['minimalSpent']['en-US'];
                         $newcoupon->save();
                     }
+                }
+
+
+                if ($data['sys']['contentType']['sys']['id'] == 'adsCreation') {
+
+                    $entry_id = $data['sys']['id'];
+                    $audience = Audience::where('entry_id', $entry_id)->first();
+                    $ads = Ads::where('id', $audience->ads_id)->first();
+
+                    if ($ads && isset($data['fields']['adsAirdrops']['en-US'])) {
+                        $ads->count_airdrop = $data['fields']['adsAirdrops']['en-US'];
+                        $ads->save();
+
+                        $count_airdrop = Ads::where('campaign_id', $ads->id)->sum('count_airdrop');
+
+                        $campaign = Campaign::where('id', $ads->campaign_id)->first();
+                        $campaign->count_airdrop = $count_airdrop;
+                        $campaign->save();
+                    }
+
+                    if ($ads && isset($data['fields']['adsLinkClicks']['en-US'])) {
+                        $ads->count_click = $data['fields']['adsLinkClicks']['en-US'];
+                        $ads->save();
+
+                        $count_clicks = Ads::where('campaign_id', $ads->id)->sum('count_click');
+
+                        $campaign = Campaign::where('id', $ads->campaign_id)->first();
+                        $campaign->count_click = $count_clicks;
+                        $campaign->save();
+                    }
+
+                    if ($ads && isset($data['fields']['adsMints']['en-US'])) {
+                        $ads->count_mint = $data['fields']['adsMints']['en-US'];
+                        $ads->save();
+
+                        $count_mints = Ads::where('campaign_id', $ads->id)->sum('count_mint');
+
+                        $campaign = Campaign::where('id', $ads->campaign_id)->first();
+                        $campaign->count_mint = $count_mints;
+                        $campaign->save();
+                    }
+
+                    if ($ads && isset($data['fields']['adsImpressions']['en-US'])) {
+                        $ads->count_mint = $data['fields']['adsImpressions']['en-US'];
+                        $ads->save();
+
+                        $count_mints = Ads::where('campaign_id', $ads->id)->sum('count_mint');
+
+                        $campaign = Campaign::where('id', $ads->campaign_id)->first();
+                        $campaign->count_mint = $count_mints;
+                        $campaign->save();
+                    }
+
+                    if ($ads && isset($data['fields']['adsViews']['en-US'])) {
+                        $ads->count_mint = $data['fields']['adsViews']['en-US'];
+                        $ads->save();
+
+                        $count_mints = Ads::where('campaign_id', $ads->id)->sum('count_mint');
+
+                        $campaign = Campaign::where('id', $ads->campaign_id)->first();
+                        $campaign->count_mint = $count_mints;
+                        $campaign->save();
+                    }
+
+
                 }
             }
 
