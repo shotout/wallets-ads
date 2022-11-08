@@ -247,24 +247,24 @@ class WebhookHandler extends ProcessWebhookJob
                     }
 
                     if ($ads && isset($data['fields']['adsImpressions']['en-US'])) {
-                        $ads->count_mint = $data['fields']['adsImpressions']['en-US'];
+                        $ads->count_impression = $data['fields']['adsImpressions']['en-US'];
                         $ads->save();
 
-                        $count_mints = Ads::where('campaign_id', $ads->id)->sum('count_mint');
+                        $count_impression = Ads::where('campaign_id', $ads->id)->sum('count_impression');
 
                         $campaign = Campaign::where('id', $ads->campaign_id)->first();
-                        $campaign->count_mint = $count_mints;
+                        $campaign->count_impression = $count_impression;
                         $campaign->save();
                     }
 
                     if ($ads && isset($data['fields']['adsViews']['en-US'])) {
-                        $ads->count_mint = $data['fields']['adsViews']['en-US'];
+                        $ads->count_view = $data['fields']['adsViews']['en-US'];
                         $ads->save();
 
-                        $count_mints = Ads::where('campaign_id', $ads->id)->sum('count_mint');
+                        $count_view = Ads::where('campaign_id', $ads->id)->sum('count_view');
 
                         $campaign = Campaign::where('id', $ads->campaign_id)->first();
-                        $campaign->count_mint = $count_mints;
+                        $campaign->count_view = $count_view;
                         $campaign->save();
                     }
 
