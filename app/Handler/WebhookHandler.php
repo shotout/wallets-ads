@@ -217,7 +217,7 @@ class WebhookHandler extends ProcessWebhookJob
                         $ads->count_airdrop = $data['fields']['adsAirdrops']['en-US'];
                         $ads->save();
 
-                        $count_airdrop = Ads::where('campaign_id', $ads->id)->sum('count_airdrop');
+                        $count_airdrop = Ads::where('campaign_id', $ads->campaign_id)->sum('count_airdrop');
 
                         $campaign = Campaign::where('id', $ads->campaign_id)->first();
                         $campaign->count_airdrop = $count_airdrop;
@@ -228,7 +228,7 @@ class WebhookHandler extends ProcessWebhookJob
                         $ads->count_click = $data['fields']['adsLinkClicks']['en-US'];
                         $ads->save();
 
-                        $count_clicks = Ads::where('campaign_id', $ads->id)->sum('count_click');
+                        $count_clicks = Ads::where('campaign_id', $ads->campaign_id)->sum('count_click');
 
                         $campaign = Campaign::where('id', $ads->campaign_id)->first();
                         $campaign->count_click = $count_clicks;
@@ -239,7 +239,7 @@ class WebhookHandler extends ProcessWebhookJob
                         $ads->count_mint = $data['fields']['adsMints']['en-US'];
                         $ads->save();
 
-                        $count_mints = Ads::where('campaign_id', $ads->id)->sum('count_mint');
+                        $count_mints = Ads::where('campaign_id', $ads->campaign_id)->sum('count_mint');
 
                         $campaign = Campaign::where('id', $ads->campaign_id)->first();
                         $campaign->count_mint = $count_mints;
@@ -250,7 +250,7 @@ class WebhookHandler extends ProcessWebhookJob
                         $ads->count_impression = $data['fields']['adsImpressions']['en-US'];
                         $ads->save();
 
-                        $count_impression = Ads::where('campaign_id', $ads->id)->sum('count_impression');
+                        $count_impression = Ads::where('campaign_id', $ads->campaign_id)->sum('count_impression');
 
                         $campaign = Campaign::where('id', $ads->campaign_id)->first();
                         $campaign->count_impression = $count_impression;
@@ -261,7 +261,7 @@ class WebhookHandler extends ProcessWebhookJob
                         $ads->count_view = $data['fields']['adsViews']['en-US'];
                         $ads->save();
 
-                        $count_view = Ads::where('campaign_id', $ads->id)->sum('count_view');
+                        $count_view = Ads::where('campaign_id', $ads->campaign_id)->sum('count_view');
 
                         $campaign = Campaign::where('id', $ads->campaign_id)->first();
                         $campaign->count_view = $count_view;
