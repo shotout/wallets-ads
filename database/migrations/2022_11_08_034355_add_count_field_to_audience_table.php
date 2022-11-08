@@ -14,11 +14,11 @@ class AddCountFieldToAudienceTable extends Migration
     public function up()
     {
         Schema::table('audiences', function (Blueprint $table) {
-            $table->integer('count_click')->default(null)->after('total_user');
-            $table->integer('count_airdrop')->default(null)->after('count_click');
-            $table->integer('count_mint')->default(null)->after('count_airdrop');
-            $table->integer('count_view')->default(null)->after('count_mint');
-            $table->integer('count_impression')->default(null)->after('count_view');
+            $table->integer('count_click')->default(null)->after('total_user')->nullable();
+            $table->integer('count_airdrop')->default(null)->after('count_click')->nullable();
+            $table->integer('count_mint')->default(null)->after('count_airdrop')->nullable();
+            $table->integer('count_view')->default(null)->after('count_mint')->nullable();
+            $table->integer('count_impression')->default(null)->after('count_view')->nullable();
         });
     }
 
