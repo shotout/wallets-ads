@@ -211,59 +211,58 @@ class WebhookHandler extends ProcessWebhookJob
 
                     $entry_id = $data['sys']['id'];
                     $audience = Audience::where('entry_id', $entry_id)->first();
-                    $ads = Ads::where('id', $audience->ads_id)->first();
 
-                    if ($ads && isset($data['fields']['adsAirdrops']['en-US'])) {
-                        $ads->count_airdrop = $data['fields']['adsAirdrops']['en-US'];
-                        $ads->save();
+                    if ($audience && isset($data['fields']['adsAirdrops']['en-US'])) {
+                        $audience->count_airdrop = $data['fields']['adsAirdrops']['en-US'];
+                        $audience->save();
 
-                        $count_airdrop = Ads::where('campaign_id', $ads->campaign_id)->sum('count_airdrop');
+                        $count_airdrop = Audience::where('campaign_id', $audience->campaign_id)->sum('count_airdrop');
 
-                        $campaign = Campaign::where('id', $ads->campaign_id)->first();
+                        $campaign = Campaign::where('id', $audience->campaign_id)->first();
                         $campaign->count_airdrop = $count_airdrop;
                         $campaign->save();
                     }
 
-                    if ($ads && isset($data['fields']['adsLinkClicks']['en-US'])) {
-                        $ads->count_click = $data['fields']['adsLinkClicks']['en-US'];
-                        $ads->save();
+                    if ($audience && isset($data['fields']['adsLinkClicks']['en-US'])) {
+                        $audience->count_click = $data['fields']['adsLinkClicks']['en-US'];
+                        $audience->save();
 
-                        $count_clicks = Ads::where('campaign_id', $ads->campaign_id)->sum('count_click');
+                        $count_clicks = Audience::where('campaign_id', $audience->campaign_id)->sum('count_click');
 
-                        $campaign = Campaign::where('id', $ads->campaign_id)->first();
+                        $campaign = Campaign::where('id', $audience->campaign_id)->first();
                         $campaign->count_click = $count_clicks;
                         $campaign->save();
                     }
 
-                    if ($ads && isset($data['fields']['adsMints']['en-US'])) {
-                        $ads->count_mint = $data['fields']['adsMints']['en-US'];
-                        $ads->save();
+                    if ($audience && isset($data['fields']['adsMints']['en-US'])) {
+                        $audience->count_mint = $data['fields']['adsMints']['en-US'];
+                        $audience->save();
 
-                        $count_mints = Ads::where('campaign_id', $ads->campaign_id)->sum('count_mint');
+                        $count_mints = Audience::where('campaign_id', $audience->campaign_id)->sum('count_mint');
 
-                        $campaign = Campaign::where('id', $ads->campaign_id)->first();
+                        $campaign = Campaign::where('id', $audience->campaign_id)->first();
                         $campaign->count_mint = $count_mints;
                         $campaign->save();
                     }
 
-                    if ($ads && isset($data['fields']['adsImpressions']['en-US'])) {
-                        $ads->count_impression = $data['fields']['adsImpressions']['en-US'];
-                        $ads->save();
+                    if ($audience && isset($data['fields']['adsImpressions']['en-US'])) {
+                        $audience->count_impression = $data['fields']['adsImpressions']['en-US'];
+                        $audience->save();
 
-                        $count_impression = Ads::where('campaign_id', $ads->campaign_id)->sum('count_impression');
+                        $count_impression = Audience::where('campaign_id', $audience->campaign_id)->sum('count_impression');
 
-                        $campaign = Campaign::where('id', $ads->campaign_id)->first();
+                        $campaign = Campaign::where('id', $audience->campaign_id)->first();
                         $campaign->count_impression = $count_impression;
                         $campaign->save();
                     }
 
-                    if ($ads && isset($data['fields']['adsViews']['en-US'])) {
-                        $ads->count_view = $data['fields']['adsViews']['en-US'];
-                        $ads->save();
+                    if ($audience && isset($data['fields']['adsViews']['en-US'])) {
+                        $audience->count_view = $data['fields']['adsViews']['en-US'];
+                        $audience->save();
 
-                        $count_view = Ads::where('campaign_id', $ads->campaign_id)->sum('count_view');
+                        $count_view = Ads::where('campaign_id', $audience->campaign_id)->sum('count_view');
 
-                        $campaign = Campaign::where('id', $ads->campaign_id)->first();
+                        $campaign = Campaign::where('id', $audience->campaign_id)->first();
                         $campaign->count_view = $count_view;
                         $campaign->save();
                     }
