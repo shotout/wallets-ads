@@ -260,7 +260,7 @@ class WebhookHandler extends ProcessWebhookJob
                         $audience->count_view = $data['fields']['adsViews']['en-US'];
                         $audience->save();
 
-                        $count_view = Ads::where('campaign_id', $audience->campaign_id)->sum('count_view');
+                        $count_view = Audience::where('campaign_id', $audience->campaign_id)->sum('count_view');
 
                         $campaign = Campaign::where('id', $audience->campaign_id)->first();
                         $campaign->count_view = $count_view;
