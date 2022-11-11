@@ -181,7 +181,7 @@ class WebhookHandler extends ProcessWebhookJob
                         if ($data['fields']['showOnReportDashboard']['en-US'] == false) {
                             $campaign->is_show = 0;
                         }
-                        if ($data['fields']['campaignStatus']['en-US'] == true) {
+                        if ($data['fields']['showOnReportDashboard']['en-US'] == true) {
                             $campaign->is_show = 1;
                         }
                     }
