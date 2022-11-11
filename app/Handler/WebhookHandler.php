@@ -174,6 +174,18 @@ class WebhookHandler extends ProcessWebhookJob
                         }
                     }
 
+                    if (isset($data['fields']['showOnReportDashboard']['en-US'])) {
+                        $entry_id = $data['sys']['id'];
+                        $campaign = Campaign::where('entry_id', $entry_id)->first();
+
+                        if ($data['fields']['showOnReportDashboard']['en-US'] == false) {
+                            $campaign->is_show = 0;
+                        }
+                        if ($data['fields']['campaignStatus']['en-US'] == true) {
+                            $campaign->is_show = 1;
+                        }
+                    }
+
                     if (isset($data['fields']['campaignAirdrops']['en-US'])) {
                         $entry_id = $data['sys']['id'];
                         $campaign = Campaign::where('entry_id', $entry_id)->first();
