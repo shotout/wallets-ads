@@ -172,6 +172,7 @@ class WebhookHandler extends ProcessWebhookJob
                         if ($data['fields']['campaignStatus']['en-US'] == true) {
                             $campaign->status = 3;
                         }
+                        $campaign->save();
                     }
 
                     if (isset($data['fields']['showOnReportDashboard']['en-US'])) {
@@ -184,6 +185,8 @@ class WebhookHandler extends ProcessWebhookJob
                         if ($data['fields']['showOnReportDashboard']['en-US'] == true) {
                             $campaign->is_show = 1;
                         }
+
+                        $campaign->save();
                     }
 
                     if (isset($data['fields']['campaignAirdrops']['en-US'])) {
