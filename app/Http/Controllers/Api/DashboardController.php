@@ -65,7 +65,7 @@ class DashboardController extends Controller
             });
         }
 
-        $campaigns = $query->paginate($length);
+        $campaigns = $query->paginate(5);
 
         $counter = (object) array(
             "airdrop" => Campaign::where('user_id', auth('sanctum')->user()->id)->sum('count_airdrop'),
