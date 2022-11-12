@@ -36,7 +36,7 @@ class DashboardController extends Controller
         if ($request->has('length') && $request->input('length') != '') {
             $length = $request->input('length');
         } else {
-            $length = 10;
+            $length = 5;
         }
 
         if ($request->has('column') && $request->input('column') != '') {
