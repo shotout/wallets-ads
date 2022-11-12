@@ -93,7 +93,9 @@ class DashboardController extends Controller
             ], 404); 
         }
 
-        $audiences = Audience::where('campaign_id', $id)->with('ads')->get();
+        $audiences = Audience::where('campaign_id', $id)->with('ads')->join('medias', 'medias.owner_id', '=', 'campaign_id')
+            ->select('audiences.*', 'medias.*')
+            ->get();
 
         $airdrop =  Audience::where('campaign_id', $id)->sum('count_airdrop');
         $click =  Audience::where('campaign_id', $id)->sum('count_click');
