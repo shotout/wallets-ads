@@ -162,14 +162,17 @@ class WebhookHandler extends ProcessWebhookJob
                     }
 
 
-                    if (isset($data['fields']['campaignStatus']['en-US'])) {
+                    if (isset($data['fields']['statusCampaign']['en-US'])) {
                         $entry_id = $data['sys']['id'];
                         $campaign = Campaign::where('entry_id', $entry_id)->first();
 
-                        if ($data['fields']['campaignStatus']['en-US'] == false) {
+                        if ($data['fields']['statusCampaign']['en-US'] == 'In Review') {
+                            $campaign->status = 1;
+                        }
+                        if ($data['fields']['statusCampaign']['en-US'] == 'Running') {
                             $campaign->status = 2;
                         }
-                        if ($data['fields']['campaignStatus']['en-US'] == true) {
+                        if ($data['fields']['statusCampaign']['en-US'] == 'Finished') {
                             $campaign->status = 3;
                         }
                         $campaign->save();
