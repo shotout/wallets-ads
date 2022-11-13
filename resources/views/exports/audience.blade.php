@@ -19,6 +19,8 @@
                     <td style="text-align: left;">{{$audience->ads->count_airdrop}}</td>
                     <td style="text-align: left;">{{$audience->ads->count_click}}</td>
                     <td style="text-align: left;">{{$audience->ads->count_mint}}</td>
+                    <td style="text-align: left;">{{$audience->ads->count_impression}}</td>
+                    <td style="text-align: left;">{{$audience->ads->count_view}}</td>
                 </tr>
             @endforeach
 
@@ -27,6 +29,8 @@
                 <td style="font-weight: bold; text-align: left;">{{$data->counter->airdrop}}</td>
                 <td style="font-weight: bold; text-align: left;">{{$data->counter->click}}</td>
                 <td style="font-weight: bold; text-align: left;">{{$data->counter->mint}}</td>
+                <td style="font-weight: bold; text-align: left;">{{$data->counter->impression}}</td>
+                <td style="font-weight: bold; text-align: left;">{{$data->counter->vew}}</td>
             </tr>
         </tbody>
     </table>
