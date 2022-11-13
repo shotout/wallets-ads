@@ -20,6 +20,7 @@ use App\Jobs\SendNotifRegister;
 use App\Jobs\SendResetEmail;
 use App\Jobs\SendScheduleCampaign;
 use App\Jobs\UpdateCryptoPaymet;
+use App\Jobs\UpdateShowStatus;
 use App\Jobs\UploadCampaignToContentful;
 use App\Models\Invoice;
 use App\Models\User;
@@ -767,4 +768,30 @@ class CampaignController extends Controller
             'data' => $invoices
         ], 200);
     }
+
+
+    public function cancelStripe(Request $request)
+    {
+        $campaign_id = $request->campaign_id;
+
+        if ($campaign_id) {
+            $campaign = Campaign::find($campaign_id);
+            $campaign->is_show = '0';
+            $campaign->save();
+
+            $entry_id = $campaign->entry_id;
+
+            UpdateShowStatus::dispatch($entry_id)->delay(now()->addSeconds(70));
+
+            return response()->json([
+                'status' => 'success'
+            ], 200);
+        }
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Something went wrong'
+        ], 400);
+    }
+    
 }

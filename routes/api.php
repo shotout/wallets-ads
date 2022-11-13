@@ -21,7 +21,7 @@ use App\Http\Controllers\Api\StripeController;
 */
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
+//     return $request->user();F
 // });
 
 Route::group(
@@ -103,6 +103,7 @@ Route::group(
     function() {
         Route::post('/', [PaymentController::class, 'store'])->name('store');
         Route::patch('/{id}', [PaymentController::class, 'update'])->name('update');
+        Route::post('/cancelstripe', [CampaignController::class, 'cancelStripe'])->name('cancelStripe');
     }
 );
 
