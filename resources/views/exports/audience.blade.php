@@ -5,10 +5,12 @@
         <thead>
             <tr>
                 <th style="font-weight: bold; text-align: left;">Audience</th>
-                <th style="font-weight: bold; text-align: left;">Ads Cretaive</th>
-                <th style="font-weight: bold; text-align: left;">Airdrop</th>
-                <th style="font-weight: bold; text-align: left;">Click</th>
-                <th style="font-weight: bold; text-align: left;">Mint</th>
+                <th style="font-weight: bold; text-align: left;">Ads Name</th>
+                <th style="font-weight: bold; text-align: left;">Airdrops</th>
+                <th style="font-weight: bold; text-align: left;">Clicks</th>
+                <th style="font-weight: bold; text-align: left;">Mints</th>
+                <th style="font-weight: bold; text-align: left;">Impressions</th>
+                <th style="font-weight: bold; text-align: left;">Mints</th>
             </tr>
         </thead>
         <tbody>
