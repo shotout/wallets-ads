@@ -30,7 +30,7 @@
                 <td style="font-weight: bold; text-align: left;">{{$data->counter->click}}</td>
                 <td style="font-weight: bold; text-align: left;">{{$data->counter->mint}}</td>
                 <td style="font-weight: bold; text-align: left;">{{$data->counter->impression}}</td>
-                <td style="font-weight: bold; text-align: left;">{{$data->counter->vew}}</td>
+                <td style="font-weight: bold; text-align: left;">{{$data->counter->view}}</td>
             </tr>
         </tbody>
     </table>
