@@ -324,8 +324,6 @@ class WebhookHandler extends ProcessWebhookJob
                     $campaign = Campaign::where('entry_id', $entry_id)->first();
 
                     if ($campaign) {
-                        $campaign->is_deleted = 1;
-                        $campaign->save();
 
                         $audiences = Audience::where('campaign_id', $campaign->id)->get();
 
@@ -334,8 +332,12 @@ class WebhookHandler extends ProcessWebhookJob
                             $entry_audience = $environment->getEntry($audience->entry_id);
                             $entry_audience->unpublish();
                             $entry_audience->delete();
+
+                            $audience->delete();
                         }
                     }
+
+                    $campaign->delete();
                 }
 
                 if ($data['sys']['contentType']['sys']['id'] == 'users') {
