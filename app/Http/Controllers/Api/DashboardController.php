@@ -161,6 +161,6 @@ class DashboardController extends Controller
             'counter' => $counter
         );
 
-        return Excel::download(new CampaignAudience($data), 'audience '.$campaign->name.'.xls');
+        return Excel::download(new CampaignAudience($data), $campaign->name.'.xls');
     }
 }
