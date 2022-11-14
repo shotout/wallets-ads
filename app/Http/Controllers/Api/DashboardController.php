@@ -23,6 +23,7 @@ class DashboardController extends Controller
     {
         $listCampaign = Campaign::select('id','name')
             ->where('user_id', auth('sanctum')->user()->id)
+            ->where('is_show', 1)
             ->get();
 
         return response()->json([
