@@ -5,8 +5,10 @@ namespace App\Exports;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithTitle;
 
-class CampaignAudience implements FromView
+class CampaignAudience implements FromView,ShouldAutoSize,WithTitle
 {
     use Exportable;
 
@@ -15,6 +17,11 @@ class CampaignAudience implements FromView
     public function __construct($data)
     {
         $this->data = $data;
+    }
+
+    public function title(): string
+    {
+        return $this->data['campaign']->name;
     }
 
     public function view(): View
