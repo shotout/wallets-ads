@@ -14,7 +14,7 @@ class AddIsShowFieldToCampaignsTable extends Migration
     public function up()
     {
         Schema::table('campaigns', function (Blueprint $table) {
-            $table->boolean('is_show')->default(0)->after('payment_method');
+            $table->boolean('is_show')->default(1)->after('payment_method');
         });
     }
 
