@@ -67,6 +67,7 @@ class CampaignController extends Controller
             });
         }
 
+        $query->where('is_show', 1);
         $campaigns = $query->paginate($length);
 
         // $counter = (object) array(
