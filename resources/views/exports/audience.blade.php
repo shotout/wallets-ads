@@ -9,7 +9,7 @@
                 <th style="font-weight: bold; text-align: left;">Airdrops</th>
                 <th style="font-weight: bold; text-align: left;">Impressions</th>
                 <th style="font-weight: bold; text-align: left;">Views</th>
-                <th style="font-weight: bold; text-align: left;">Link Clicks</th>
+                <th style="font-weight: bold; text-align: left;">Link clicks</th>
                 <th style="font-weight: bold; text-align: left;">Mints</th>
             </tr>
         </thead>
@@ -18,11 +18,11 @@
                 <tr>
                     <td style="text-align: left;">{{$audience->name ?? '0'}}</td>
                     <td style="text-align: left;">{{$audience->ads->name ?? '0'}}</td>
-                    <td style="text-align: left;">{{$audience->ads->count_airdrop ?? '0'}}</td>
-                    <td style="text-align: left;">{{$audience->ads->count_impression ?? '0'}}</td>
-                    <td style="text-align: left;">{{$audience->ads->count_view ?? '0'}}</td>
-                    <td style="text-align: left;">{{$audience->ads->count_click ?? '0'}}</td>
-                    <td style="text-align: left;">{{$audience->ads->count_mint ?? '0'}}</td>
+                    <td style="text-align: left;">{{$audience->count_airdrop ?? '0'}}</td>
+                    <td style="text-align: left;">{{$audience->count_impression ?? '0'}}</td>
+                    <td style="text-align: left;">{{$audience->count_view ?? '0'}}</td>
+                    <td style="text-align: left;">{{$audience->count_click ?? '0'}}</td>
+                    <td style="text-align: left;">{{$audience->count_mint ?? '0'}}</td>
                 </tr>
             @endforeach
 
