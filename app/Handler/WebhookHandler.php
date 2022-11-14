@@ -340,6 +340,15 @@ class WebhookHandler extends ProcessWebhookJob
                     $campaign->delete();
                 }
 
+                if ($data['sys']['contentType']['sys']['id'] == 'adsCreation') {
+
+
+                    $entry_id = $data['sys']['id'];
+                    $audience = Audience::where('entry_id', $entry_id)->first();
+
+                    $audience->delete();
+                }
+
 
                 if ($data['sys']['contentType']['sys']['id'] == 'users') {
 
