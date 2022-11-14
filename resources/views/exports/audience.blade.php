@@ -29,10 +29,10 @@
             <tr>
                 <td style="font-weight: bold; text-align: left;" colspan="2">Total</td>
                 <td style="font-weight: bold; text-align: left;">{{$data->counter->airdrop}}</td>
-                <td style="font-weight: bold; text-align: left;">{{$data->counter->click}}</td>
-                <td style="font-weight: bold; text-align: left;">{{$data->counter->mint}}</td>
                 <td style="font-weight: bold; text-align: left;">{{$data->counter->impression}}</td>
                 <td style="font-weight: bold; text-align: left;">{{$data->counter->view}}</td>
+                <td style="font-weight: bold; text-align: left;">{{$data->counter->click}}</td>
+                <td style="font-weight: bold; text-align: left;">{{$data->counter->mint}}</td>
             </tr>
         </tbody>
     </table>
