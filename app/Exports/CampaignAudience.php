@@ -21,7 +21,8 @@ class CampaignAudience implements FromView,ShouldAutoSize,WithTitle
 
     public function title(): string
     {
-        return $this->data['campaign']->name;
+        $file_name = $this->data->campaign->name;
+        return $file_name;
     }
 
     public function view(): View
