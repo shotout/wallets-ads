@@ -5,11 +5,11 @@
         <thead>
             <tr>
                 <th style="font-weight: bold; text-align: left;">Audience</th>
-                <th style="font-weight: bold; text-align: left;">Ads Name</th>
+                <th style="font-weight: bold; text-align: left;">Ad creative</th>
                 <th style="font-weight: bold; text-align: left;">Airdrops</th>
                 <th style="font-weight: bold; text-align: left;">Impressions</th>
                 <th style="font-weight: bold; text-align: left;">Views</th>
-                <th style="font-weight: bold; text-align: left;">Clicks</th>
+                <th style="font-weight: bold; text-align: left;">Link Clicks</th>
                 <th style="font-weight: bold; text-align: left;">Mints</th>
             </tr>
         </thead>
