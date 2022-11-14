@@ -7,22 +7,22 @@
                 <th style="font-weight: bold; text-align: left;">Audience</th>
                 <th style="font-weight: bold; text-align: left;">Ads Name</th>
                 <th style="font-weight: bold; text-align: left;">Airdrops</th>
-                <th style="font-weight: bold; text-align: left;">Clicks</th>
-                <th style="font-weight: bold; text-align: left;">Mints</th>
                 <th style="font-weight: bold; text-align: left;">Impressions</th>
+                <th style="font-weight: bold; text-align: left;">Views</th>
+                <th style="font-weight: bold; text-align: left;">Clicks</th>
                 <th style="font-weight: bold; text-align: left;">Mints</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($data->audiences as $audience)
                 <tr>
-                    <td style="text-align: left;">{{$audience->name}}</td>
-                    <td style="text-align: left;">{{$audience->ads->name}}</td>
-                    <td style="text-align: left;">{{$audience->ads->count_airdrop}}</td>
-                    <td style="text-align: left;">{{$audience->ads->count_click}}</td>
-                    <td style="text-align: left;">{{$audience->ads->count_mint}}</td>
-                    <td style="text-align: left;">{{$audience->ads->count_impression}}</td>
-                    <td style="text-align: left;">{{$audience->ads->count_view}}</td>
+                    <td style="text-align: left;">{{$audience->name ?? '0'}}</td>
+                    <td style="text-align: left;">{{$audience->ads->name ?? '0'}}</td>
+                    <td style="text-align: left;">{{$audience->ads->count_airdrop ?? '0'}}</td>
+                    <td style="text-align: left;">{{$audience->ads->count_impression ?? '0'}}</td>
+                    <td style="text-align: left;">{{$audience->ads->count_view ?? '0'}}</td>
+                    <td style="text-align: left;">{{$audience->ads->count_click ?? '0'}}</td>
+                    <td style="text-align: left;">{{$audience->ads->count_mint ?? '0'}}</td>
                 </tr>
             @endforeach
 
