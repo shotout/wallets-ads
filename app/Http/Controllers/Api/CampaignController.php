@@ -243,6 +243,8 @@ class CampaignController extends Controller
             $adsPage->facebook = $request->ads_page_facebook;
             $adsPage->telegram = $request->ads_page_telegram;
             $adsPage->external_page = $request->ads_page_external_page;
+            $adsPage->token_name = $request->ads_page_token_name;
+            $adsPage->token_symbol = $request->ads_page_token_symbol;
             $adsPage->save();
 
             if ($request->has('ads_page_logo_url') && $request->ads_page_logo_url != '') {
