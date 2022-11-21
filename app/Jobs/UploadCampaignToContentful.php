@@ -116,6 +116,8 @@ class UploadCampaignToContentful implements ShouldQueue
         $entry_ads_page->setField('collectionPageTelegram', 'en-US', $newadspage->telegram);
         $entry_ads_page->setField('collectionPageLogo', 'en-US', $asset_logo->asLink());
         $entry_ads_page->setField('collectionPageBanner', 'en-US', $asset_banner->asLink());
+        $entry_ads_page->setField('collectionPageTokenTrackerName', 'en-US', $newadspage->token_name);
+        $entry_ads_page->setField('collectionPageTokenTrackerSymbol', 'en-US', $newadspage->token_symbol);
         $environment->create($entry_ads_page);
 
         //publish ads page to contentful
