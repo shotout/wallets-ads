@@ -313,7 +313,7 @@ class CampaignController extends Controller
                         $newAds->name = $ads->name;
                     }
                     if (isset($ads->description)) {
-                        $newAds->description = $ads->description;
+                        $newAds->description = json_decode($ads->description);
                     }
                     $newAds->save();
 
@@ -765,9 +765,14 @@ class CampaignController extends Controller
     {
         $invoices = Invoice::where('user_id', auth('sanctum')->user()->id)->get();
 
+        $adtext = ads::where('campaign_id', '330')->get('description');
+        $adtext = json_decode($adtext, true);
+
         return response()->json([
             'status' => 'success',
-            'data' => $invoices
+            'data' => $invoices,
+            'ad' => $adtext,
+            'adtext' => $adtext
         ], 200);
     }
 
