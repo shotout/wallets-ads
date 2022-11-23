@@ -313,7 +313,7 @@ class CampaignController extends Controller
                         $newAds->name = $ads->name;
                     }
                     if (isset($ads->description)) {
-                        $newAds->description = json_decode($ads->description);
+                        $newAds->description = $ads->description;
                     }
                     $newAds->save();
 
