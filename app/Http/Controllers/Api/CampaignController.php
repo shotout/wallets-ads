@@ -29,6 +29,7 @@ use Contentful\Management\Resource\Asset;
 use Contentful\Management\Resource\Entry;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use JsonMapper\LaravelPackage\JsonMapper;
 
 class CampaignController extends Controller
 {
@@ -67,7 +68,7 @@ class CampaignController extends Controller
             });
         }
 
-        $campaigns = $query->where('is_show','1')->paginate($length);
+        $campaigns = $query->where('is_show', '1')->paginate($length);
 
         // $counter = (object) array(
         //     "airdrop" => Campaign::where('user_id', auth('sanctum')->user()->id)->sum('count_airdrop'),
@@ -765,8 +766,9 @@ class CampaignController extends Controller
     {
         $invoices = Invoice::where('user_id', auth('sanctum')->user()->id)->get();
 
-        $adtext = ads::where('campaign_id', '330')->get('description');
-        $adtext = json_decode($adtext, true);
+        $adtext = ads::where('campaign_id', '330')->get('description')->get();        
+        dd($adtext[0]['description']['id']);
+
 
         return response()->json([
             'status' => 'success',
@@ -800,5 +802,4 @@ class CampaignController extends Controller
             'message' => 'Something went wrong'
         ], 400);
     }
-    
 }
