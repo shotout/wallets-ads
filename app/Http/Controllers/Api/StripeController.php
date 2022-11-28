@@ -55,8 +55,12 @@ class StripeController extends Controller
     public function intent(Request $request)
     {
         try {
+<<<<<<< HEAD
 
             Stripe::setApiKey(env('STRIPE_LIVE_API_KEY'));
+=======
+            Stripe::setApiKey(env('STRIPE_TEST_API_KEY'));
+>>>>>>> 729a8052c2c176906dc41161717cc55197b0e5d8
 
             if (isset($request->promo)) {
                 $coupon = Voucher::where('code', $request->promo)->first();
