@@ -19,7 +19,7 @@ class StripeController extends Controller
     public function index(Request $request)
     {
         try {
-            $stripe = new StripeClient(env('STRIPE_LIVE_API_KEY'));
+            $stripe = new StripeClient(env('STRIPE_TEST_API_KEY'));
 
             //get token from request
             $result = $stripe->tokens->create([
@@ -32,7 +32,7 @@ class StripeController extends Controller
             ]);
 
             //charge customer payment
-            $charge = new StripeClient(env('STRIPE_LIVE_API_KEY'));
+            $charge = new StripeClient(env('STRIPE_TEST_API_KEY'));
 
             $charge->charges->create([
                 'amount' => $request->amount,
