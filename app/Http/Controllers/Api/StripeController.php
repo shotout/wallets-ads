@@ -55,7 +55,6 @@ class StripeController extends Controller
     public function intent(Request $request)
     {
         try {
-            //api 
             Stripe::setApiKey(env('STRIPE_TEST_API_KEY'));
 
             if (isset($request->promo)) {
