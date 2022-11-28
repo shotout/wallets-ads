@@ -56,7 +56,7 @@ class StripeController extends Controller
     {
         try {
 
-            Stripe::setApiKey(env('STRIPE_TEST_API_KEY'));
+            Stripe::setApiKey(env('STRIPE_LIVE_API_KEY'));
 
             if (isset($request->promo)) {
                 $coupon = Voucher::where('code', $request->promo)->first();
@@ -84,8 +84,8 @@ class StripeController extends Controller
                     ]],
                     'client_reference_id' => 'INV_001',
                     'customer_email' => auth('sanctum')->user()->email,
-                    'success_url' => "https://wallet-ads-frontend.vercel.app/create-campaign/?id=" . $request->campaign_id . "&status=success",
-                    'cancel_url' =>  "https://wallet-ads-frontend.vercel.app/create-campaign/?id=" . $request->campaign_id . "&status=fail"
+                    'success_url' => "https://dashboard.walletads.io/create-campaign/?id=" . $request->campaign_id . "&status=success",
+                    'cancel_url' =>  "https://dashboard.walletads.io/create-campaign/?id=" . $request->campaign_id . "&status=fail"
                 ]);
             } else {
 
@@ -105,8 +105,8 @@ class StripeController extends Controller
                     'mode' => 'payment',
                     'client_reference_id' => 'INV_001',
                     'customer_email' => auth('sanctum')->user()->email,
-                    'success_url' => "https://wallet-ads-frontend.vercel.app/create-campaign/?id=" . $request->campaign_id . "&status=success",
-                    'cancel_url' =>  "https://wallet-ads-frontend.vercel.app/create-campaign/?id=" . $request->campaign_id . "&status=fail"
+                    'success_url' => "https://dashboard.walletads.io/create-campaign/?id=" . $request->campaign_id . "&status=success",
+                    'cancel_url' =>  "https://dashboard.walletads.io/create-campaign/?id=" . $request->campaign_id . "&status=fail"
                 ]);
             }
 
