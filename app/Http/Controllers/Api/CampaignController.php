@@ -139,6 +139,9 @@ class CampaignController extends Controller
                         if (isset($audience->total_user)) {
                             $adc->total_user = $audience->total_user;
                         }
+                        if (isset($audience->selected_fe_id)) {
+                            $adc->selected_fe_id = $audience->selected_fe_id;
+                        }
                         $adc->save();
 
                         // $optimizeTarget = new OptimizeTarget;
