@@ -101,11 +101,11 @@ class UploadCampaignToContentful implements ShouldQueue
         $entry_ads_page->setField('startDate', 'en-US', $campaign->start_date);
         $entry_ads_page->setField('totalBudget', 'en-US', Audience::where('campaign_id', $campaign->id)->sum('price'));
 
-        if($campaign->promo_code != NULL and $campaign->promo_code != ''){
+        if ($campaign->promo_code != NULL and $campaign->promo_code != '') {
             $entry_ads_page->setField('promoCode', 'en-US', $campaign->promo_code);
             $entry_ads_page->setField('promoAmount', 'en-US', $voucher->value);
         }
-        
+
         $entry_ads_page->setField('paymentMethod', 'en-US', $campaign->payment_method);
         $entry_ads_page->setField('paymentStatus', 'en-US', false);
         $entry_ads_page->setField('collectionPageName', 'en-US', $newadspage->name);
@@ -137,6 +137,16 @@ class UploadCampaignToContentful implements ShouldQueue
 
         foreach ($adv as $ad) {
 
+            $adtext = ads::where('id', $ad->id)->get()->toArray();
+            $adtext = json_decode($adtext[0]['description'], true);
+            $adtext[0]['adtext'];
+
+            foreach ($adtext as $key => $value) {
+                $multiple[] = 'Ad text = ' . $value['adtext'];
+            }
+
+            $ad_text = implode(' ||| ', $multiple);
+
             $audience = Audience::where('ads_id', $ad->id)->get();
 
 
@@ -156,7 +166,7 @@ class UploadCampaignToContentful implements ShouldQueue
 
 
                 $asset_image = new Asset();
-                $asset_image->setTitle('en-US', 'Media '.$aud->name.' '. $campaign->name);
+                $asset_image->setTitle('en-US', 'Media ' . $aud->name . ' ' . $campaign->name);
                 $asset_image->setFile('en-US', $image);
 
                 //process Image
@@ -196,7 +206,7 @@ class UploadCampaignToContentful implements ShouldQueue
                 $entry_ads->setField('campaignAvailability', 'en-US', $campaign->availability);
                 $entry_ads->setField('campaignStartDate', 'en-US', $campaign->start_date);
                 $entry_ads->setField('adsName', 'en-US', $ad->name);
-                $entry_ads->setField('adsText', 'en-US', $ad->ad);
+                $entry_ads->setField('adsText', 'en-US', $ad_text);
                 $entry_ads->setField('budget', 'en-US', $aud->price);
                 if ($aud->price_airdrop == "0.019") {
                     $entry_ads->setField('audienceFile', 'en-US', $asset_file->asLink());
@@ -224,7 +234,7 @@ class UploadCampaignToContentful implements ShouldQueue
                 $aud->update();
                 $i++;
             }
-        }        
+        }
 
         SendCampaignNotificationEmail::dispatch($campaign);
     }
