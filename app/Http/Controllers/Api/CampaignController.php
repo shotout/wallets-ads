@@ -770,15 +770,9 @@ class CampaignController extends Controller
     {
         $invoices = Invoice::where('user_id', auth('sanctum')->user()->id)->get();
 
-        $adtext = ads::where('campaign_id', '330')->get('description')->get();        
-        dd($adtext[0]['description']['id']);
-
-
         return response()->json([
             'status' => 'success',
-            'data' => $invoices,
-            'ad' => $adtext,
-            'adtext' => $adtext
+            'data' => $invoices
         ], 200);
     }
 
