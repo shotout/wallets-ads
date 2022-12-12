@@ -29,6 +29,7 @@ use Contentful\Management\Resource\Asset;
 use Contentful\Management\Resource\Entry;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use JsonMapper\LaravelPackage\JsonMapper;
 
 class CampaignController extends Controller
 {
@@ -67,7 +68,7 @@ class CampaignController extends Controller
             });
         }
 
-        $campaigns = $query->where('is_show','1')->paginate($length);
+        $campaigns = $query->where('is_show', '1')->paginate($length);
 
         // $counter = (object) array(
         //     "airdrop" => Campaign::where('user_id', auth('sanctum')->user()->id)->sum('count_airdrop'),
@@ -115,6 +116,7 @@ class CampaignController extends Controller
             // }
             $campaign->payment_method = 'Card';
             $campaign->status = 1;
+            $campaign->is_show = 1;
             $campaign->save();
 
             if ($request->has('campaign_audiences') && count($request->campaign_audiences) > 0) {
@@ -137,6 +139,9 @@ class CampaignController extends Controller
                         }
                         if (isset($audience->total_user)) {
                             $adc->total_user = $audience->total_user;
+                        }
+                        if (isset($audience->selected_fe_id)) {
+                            $adc->selected_fe_id = $audience->selected_fe_id;
                         }
                         $adc->save();
 
@@ -243,6 +248,8 @@ class CampaignController extends Controller
             $adsPage->facebook = $request->ads_page_facebook;
             $adsPage->telegram = $request->ads_page_telegram;
             $adsPage->external_page = $request->ads_page_external_page;
+            $adsPage->token_name = $request->ads_page_token_name;
+            $adsPage->token_symbol = $request->ads_page_token_symbol;
             $adsPage->save();
 
             if ($request->has('ads_page_logo_url') && $request->ads_page_logo_url != '') {
@@ -793,5 +800,4 @@ class CampaignController extends Controller
             'message' => 'Something went wrong'
         ], 400);
     }
-    
 }
