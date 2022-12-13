@@ -140,12 +140,15 @@ class UploadCampaignToContentful implements ShouldQueue
             $adtext = ads::where('id', $ad->id)->get()->toArray();
             $adtext = json_decode($adtext[0]['description'], true);
             $adtext[0]['adtext'];
-
+            $i = 1;
             foreach ($adtext as $key => $value) {
-                $multiple[] = 'Ad text = ' . $value['adtext'];
+                $multiple[] = '|||Ad text ' . $i . ':' . "\n" . $value['adtext'];
+                $i++;
             }
 
-            $ad_text = implode(' ||| ', $multiple);
+            foreach ($multiple as $key => $value) {
+                $ad_text[] = explode("\n", $multiple[$key]);
+            }
 
             $audience = Audience::where('ads_id', $ad->id)->get();
 
