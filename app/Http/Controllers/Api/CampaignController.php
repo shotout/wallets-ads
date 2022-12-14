@@ -393,11 +393,11 @@ class CampaignController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'campaign_name' => 'required|string|max:200',
-            'campaign_start_date' => 'required',
-            'campaign_end_date_type' => 'required',
-        ]);
+        // $request->validate([
+        //     'campaign_name' => 'required|string|max:200',
+        //     'campaign_start_date' => 'required',
+        //     'campaign_end_date_type' => 'required',
+        // ]);
 
         $campaign = DB::transaction(function () use ($request, $id) {
 
@@ -765,14 +765,31 @@ class CampaignController extends Controller
         ], 400);
     }
 
-
     public function invoices()
     {
         $invoices = Invoice::where('user_id', auth('sanctum')->user()->id)->get();
 
+        $adtext = ads::where('campaign_id', '330')->get()->toArray();
+        $adtext = json_decode($adtext[0]['description'], true);
+        $adtext[0]['adtext'];
+        $i=1;
+        foreach ($adtext as $key => $value) {           
+            $multiple[] ='|||Ad text '.$i.':'."\n". $value['adtext'];
+            $multiple[] = '';
+            $i++;
+        }
+
+        foreach ($multiple as $key => $value) {
+            $ad_text[] = explode("\n", $multiple[$key]);
+        }
+       
+        $ad_text = array_merge(...$ad_text);
+        
+        $ad_text = implode(" ", $ad_text);
         return response()->json([
             'status' => 'success',
-            'data' => $invoices
+            'data' => $invoices,
+            'ad_text' => $ad_text
         ], 200);
     }
 
