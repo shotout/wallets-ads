@@ -416,6 +416,7 @@ class CampaignController extends Controller
             $campaign->user_id = auth('sanctum')->user()->id;
             $campaign->name = $request->campaign_name;
             $campaign->start_date = $request->campaign_start_date;
+            $campaign->is_show = 1;
 
             if (isset($request->status)) {
                 $campaign->status = $request->status;
