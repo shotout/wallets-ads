@@ -549,73 +549,73 @@ class CampaignController extends Controller
             $adsPage->external_page = $request->ads_page_external_page;
             $adsPage->save();
 
-            if ($request->has('ads_page_logo_url') && $request->ads_page_logo_url != '') {
-                $media = Media::where('owner_id', $adsPage->id)
-                    ->where('type', 'ads_logo')
-                    ->first();
+            // if ($request->has('ads_page_logo_url') && $request->ads_page_logo_url != '') {
+            //     $media = Media::where('owner_id', $adsPage->id)
+            //         ->where('type', 'ads_logo')
+            //         ->first();
 
-                if ($media) {
-                    unlink(public_path() . $media->url);
-                } else {
-                    $media = Media::where('url', $request->ads_page_logo_url)->first();
-                    if ($media) {
-                        $media->owner_id = $adsPage->id;
-                        $media->save();
-                    }
-                }
-            } elseif ($request->has('ads_page_logo') && $request->ads_page_logo != '') {
-                $media = Media::where('owner_id', $adsPage->id)->where('type', 'ads_logo')->first();
-                if ($media) {
-                    unlink(public_path() . $media->url);
-                } else {
-                    $media = new Media;
-                    $media->owner_id = $adsPage->id;
-                    $media->type = "ads_logo";
-                }
+            //     if ($media) {
+            //         unlink(public_path() . $media->url);
+            //     } else {
+            //         $media = Media::where('url', $request->ads_page_logo_url)->first();
+            //         if ($media) {
+            //             $media->owner_id = $adsPage->id;
+            //             $media->save();
+            //         }
+            //     }
+            // } elseif ($request->has('ads_page_logo') && $request->ads_page_logo != '') {
+            //     $media = Media::where('owner_id', $adsPage->id)->where('type', 'ads_logo')->first();
+            //     if ($media) {
+            //         unlink(public_path() . $media->url);
+            //     } else {
+            //         $media = new Media;
+            //         $media->owner_id = $adsPage->id;
+            //         $media->type = "ads_logo";
+            //     }
 
-                $filename = uniqid();
-                $fileExt = $request->ads_page_logo->getClientOriginalExtension();
-                $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
-                $request->ads_page_logo->move(public_path() . '/assets/images/logo/', $fileNameToStore);
+            //     $filename = uniqid();
+            //     $fileExt = $request->ads_page_logo->getClientOriginalExtension();
+            //     $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
+            //     $request->ads_page_logo->move(public_path() . '/assets/images/logo/', $fileNameToStore);
 
-                $media->name = $fileNameToStore;
-                $media->url = '/assets/images/logo/' . $fileNameToStore;
-                $media->save();
-            }
+            //     $media->name = $fileNameToStore;
+            //     $media->url = '/assets/images/logo/' . $fileNameToStore;
+            //     $media->save();
+            // }
 
-            if ($request->has('ads_page_banner_url') && $request->ads_page_banner_url != '') {
-                $media = Media::where('owner_id', $adsPage->id)
-                    ->where('type', 'ads_banner')
-                    ->first();
+            // if ($request->has('ads_page_banner_url') && $request->ads_page_banner_url != '') {
+            //     $media = Media::where('owner_id', $adsPage->id)
+            //         ->where('type', 'ads_banner')
+            //         ->first();
 
-                if ($media) {
-                    unlink(public_path() . $media->url);
-                } else {
-                    $media = Media::where('url', $request->ads_page_banner_url)->first();
-                    if ($media) {
-                        $media->owner_id = $adsPage->id;
-                        $media->save();
-                    }
-                }
-            } elseif ($request->has('ads_page_banner') && $request->ads_page_banner != '') {
-                $media = Media::where('owner_id', $adsPage->id)->where('type', 'ads_banner')->first();
-                if ($media) {
-                    unlink(public_path() . $media->url);
-                } else {
-                    $media = new Media;
-                    $media->owner_id = $adsPage->id;
-                    $media->type = "ads_banner";
-                }
+            //     if ($media) {
+            //         unlink(public_path() . $media->url);
+            //     } else {
+            //         $media = Media::where('url', $request->ads_page_banner_url)->first();
+            //         if ($media) {
+            //             $media->owner_id = $adsPage->id;
+            //             $media->save();
+            //         }
+            //     }
+            // } elseif ($request->has('ads_page_banner') && $request->ads_page_banner != '') {
+            //     $media = Media::where('owner_id', $adsPage->id)->where('type', 'ads_banner')->first();
+            //     if ($media) {
+            //         unlink(public_path() . $media->url);
+            //     } else {
+            //         $media = new Media;
+            //         $media->owner_id = $adsPage->id;
+            //         $media->type = "ads_banner";
+            //     }
 
-                $filename = uniqid();
-                $fileExt = $request->ads_page_banner->getClientOriginalExtension();
-                $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
-                $request->ads_page_banner->move(public_path() . '/assets/images/banner/', $fileNameToStore);
+            //     $filename = uniqid();
+            //     $fileExt = $request->ads_page_banner->getClientOriginalExtension();
+            //     $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
+            //     $request->ads_page_banner->move(public_path() . '/assets/images/banner/', $fileNameToStore);
 
-                $media->name = $fileNameToStore;
-                $media->url = '/assets/images/banner/' . $fileNameToStore;
-                $media->save();
-            }
+            //     $media->name = $fileNameToStore;
+            //     $media->url = '/assets/images/banner/' . $fileNameToStore;
+            //     $media->save();
+            // }
 
             if ($request->has('campaign_ads') && count($request->campaign_ads) > 0) {
                 foreach ($request->campaign_ads as $ads) {
@@ -776,7 +776,6 @@ class CampaignController extends Controller
         $i=1;
         foreach ($adtext as $key => $value) {           
             $multiple[] ='|||Ad text '.$i.':'."\n". $value['adtext'];
-            $multiple[] = '';
             $i++;
         }
 
@@ -784,9 +783,11 @@ class CampaignController extends Controller
             $ad_text[] = explode("\n", $multiple[$key]);
         }
        
-        $ad_text = array_merge(...$ad_text);
+        // $ad_text = array_merge(...$ad_text);
         
-        $ad_text = implode(" ", $ad_text);
+        $campaign = Campaign::find(330);
+        UploadCampaignToContentful::dispatch($campaign)->delay(Carbon::now()->addSeconds(2));
+
         return response()->json([
             'status' => 'success',
             'data' => $invoices,
