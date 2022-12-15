@@ -47,7 +47,7 @@ class SendCampaignNotificationEmail implements ShouldQueue
      */
     public function handle()
     {
-        $this->user->email_message = 'walletads - New campaign';
+        $this->user->email_message = 'New Campaign Notification';
         $this->campaign->date = date('m/d/Y', strtotime($this->campaign->start_date));
         $this->campaign->amount = $this->amount;
 
