@@ -539,14 +539,27 @@ class CampaignController extends Controller
             $adsPage = AdsPage::where('campaign_id', $campaign->id)->first();
             $adsPage->name = $request->ads_page_name;
             $adsPage->description = $request->ads_page_description;
-            $adsPage->website = $request->ads_page_website;
-            $adsPage->discord = $request->ads_page_discord;
-            $adsPage->twitter = $request->ads_page_twitter;
-            $adsPage->instagram = $request->ads_page_instagram;
-            $adsPage->medium = $request->ads_page_medium;
-            $adsPage->facebook = $request->ads_page_facebook;
-            $adsPage->instagram = $request->ads_page_instagram;
-            $adsPage->external_page = $request->ads_page_external_page;
+            if(isset($request->ads_page_website)){
+                $adsPage->website = $request->ads_page_website;
+            }
+            if(isset($request->ads_page_discord)){
+                $adsPage->discord = $request->ads_page_discord;
+            }
+            if(isset($request->ads_page_twitter)){
+                $adsPage->twitter = $request->ads_page_twitter;
+            }
+            if(isset($request->ads_page_instagram)){
+                $adsPage->instagram = $request->ads_page_instagram;
+            }
+            if(isset($request->ads_page_medium)){
+                $adsPage->medium = $request->ads_page_medium;
+            }
+            if(isset($request->ads_page_facebook)){
+                $adsPage->facebook = $request->ads_page_facebook;
+            }
+            if(isset($request->ads_page_external_page)){
+                $adsPage->external_page = $request->ads_page_external_page;
+            }
             $adsPage->save();
 
             if ($request->has('ads_page_logo_url') && $request->ads_page_logo_url != '') {
