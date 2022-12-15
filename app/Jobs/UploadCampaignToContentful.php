@@ -133,19 +133,23 @@ class UploadCampaignToContentful implements ShouldQueue
         //add ads to contentful
         $adv = Ads::where('campaign_id', $campaign->id)->get();
 
-        $i = 0;
+        $i = 1;
 
         foreach ($adv as $ad) {
 
             $adtext = ads::where('id', $ad->id)->get()->toArray();
             $adtext = json_decode($adtext[0]['description'], true);
             $adtext[0]['adtext'];
-
             foreach ($adtext as $key => $value) {
-                $multiple[] = 'Ad text = ' . $value['adtext'];
+                $multiple[] = '|||Ad text ' . $i . ':' . "\n" . $value['adtext'];
+                $i++;
             }
 
-            $ad_text = implode(' ||| ', $multiple);
+            foreach ($multiple as $key => $value) {
+                $ad_text[] = explode("\n", $multiple[$key]);
+            }
+
+            // $ad_text = array_merge(...$ad_text);
 
             $audience = Audience::where('ads_id', $ad->id)->get();
 
@@ -206,8 +210,9 @@ class UploadCampaignToContentful implements ShouldQueue
                 $entry_ads->setField('campaignAvailability', 'en-US', $campaign->availability);
                 $entry_ads->setField('campaignStartDate', 'en-US', $campaign->start_date);
                 $entry_ads->setField('adsName', 'en-US', $ad->name);
-                $entry_ads->setField('adsText', 'en-US', $ad_text);
+                // $entry_ads->setField('adsText', 'en-US', $ad_text);
                 $entry_ads->setField('budget', 'en-US', $aud->price);
+                $entry_ads->setField('advertiseText', 'en-US', $ad_text);
                 if ($aud->price_airdrop == "0.019") {
                     $entry_ads->setField('audienceFile', 'en-US', $asset_file->asLink());
                 }
