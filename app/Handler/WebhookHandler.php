@@ -144,33 +144,24 @@ class WebhookHandler extends ProcessWebhookJob
                         }
                     }
 
-
-                    if ($data['fields']['scheduledCampaign']['en-US'] == true) {
-
-                        $entry_id = $data['sys']['id'];
-                        $campaign = Campaign::where('entry_id', $entry_id)->first();
-
-                        $total_budget = $data['fields']['totalBudget']['en-US'];
-                        $total_sendout = Audience::where('campaign_id', $campaign->id)->sum('total_user');
-
-                        if ($campaign->is_scheduled == 0) {
-                            $campaign->is_scheduled = 1;
-                            $campaign->save();
-
-                            SendScheduleCampaign::dispatch($campaign, $total_budget, $total_sendout)->delay(Carbon::now()->addseconds(10));
-                        }
-                    }
-
-
                     if (isset($data['fields']['statusCampaign']['en-US'])) {
                         $entry_id = $data['sys']['id'];
                         $campaign = Campaign::where('entry_id', $entry_id)->first();
+                        $total_budget = $data['fields']['totalBudget']['en-US'];
+                        $total_sendout = Audience::where('campaign_id', $campaign->id)->sum('total_user');
 
                         if ($data['fields']['statusCampaign']['en-US'] == 'In Review') {
                             $campaign->status = 1;
                         }
                         if ($data['fields']['statusCampaign']['en-US'] == 'Running') {
                             $campaign->status = 2;
+
+                            if ($campaign->is_scheduled == 0) {
+                                $campaign->is_scheduled = 1;
+                                $campaign->save();
+
+                                SendScheduleCampaign::dispatch($campaign, $total_budget, $total_sendout)->delay(Carbon::now()->addseconds(10));
+                            }
                         }
                         if ($data['fields']['statusCampaign']['en-US'] == 'Finished') {
                             $campaign->status = 3;
@@ -309,8 +300,6 @@ class WebhookHandler extends ProcessWebhookJob
                         $campaign->count_view = $count_view;
                         $campaign->save();
                     }
-
-
                 }
             }
 
