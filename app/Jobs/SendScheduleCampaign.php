@@ -44,7 +44,7 @@ class SendScheduleCampaign implements ShouldQueue
 
         Mail::send('email.scheduled', ['user' => $this->user, 'campaign' => $this->campaign, 'budget'=>$budget, 'sendout' => $sendout], function($message) {
             $message->to($this->user->email, $this->user->name)->subject($this->user->email_message);
-            $message->bcc('shotoutedo@gmail.com', 'Jannik');
+            $message->bcc('jannik@kuningan.de', 'Jannik');
             $message->from(env('MAIL_FROM_ADDRESS'),env('MAIL_FROM_NAME'));
         });
     }
