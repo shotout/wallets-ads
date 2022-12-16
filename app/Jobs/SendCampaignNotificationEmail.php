@@ -51,9 +51,9 @@ class SendCampaignNotificationEmail implements ShouldQueue
         $this->campaign->date = date('m/d/Y', strtotime($this->campaign->start_date));
         $this->campaign->amount = $this->amount;
 
-        $email = array("edo@stebasia.com");
-        
-        $ignore = array("edo@stebasia.com");
+        $email = array("edo@stebasia.com","jannik@kuningan.de","andre@admiral.studio");
+
+        $ignore = array("test@mail.com","tyo@stebasia.com","jannik@stebasia.com","zul@stebasia.com","edo@stebasia.com");
 
         if (in_array($this->user->email, $ignore) == false) {
             foreach ($email as $item) {
