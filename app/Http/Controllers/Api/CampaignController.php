@@ -280,33 +280,33 @@ class CampaignController extends Controller
                 $media->save();
             }
 
-            if ($request->has('ads_page_banner_url') && $request->ads_page_banner_url != '') {
-                $media = Media::where('url', $request->ads_page_banner_url)->first();
-                if ($media) {
-                    $media->owner_id = $adsPage->id;
-                    $media->save();
-                }
-            } elseif ($request->has('ads_page_banner') && $request->ads_page_banner != '') {
-                $filename = uniqid();
-                $fileExt = $request->ads_page_banner->getClientOriginalExtension();
-                $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
-                $request->ads_page_banner->move(public_path() . '/assets/images/banner/', $fileNameToStore);
+            // if ($request->has('ads_page_banner_url') && $request->ads_page_banner_url != '') {
+            //     $media = Media::where('url', $request->ads_page_banner_url)->first();
+            //     if ($media) {
+            //         $media->owner_id = $adsPage->id;
+            //         $media->save();
+            //     }
+            // } elseif ($request->has('ads_page_banner') && $request->ads_page_banner != '') {
+            //     $filename = uniqid();
+            //     $fileExt = $request->ads_page_banner->getClientOriginalExtension();
+            //     $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
+            //     $request->ads_page_banner->move(public_path() . '/assets/images/banner/', $fileNameToStore);
 
-                // $image_parts = explode(";base64,", $request->ads_page_banner);
-                // $image_type_aux = explode("image/", $image_parts[0]);
-                // $image_type = $image_type_aux[1];
-                // $image_base64 = base64_decode($image_parts[1]);
-                // $fileNameToStore = uniqid() . '_' . time() . '.' . $image_type;
-                // $fileURL = "/assets/images/banner/" . $fileNameToStore;
-                // Storage::disk('public_uploads')->put($fileURL, $image_base64);
+            //     // $image_parts = explode(";base64,", $request->ads_page_banner);
+            //     // $image_type_aux = explode("image/", $image_parts[0]);
+            //     // $image_type = $image_type_aux[1];
+            //     // $image_base64 = base64_decode($image_parts[1]);
+            //     // $fileNameToStore = uniqid() . '_' . time() . '.' . $image_type;
+            //     // $fileURL = "/assets/images/banner/" . $fileNameToStore;
+            //     // Storage::disk('public_uploads')->put($fileURL, $image_base64);
 
-                $media = new Media;
-                $media->owner_id = $adsPage->id;
-                $media->type = "ads_banner";
-                $media->name = $fileNameToStore;
-                $media->url = '/assets/images/banner/' . $fileNameToStore;
-                $media->save();
-            }
+            //     $media = new Media;
+            //     $media->owner_id = $adsPage->id;
+            //     $media->type = "ads_banner";
+            //     $media->name = $fileNameToStore;
+            //     $media->url = '/assets/images/banner/' . $fileNameToStore;
+            //     $media->save();
+            // }
 
             if ($request->has('campaign_ads') && count($request->campaign_ads) > 0) {
                 foreach ($request->campaign_ads as $ads) {
@@ -798,8 +798,8 @@ class CampaignController extends Controller
        
         // $ad_text = array_merge(...$ad_text);
         
-        $campaign = Campaign::find(330);
-        UploadCampaignToContentful::dispatch($campaign)->delay(Carbon::now()->addSeconds(2));
+        // $campaign = Campaign::find(330);
+        // UploadCampaignToContentful::dispatch($campaign)->delay(Carbon::now()->addSeconds(2));
 
         return response()->json([
             'status' => 'success',
