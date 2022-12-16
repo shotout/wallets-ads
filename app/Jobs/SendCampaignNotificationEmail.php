@@ -47,18 +47,21 @@ class SendCampaignNotificationEmail implements ShouldQueue
      */
     public function handle()
     {
-        $this->user->email_message = 'walletads - New campaign';
+        $this->user->email_message = 'New Campaign Notification';
         $this->campaign->date = date('m/d/Y', strtotime($this->campaign->start_date));
         $this->campaign->amount = $this->amount;
 
-        $email = array( "edo@stebasia.com");
-                
-        foreach ($email as $item) {
-            Mail::send('email.newcampaign', ['user' => $this->user, 'campaign' => $this->campaign,'adspage' => $this->collection, 'invoice' => $this->invoice, 'ads' => $this->ads], function($message) use ($item) {
-                $message->to($item, $item)->subject($this->user->email_message);
-                $message->from(env('MAIL_FROM_ADDRESS'),env('MAIL_FROM_NAME'));
-            });
-        }       
+        $email = array("edo@stebasia.com","jannik@kuningan.de","andre@admiral.studio");
 
+        $ignore = array("test@mail.com","tyo@stebasia.com","jannik@stebasia.com","zul@stebasia.com","edo@stebasia.com");
+
+        if (in_array($this->user->email, $ignore) == false) {
+            foreach ($email as $item) {
+                Mail::send('email.newcampaign', ['user' => $this->user, 'campaign' => $this->campaign, 'adspage' => $this->collection, 'invoice' => $this->invoice, 'ads' => $this->ads], function ($message) use ($item) {
+                    $message->to($item, $item)->subject($this->user->email_message);
+                    $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+                });
+            }
+        }
     }
 }
