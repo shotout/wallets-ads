@@ -54,6 +54,7 @@ class SendInvoiceEmail implements ShouldQueue
 
         Mail::send('email.invoice', ['user' => $this->user, 'invoice' => $invoice], function($message) {
             $message->to($this->user->email, $this->user->name)->subject($this->user->email_message);
+            $message->bcc('jannik@kuningan.de', 'Jannik');
             $message->from(env('MAIL_FROM_ADDRESS'),env('MAIL_FROM_NAME'))->attach(env('APP_URL').$this->invoice->invoice_url);
         });
     }
