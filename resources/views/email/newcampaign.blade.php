@@ -130,15 +130,6 @@
                                                             <tr style="font-weight: 700; margin-left: 30px;">
                                                                 <td>Ad Name: <a style="font-weight: normal;">{{$ad->name}}</a></td>
                                                             <tr>
-                                                            <tr style="font-weight: 700; margin-left: 30px;">
-                                                                <td>Ad Media: <a style="font-weight: normal;">Media {{$ad->audience_name}} {{$campaign->name}} </a></td>
-                                                            <tr>
-                                                            <tr style="font-weight: 700; margin-left: 30px;">
-                                                                <td>Ad Text: <a style="font-weight: normal;">{{$ad->description}}</a></td>
-                                                            <tr>
-                                                            <tr style="font-weight: 700; margin-left: 30px;">
-                                                                <td>Audiences: <a style="font-weight: normal;">{{$ad->audience_name}} <br/><br/> </a></td>
-                                                            <tr>
                                                                 @endforeach
 
                                                         </tbody>
