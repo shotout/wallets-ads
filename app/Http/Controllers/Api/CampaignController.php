@@ -788,16 +788,18 @@ class CampaignController extends Controller
         $adtext[0]['adtext'];
         $i=1;
         foreach ($adtext as $key => $value) {           
-            $multiple[] ='|||Ad text '.$i.':'."\n". $value['adtext'];
-            $i++;
+            $multiple[] = $value['adtext'];
+            
         }
 
         foreach ($multiple as $key => $value) {
+            $test = '|||Ad text'.$i.':';
+            $ad_text[] = $test;
             $ad_text[] = explode("\n", $multiple[$key]);
+            $i++;
         }
-       
-        // $ad_text = array_merge(...$ad_text);
-        
+
+          
         // $campaign = Campaign::find(330);
         // UploadCampaignToContentful::dispatch($campaign)->delay(Carbon::now()->addSeconds(2));
 
