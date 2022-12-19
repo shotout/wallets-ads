@@ -146,7 +146,10 @@ class UploadCampaignToContentful implements ShouldQueue
             }
 
             foreach ($multiple as $key => $value) {
+                $test = '|||Ad text'.$i.':';
+                $ad_text[] = $test;
                 $ad_text[] = explode("\n", $multiple[$key]);
+                $i++;
             }
 
             // $ad_text = array_merge(...$ad_text);
