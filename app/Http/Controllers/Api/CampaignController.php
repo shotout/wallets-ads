@@ -539,25 +539,25 @@ class CampaignController extends Controller
             $adsPage = AdsPage::where('campaign_id', $campaign->id)->first();
             $adsPage->name = $request->ads_page_name;
             $adsPage->description = $request->ads_page_description;
-            if(isset($request->ads_page_website)){
+            if (isset($request->ads_page_website)) {
                 $adsPage->website = $request->ads_page_website;
             }
-            if(isset($request->ads_page_discord)){
+            if (isset($request->ads_page_discord)) {
                 $adsPage->discord = $request->ads_page_discord;
             }
-            if(isset($request->ads_page_twitter)){
+            if (isset($request->ads_page_twitter)) {
                 $adsPage->twitter = $request->ads_page_twitter;
             }
-            if(isset($request->ads_page_instagram)){
+            if (isset($request->ads_page_instagram)) {
                 $adsPage->instagram = $request->ads_page_instagram;
             }
-            if(isset($request->ads_page_medium)){
+            if (isset($request->ads_page_medium)) {
                 $adsPage->medium = $request->ads_page_medium;
             }
-            if(isset($request->ads_page_facebook)){
+            if (isset($request->ads_page_facebook)) {
                 $adsPage->facebook = $request->ads_page_facebook;
             }
-            if(isset($request->ads_page_external_page)){
+            if (isset($request->ads_page_external_page)) {
                 $adsPage->external_page = $request->ads_page_external_page;
             }
             $adsPage->save();
@@ -586,14 +586,16 @@ class CampaignController extends Controller
                     $media->type = "ads_logo";
                 }
 
-                $filename = uniqid();
-                $fileExt = $request->ads_page_logo->getClientOriginalExtension();
-                $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
-                $request->ads_page_logo->move(public_path() . '/assets/images/logo/', $fileNameToStore);
+                if ($request->ads_page_logo->getClientOriginalExtension() != '') {
+                    $filename = uniqid();
+                    $fileExt = $request->ads_page_logo->getClientOriginalExtension();
+                    $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
+                    $request->ads_page_logo->move(public_path() . '/assets/images/logo/', $fileNameToStore);
 
-                $media->name = $fileNameToStore;
-                $media->url = '/assets/images/logo/' . $fileNameToStore;
-                $media->save();
+                    $media->name = $fileNameToStore;
+                    $media->url = '/assets/images/logo/' . $fileNameToStore;
+                    $media->save();
+                }
             }
 
             if ($request->has('ads_page_banner_url') && $request->ads_page_banner_url != '') {
@@ -786,15 +788,14 @@ class CampaignController extends Controller
         $adtext = ads::where('campaign_id', '330')->get()->toArray();
         $adtext = json_decode($adtext[0]['description'], true);
         $adtext[0]['adtext'];
-        $i=1;
-        foreach ($adtext as $key => $value) {           
+        $i = 1;
+        foreach ($adtext as $key => $value) {
             $multiple[] = $value['adtext'];
-            
         }
 
         foreach ($multiple as $key => $value) {
-            $test = '|||Ad text '.$i.':';
-            $ad_text[] = $test; 
+            $test = '|||Ad text ' . $i . ':';
+            $ad_text[] = $test;
             $ad_text[] = $multiple[$key];
             $i++;
         }
