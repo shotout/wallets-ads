@@ -586,7 +586,7 @@ class CampaignController extends Controller
                     $media->type = "ads_logo";
                 }
 
-                if( gettype($request->ads_page_logo) != 'string' ){                                  
+                if (gettype($request->ads_page_logo) != 'string') {
                     $filename = uniqid();
                     $fileExt = $request->ads_page_logo->getClientOriginalExtension();
                     $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
@@ -696,14 +696,16 @@ class CampaignController extends Controller
                             $media->type = "ads_nft";
                         }
 
-                        $filename = uniqid();
-                        $fileExt = $ads->image->getClientOriginalExtension();
-                        $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
-                        $ads->image->move(public_path() . '/assets/images/nft/', $fileNameToStore);
+                        if (gettype($ads->image) != 'string') {
+                            $filename = uniqid();
+                            $fileExt = $ads->image->getClientOriginalExtension();
+                            $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
+                            $ads->image->move(public_path() . '/assets/images/nft/', $fileNameToStore);
 
-                        $media->name = $fileNameToStore;
-                        $media->url = "/assets/images/nft/$fileNameToStore";
-                        $media->save();
+                            $media->name = $fileNameToStore;
+                            $media->url = "/assets/images/nft/$fileNameToStore";
+                            $media->save();
+                        }
                     }
                 }
             }
