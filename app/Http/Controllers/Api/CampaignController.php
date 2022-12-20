@@ -586,9 +586,7 @@ class CampaignController extends Controller
                     $media->type = "ads_logo";
                 }
 
-                $page_logo = $request->ads_page_logo;
-
-                if($page_logo->getmimeType() == 'image/svg+xml' || $page_logo->getMimeType() == 'image/jpeg' || $page_logo->getMimeType() == 'image/png' || $page_logo->getMimeType() == 'image/gif'){
+                if( gettype($request->ads_page_logo) != 'string' ){                                  
                     $filename = uniqid();
                     $fileExt = $request->ads_page_logo->getClientOriginalExtension();
                     $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
