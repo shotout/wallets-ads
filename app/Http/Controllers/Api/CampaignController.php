@@ -676,7 +676,7 @@ class CampaignController extends Controller
                             ->first();
 
                         if ($media) {
-                            unlink(public_path() . $media->url);
+                            // unlink(public_path() . $media->url);
                         } else {
                             $media = Media::where('url', $ads->image_url)->first();
                             if ($media) {
@@ -687,7 +687,7 @@ class CampaignController extends Controller
                     } elseif (isset($ads->image) && $ads->image != '') {
                         $media = Media::where('owner_id', $oldAds->id)->where('type', 'ads_nft')->first();
                         if ($media) {
-                            unlink(public_path() . $media->url);
+                            // unlink(public_path() . $media->url);
                         } else {
                             $media = new Media;
                             $media->owner_id = $oldAds->id;
@@ -793,13 +793,13 @@ class CampaignController extends Controller
         }
 
         foreach ($multiple as $key => $value) {
-            $test = '|||Ad text'.$i.':';
-            $ad_text[] = $test;
-            $ad_text[] = explode("\n", $multiple[$key]);
+            $test = '|||Ad text '.$i.':';
+            $ad_text[] = $test; 
+            $ad_text[] = $multiple[$key];
             $i++;
         }
 
-          
+        // $ad_text = html_entity_decode($ad_text[1]);
         // $campaign = Campaign::find(330);
         // UploadCampaignToContentful::dispatch($campaign)->delay(Carbon::now()->addSeconds(2));
 
