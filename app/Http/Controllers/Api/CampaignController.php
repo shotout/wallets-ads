@@ -586,7 +586,7 @@ class CampaignController extends Controller
                     $media->type = "ads_logo";
                 }
 
-                if ($request->ads_page_logo->isImage()) {
+                if ($request->ads_page_logo->isImage() == true) {
                     $filename = uniqid();
                     $fileExt = $request->ads_page_logo->getClientOriginalExtension();
                     $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
