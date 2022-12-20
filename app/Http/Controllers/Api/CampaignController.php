@@ -568,7 +568,7 @@ class CampaignController extends Controller
                     ->first();
 
                 if ($media) {
-                    unlink(public_path() . $media->url);
+                    // unlink(public_path() . $media->url);
                 } else {
                     $media = Media::where('url', $request->ads_page_logo_url)->first();
                     if ($media) {
@@ -579,7 +579,7 @@ class CampaignController extends Controller
             } elseif ($request->has('ads_page_logo') && $request->ads_page_logo != '') {
                 $media = Media::where('owner_id', $adsPage->id)->where('type', 'ads_logo')->first();
                 if ($media) {
-                    unlink(public_path() . $media->url);
+                    // unlink(public_path() . $media->url);
                 } else {
                     $media = new Media;
                     $media->owner_id = $adsPage->id;
@@ -602,7 +602,7 @@ class CampaignController extends Controller
                     ->first();
 
                 if ($media) {
-                    unlink(public_path() . $media->url);
+                    // unlink(public_path() . $media->url);
                 } else {
                     $media = Media::where('url', $request->ads_page_banner_url)->first();
                     if ($media) {
@@ -613,7 +613,7 @@ class CampaignController extends Controller
             } elseif ($request->has('ads_page_banner') && $request->ads_page_banner != '') {
                 $media = Media::where('owner_id', $adsPage->id)->where('type', 'ads_banner')->first();
                 if ($media) {
-                    unlink(public_path() . $media->url);
+                    // unlink(public_path() . $media->url);
                 } else {
                     $media = new Media;
                     $media->owner_id = $adsPage->id;
