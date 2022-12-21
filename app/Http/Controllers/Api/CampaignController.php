@@ -117,6 +117,9 @@ class CampaignController extends Controller
             $campaign->payment_method = 'Card';
             $campaign->status = 1;
             $campaign->is_show = 1;
+            if($request->has('sample_address')){
+                $campaign->sample_address = $request->sample_address;
+            }
             $campaign->save();
 
             if ($request->has('campaign_audiences') && count($request->campaign_audiences) > 0) {
