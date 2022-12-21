@@ -789,29 +789,38 @@ class CampaignController extends Controller
     {
         $invoices = Invoice::where('user_id', auth('sanctum')->user()->id)->get();
 
-        $adtext = ads::where('campaign_id', '330')->get()->toArray();
-        $adtext = json_decode($adtext[0]['description'], true);
-        $adtext[0]['adtext'];
-        $i = 1;
-        foreach ($adtext as $key => $value) {
-            $multiple[] = $value['adtext'];
-        }
+        // $adtext = ads::where('campaign_id', '330')->get()->toArray();
+        // $adtext = json_decode($adtext[0]['description'], true);
+        // $adtext[0]['adtext'];
+        // $i = 1;
+        // foreach ($adtext as $key => $value) {
+        //     $multiple[] = $value['adtext'];
+        // }
 
-        foreach ($multiple as $key => $value) {
-            $test = '|||Ad text ' . $i . ':';
-            $ad_text[] = $test;
-            $ad_text[] = $multiple[$key];
-            $i++;
-        }
+        // foreach ($multiple as $key => $value) {
+        //     $test = '|||Ad text ' . $i . ':';
+        //     $ad_text[] = $test;
+        //     $ad_text[] = $multiple[$key];
+        //     $i++;
+        // }
 
         // $ad_text = html_entity_decode($ad_text[1]);
         // $campaign = Campaign::find(330);
         // UploadCampaignToContentful::dispatch($campaign)->delay(Carbon::now()->addSeconds(2));
 
+
+        $wallets = Campaign::find(530);
+        $sample[] = $wallets->sample_address;
+        foreach ($sample as $key => $value) {
+            $samples[] = $value;
+        }
+
+        $samples = json_decode($samples[0], true);
+
         return response()->json([
             'status' => 'success',
             'data' => $invoices,
-            'ad_text' => $ad_text
+            'ad_text' => $samples
         ], 200);
     }
 
