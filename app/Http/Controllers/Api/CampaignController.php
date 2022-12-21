@@ -118,7 +118,10 @@ class CampaignController extends Controller
             $campaign->status = 1;
             $campaign->is_show = 1;
             if($request->has('wallet_address')){
-                $campaign->sample_address = $request->sample_address;
+                foreach ($request->wallet_address as $wallet) {
+                    $wallet = (object) $wallet;                    
+                }
+                $campaign->sample_address = $wallet;
             }
             $campaign->save();
 
