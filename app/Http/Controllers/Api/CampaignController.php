@@ -119,7 +119,7 @@ class CampaignController extends Controller
             $campaign->is_show = 1;
             if($request->has('wallet_address')){
                 foreach ($request->wallet_address as $wallet) {
-                    $wallet = (object) $wallet;                    
+                    $wallet [] = $wallet;                    
                 }
                 $campaign->sample_address = $wallet;
             }
