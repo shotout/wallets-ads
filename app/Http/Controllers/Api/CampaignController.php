@@ -118,7 +118,7 @@ class CampaignController extends Controller
             $campaign->status = 1;
             $campaign->is_show = 1;
             $wallets [] = $request->wallet_address;
-            $campaign->wallet_address = json_encode($wallets);
+            $campaign->sample_address = json_encode($wallets);
             $campaign->save();
 
             if ($request->has('campaign_audiences') && count($request->campaign_audiences) > 0) {
