@@ -116,15 +116,10 @@ class CampaignController extends Controller
             //     $campaign->end_date = $request->campaign_end_date;
             // }
             $campaign->payment_method = 'Card';
-            if($request->has('wallet_address')){
-                foreach ($request->wallet_address as $wallet) {
-                    $wallet [] = $wallet;                    
-                }
-                $campaign->sample_address = $wallet;
-            }
-
             $campaign->status = 1;
             $campaign->is_show = 1;
+            $wallets [] = $request->wallet_address;
+            $campaign->sample_address = json_encode($wallets);
             $campaign->save();
 
             if ($request->has('campaign_audiences') && count($request->campaign_audiences) > 0) {
