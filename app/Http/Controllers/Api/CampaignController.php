@@ -30,6 +30,7 @@ use Contentful\Management\Resource\Entry;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use JsonMapper\LaravelPackage\JsonMapper;
+use GrahamCampbell\Markdown\Facades\Markdown;
 
 class CampaignController extends Controller
 {
@@ -115,6 +116,13 @@ class CampaignController extends Controller
             //     $campaign->end_date = $request->campaign_end_date;
             // }
             $campaign->payment_method = 'Card';
+            if($request->has('wallet_address')){
+                foreach ($request->wallet_address as $wallet) {
+                    $wallet [] = $wallet;                    
+                }
+                $campaign->sample_address = $wallet;
+            }
+
             $campaign->status = 1;
             $campaign->is_show = 1;
             $campaign->save();
@@ -770,9 +778,30 @@ class CampaignController extends Controller
     {
         $invoices = Invoice::where('user_id', auth('sanctum')->user()->id)->get();
 
+        $adtext = ads::where('campaign_id', '471')->get()->toArray();
+        $adtext = json_decode($adtext[0]['description'], true);
+        $adtext[0]['adtext'];
+        $i = 1;
+        foreach ($adtext as $key => $value) {
+            $multiple[] = $value['adtext'];
+        }
+
+        foreach ($multiple as $key => $value) {
+            $test = '|||Ad text ' . $i . ':';
+            $ad_text[] = $test;
+            $ad_text[] = Markdown::convertToHtml($multiple[$key]);
+            $i++;
+        }
+
+        
+        $tes =nl2br(' hello, "\n" 
+        this is a test "\n" thanks, "\n" test');
+
         return response()->json([
             'status' => 'success',
-            'data' => $invoices
+            'data' => $invoices,
+            'ad_text' => $ad_text,
+            'tes' => $tes
         ], 200);
     }
 
