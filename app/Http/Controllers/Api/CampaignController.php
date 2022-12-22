@@ -372,7 +372,7 @@ class CampaignController extends Controller
         });
 
         //start upload campaign to contenful
-        UploadCampaignToContentful::dispatch($campaign)->delay(Carbon::now()->addSeconds(60));
+        UploadCampaignToContentful::dispatch($campaign)->delay(Carbon::now()->addSeconds(90));
 
         return response()->json([
             'status' => 'success',
