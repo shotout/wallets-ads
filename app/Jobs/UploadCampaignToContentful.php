@@ -56,7 +56,7 @@ class UploadCampaignToContentful implements ShouldQueue
         $newadspage = AdsPage::where('campaign_id', $campaign->id)->first();
 
         $url_logo = Media::where('owner_id', $newadspage->id)->where('type', 'ads_logo')->first();
-        $url_banner = Media::where('owner_id', $newadspage->id)->where('type', 'ads_banner')->first();
+        // $url_banner = Media::where('owner_id', $newadspage->id)->where('type', 'ads_banner')->first();
         $url_logo2 = env("APP_URL") . $url_logo->url;
 
         $logo = new \Contentful\Core\File\RemoteUploadFile(
@@ -65,11 +65,11 @@ class UploadCampaignToContentful implements ShouldQueue
             $url_logo2
         );
 
-        $banner = new \Contentful\Core\File\RemoteUploadFile(
-            $campaign->name . 'Collection Banner',
-            'JPEG,JPG,PNG',
-            env("APP_URL") . $url_banner->url
-        );
+        // $banner = new \Contentful\Core\File\RemoteUploadFile(
+        //     $campaign->name . 'Collection Banner',
+        //     'JPEG,JPG,PNG',
+        //     env("APP_URL") . $url_banner->url
+        // );
 
         // Prepare uploadig image
         $asset_logo = new Asset();
@@ -83,15 +83,15 @@ class UploadCampaignToContentful implements ShouldQueue
         $asset_logo->process('en-US');
 
         // Prepare uploadig image
-        $asset_banner = new Asset();
-        $asset_banner->setTitle('en-US', 'Collection Banner of ' . $campaign->name);
-        $asset_banner->setFile('en-US', $banner);
+        // $asset_banner = new Asset();
+        // $asset_banner->setTitle('en-US', 'Collection Banner of ' . $campaign->name);
+        // $asset_banner->setFile('en-US', $banner);
 
         //process Image
-        $environment->create($asset_banner);
-        $asset_banner_id = $asset_banner->getId();
-        $asset_banner = $environment->getAsset($asset_banner_id);
-        $asset_banner->process('en-US');
+        // $environment->create($asset_banner);
+        // $asset_banner_id = $asset_banner->getId();
+        // $asset_banner = $environment->getAsset($asset_banner_id);
+        // $asset_banner->process('en-US');
 
         //add collection page to contentful
         $entry_ads_page = new Entry('adsPage');
@@ -115,7 +115,7 @@ class UploadCampaignToContentful implements ShouldQueue
         $entry_ads_page->setField('collectionPageMedium', 'en-US', $newadspage->medium);
         $entry_ads_page->setField('collectionPageTelegram', 'en-US', $newadspage->telegram);
         $entry_ads_page->setField('collectionPageLogo', 'en-US', $asset_logo->asLink());
-        $entry_ads_page->setField('collectionPageBanner', 'en-US', $asset_banner->asLink());
+        // $entry_ads_page->setField('collectionPageBanner', 'en-US', $asset_banner->asLink());
         $entry_ads_page->setField('collectionPageTokenTrackerName', 'en-US', $newadspage->token_name);
         $entry_ads_page->setField('collectionPageTokenTrackerSymbol', 'en-US', $newadspage->token_symbol);
         $environment->create($entry_ads_page);
