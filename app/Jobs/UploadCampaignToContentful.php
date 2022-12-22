@@ -56,7 +56,7 @@ class UploadCampaignToContentful implements ShouldQueue
         $newadspage = AdsPage::where('campaign_id', $campaign->id)->first();
 
         $url_logo = Media::where('owner_id', $newadspage->id)->where('type', 'ads_logo')->first();
-        $url_banner = Media::where('owner_id', $newadspage->id)->where('type', 'ads_banner')->first();
+        // $url_banner = Media::where('owner_id', $newadspage->id)->where('type', 'ads_banner')->first();
         $url_logo2 = env("APP_URL") . $url_logo->url;
 
         $logo = new \Contentful\Core\File\RemoteUploadFile(
@@ -211,7 +211,7 @@ class UploadCampaignToContentful implements ShouldQueue
                 $entry_ads->setField('campaignAvailability', 'en-US', $campaign->availability);
                 $entry_ads->setField('campaignStartDate', 'en-US', $campaign->start_date);
                 $entry_ads->setField('adsName', 'en-US', $ad->name);
-                $entry_ads->setField('adsText', 'en-US', $ad_text);
+                $entry_ads->setField('advertiseText', 'en-US', $ad_text);
                 $entry_ads->setField('budget', 'en-US', $aud->price);
                 if ($aud->price_airdrop == "0.019") {
                     $entry_ads->setField('audienceFile', 'en-US', $asset_file->asLink());
