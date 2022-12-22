@@ -45,13 +45,6 @@ class UploadCampaignToContentful implements ShouldQueue
     public function handle()
     {
         $campaign = Campaign::find($this->campaign->id);
-
-        // $sample[] = $campaign->sample_address;
-        // foreach ($sample as $key => $value) {
-        //     $samples[] = $value;
-        // }
-
-        // $samples_address = json_decode($samples[0], true);
         //contentful env
         $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
         $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
@@ -72,11 +65,11 @@ class UploadCampaignToContentful implements ShouldQueue
             $url_logo2
         );
 
-        // $banner = new \Contentful\Core\File\RemoteUploadFile(
-        //     $campaign->name . 'Collection Banner',
-        //     'JPEG,JPG,PNG',
-        //     env("APP_URL") . $url_banner->url
-        // );
+        $banner = new \Contentful\Core\File\RemoteUploadFile(
+            $campaign->name . 'Collection Banner',
+            'JPEG,JPG,PNG',
+            env("APP_URL") . $url_banner->url
+        );
 
         // Prepare uploadig image
         $asset_logo = new Asset();
@@ -90,15 +83,15 @@ class UploadCampaignToContentful implements ShouldQueue
         $asset_logo->process('en-US');
 
         // Prepare uploadig image
-        // $asset_banner = new Asset();
-        // $asset_banner->setTitle('en-US', 'Collection Banner of ' . $campaign->name);
-        // $asset_banner->setFile('en-US', $banner);
+        $asset_banner = new Asset();
+        $asset_banner->setTitle('en-US', 'Collection Banner of ' . $campaign->name);
+        $asset_banner->setFile('en-US', $banner);
 
         //process Image
-        // $environment->create($asset_banner);
-        // $asset_banner_id = $asset_banner->getId();
-        // $asset_banner = $environment->getAsset($asset_banner_id);
-        // $asset_banner->process('en-US');
+        $environment->create($asset_banner);
+        $asset_banner_id = $asset_banner->getId();
+        $asset_banner = $environment->getAsset($asset_banner_id);
+        $asset_banner->process('en-US');
 
         //add collection page to contentful
         $entry_ads_page = new Entry('adsPage');
@@ -112,8 +105,7 @@ class UploadCampaignToContentful implements ShouldQueue
             $entry_ads_page->setField('promoCode', 'en-US', $campaign->promo_code);
             $entry_ads_page->setField('promoAmount', 'en-US', $voucher->value);
         }
-        // $entry_ads_page->setField('campaignSampleWalletAddresses', 'en-US', $samples_address);
-        $entry_ads_page->setField('totalBudget', 'en-US', Audience::where('campaign_id', $campaign->id)->sum('price'));
+
         $entry_ads_page->setField('paymentMethod', 'en-US', $campaign->payment_method);
         $entry_ads_page->setField('paymentStatus', 'en-US', false);
         $entry_ads_page->setField('collectionPageName', 'en-US', $newadspage->name);
@@ -123,7 +115,7 @@ class UploadCampaignToContentful implements ShouldQueue
         $entry_ads_page->setField('collectionPageMedium', 'en-US', $newadspage->medium);
         $entry_ads_page->setField('collectionPageTelegram', 'en-US', $newadspage->telegram);
         $entry_ads_page->setField('collectionPageLogo', 'en-US', $asset_logo->asLink());
-        // $entry_ads_page->setField('collectionPageBanner', 'en-US', $asset_banner->asLink());
+        $entry_ads_page->setField('collectionPageBanner', 'en-US', $asset_banner->asLink());
         $entry_ads_page->setField('collectionPageTokenTrackerName', 'en-US', $newadspage->token_name);
         $entry_ads_page->setField('collectionPageTokenTrackerSymbol', 'en-US', $newadspage->token_symbol);
         $environment->create($entry_ads_page);
@@ -148,16 +140,14 @@ class UploadCampaignToContentful implements ShouldQueue
             $adtext = ads::where('id', $ad->id)->get()->toArray();
             $adtext = json_decode($adtext[0]['description'], true);
             $adtext[0]['adtext'];
-            foreach ($adtext as $key => $value) {           
-                $multiple[] = $value['adtext'];
-                
-            }
-    
-            foreach ($multiple as $key => $value) {
-                $test = '|||Ad text '.$i.':';
-                $ad_text[] = $test;
-                $ad_text[] = $multiple[$key];
+
+            foreach ($adtext as $key => $value) {
+                $multiple[] = '|||Ad text ' . $i . ':' . "\n" . $value['adtext'];
                 $i++;
+            }
+
+            foreach ($multiple as $key => $value) {
+                $ad_text[] = explode("\n", $multiple[$key]);
             }
 
             // $ad_text = array_merge(...$ad_text);
@@ -223,8 +213,6 @@ class UploadCampaignToContentful implements ShouldQueue
                 $entry_ads->setField('adsName', 'en-US', $ad->name);
                 $entry_ads->setField('adsText', 'en-US', $ad_text);
                 $entry_ads->setField('budget', 'en-US', $aud->price);
-                // $entry_ads->setField('advertiseText', 'en-US', $ad_text);
-                $entry_ads->setField('adss', 'en-US', $ad_text);
                 if ($aud->price_airdrop == "0.019") {
                     $entry_ads->setField('audienceFile', 'en-US', $asset_file->asLink());
                 }
