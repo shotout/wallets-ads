@@ -10,6 +10,7 @@ use App\Models\DetailTarget;
 use App\Models\Media;
 use App\Models\User;
 use App\Models\Voucher;
+use Carbon\Carbon;
 use Contentful\Management\Client;
 use Contentful\Management\Resource\Asset;
 use Contentful\Management\Resource\Entry;
@@ -241,6 +242,7 @@ class UploadCampaignToContentful implements ShouldQueue
             }
         }
 
-        SendCampaignNotificationEmail::dispatch($campaign);
+        SendCampaignNotificationEmail::dispatch($campaign)->delay(Carbon::now()->addSeconds(90));
+
     }
 }
