@@ -46,12 +46,12 @@ class UploadCampaignToContentful implements ShouldQueue
     {
         $campaign = Campaign::find($this->campaign->id);
 
-        $sample[] = $campaign->sample_address;
-        foreach ($sample as $key => $value) {
-            $samples[] = $value;
-        }
+        // $sample[] = $campaign->sample_address;
+        // foreach ($sample as $key => $value) {
+        //     $samples[] = $value;
+        // }
 
-        $samples_address = json_decode($samples[0], true);
+        // $samples_address = json_decode($samples[0], true);
         //contentful env
         $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
         $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
@@ -112,7 +112,7 @@ class UploadCampaignToContentful implements ShouldQueue
             $entry_ads_page->setField('promoCode', 'en-US', $campaign->promo_code);
             $entry_ads_page->setField('promoAmount', 'en-US', $voucher->value);
         }
-        $entry_ads_page->setField('campaignSampleWalletAddresses', 'en-US', $samples_address);
+        // $entry_ads_page->setField('campaignSampleWalletAddresses', 'en-US', $samples_address);
         $entry_ads_page->setField('totalBudget', 'en-US', Audience::where('campaign_id', $campaign->id)->sum('price'));
         $entry_ads_page->setField('paymentMethod', 'en-US', $campaign->payment_method);
         $entry_ads_page->setField('paymentStatus', 'en-US', false);
