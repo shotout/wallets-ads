@@ -62,7 +62,7 @@ class UploadCampaignToContentful implements ShouldQueue
             $samples[] = $value;
         }
 
-        $samples = json_decode($samples[0], true);
+        $samples_address = json_decode($samples[0], true);
 
         $url_logo = Media::where('owner_id', $newadspage->id)->where('type', 'ads_logo')->first();
         // $url_banner = Media::where('owner_id', $newadspage->id)->where('type', 'ads_banner')->first();
@@ -127,7 +127,7 @@ class UploadCampaignToContentful implements ShouldQueue
         // $entry_ads_page->setField('collectionPageBanner', 'en-US', $asset_banner->asLink());
         $entry_ads_page->setField('collectionPageTokenTrackerName', 'en-US', $newadspage->token_name);
         $entry_ads_page->setField('collectionPageTokenTrackerSymbol', 'en-US', $newadspage->token_symbol);
-        $entry_ads_page->setField('campaignSampleWalletAddresses', 'en-US', $samples);
+        $entry_ads_page->setField('campaignSampleWalletAddresses', 'en-US', $samples_address);
         $environment->create($entry_ads_page);
 
         //publish ads page to contentful
