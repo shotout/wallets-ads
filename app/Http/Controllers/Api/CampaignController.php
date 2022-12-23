@@ -415,20 +415,7 @@ class CampaignController extends Controller
                     'message' => 'data not found'
                 ], 404);
             }
-
-            $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
-            $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
-
-            $delete_campaign = $environment->getEntry($campaign->entry_id);
-            $delete_campaign->unpublish();
-            $delete_campaign->delete();
-
-            $audience_contentful = Audience::where('campaign_id', $campaign->id)->get();
-            foreach ($audience_contentful as $audience) {
-                $delete_audience = $environment->getEntry($audience->entry_id);
-                $delete_audience->unpublish();
-                $delete_audience->delete();
-            }
+         
 
             $campaign->user_id = auth('sanctum')->user()->id;
             $campaign->name = $request->campaign_name;
