@@ -442,6 +442,8 @@ class CampaignController extends Controller
             $campaign->update();
 
             if ($request->has('campaign_audiences') && count($request->campaign_audiences) > 0) {
+                Audience::where('campaign_id', $campaign->id)->delete();
+
                 foreach ($request->campaign_audiences as $audience) {
                     $audience = (object) $audience;
 
