@@ -610,7 +610,7 @@ class CampaignController extends Controller
                     $media->type = "ads_banner";
                 }
 
-                if (gettype($request->ads_page_logo) != 'string') {
+                if (gettype($request->ads_page_banner) != 'string') {
                     $filename = uniqid();
                     $fileExt = $request->ads_page_banner->getClientOriginalExtension();
                     $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
@@ -685,7 +685,7 @@ class CampaignController extends Controller
                             $media->owner_id = $oldAds->id;
                             $media->type = "ads_nft";
                         }
-                        if (gettype($request->ads_page_logo) != 'string') {
+                        if (gettype($ads->image) != 'string') {
                             $filename = uniqid();
                             $fileExt = $ads->image->getClientOriginalExtension();
                             $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
