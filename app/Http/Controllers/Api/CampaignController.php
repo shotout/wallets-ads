@@ -416,6 +416,20 @@ class CampaignController extends Controller
                 ], 404);
             }
 
+            $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
+            $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
+
+            $delete_campaign = $environment->getEntry($campaign->entry_id);
+            $delete_campaign->unpublish();
+            $delete_campaign->delete();
+
+            $audience_contentful = Audience::where('campaign_id', $campaign->id)->get();
+            foreach ($audience_contentful as $audience) {
+                $delete_audience = $environment->getEntry($audience->entry_id);
+                $delete_audience->unpublish();
+                $delete_audience->delete();
+            }
+
             $campaign->user_id = auth('sanctum')->user()->id;
             $campaign->name = $request->campaign_name;
             $campaign->start_date = $request->campaign_start_date;
@@ -439,6 +453,7 @@ class CampaignController extends Controller
                 $campaign->availability = $request->campaign_end_date_day;
             }
 
+            $campaign->is_show = 1;
             $campaign->update();
 
             if ($request->has('campaign_audiences') && count($request->campaign_audiences) > 0) {
@@ -705,6 +720,9 @@ class CampaignController extends Controller
         });
 
         $data = Campaign::with('audiences', 'adsPage', 'ads')->find($campaign->id);
+
+        $campaign = Campaign::find($campaign->id);
+        UploadCampaignToContentful::dispatch($campaign)->delay(Carbon::now()->addSeconds(60));
 
         return response()->json([
             'status' => 'success',
