@@ -679,7 +679,7 @@ class CampaignController extends Controller
                     } elseif (isset($ads->image) && $ads->image != '') {
                         $media = Media::where('owner_id', $oldAds->id)->where('type', 'ads_nft')->first();
                         if ($media) {
-                            unlink(public_path() . $media->url);
+                            // unlink(public_path() . $media->url);
                         } else {
                             $media = new Media;
                             $media->owner_id = $oldAds->id;
