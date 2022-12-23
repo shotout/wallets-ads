@@ -44,10 +44,26 @@ class UploadCampaignToContentful implements ShouldQueue
      */
     public function handle()
     {
+
         $campaign = Campaign::find($this->campaign->id);
+
         //contentful env
         $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
         $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
+
+        //if record exist
+        if ($campaign->entry_id != 0) {
+            $delete_campaign = $environment->getEntry($campaign->entry_id);
+            $delete_campaign->unpublish();
+            $delete_campaign->delete();
+
+            $audience_contentful = Audience::where('campaign_id', $campaign->id)->get();
+            foreach ($audience_contentful as $audience) {
+                $delete_audience = $environment->getEntry($audience->entry_id);
+                $delete_audience->unpublish();
+                $delete_audience->delete();
+            }
+        }
 
         $user = User::find($campaign->user_id);
         $voucher = Voucher::where('code', $campaign->promo_code)->first();
@@ -55,8 +71,16 @@ class UploadCampaignToContentful implements ShouldQueue
         //retrieve data from database
         $newadspage = AdsPage::where('campaign_id', $campaign->id)->first();
 
+        //sample_wallet
+        $sample[] = $campaign->sample_address;
+        foreach ($sample as $key => $value) {
+            $samples[] = $value;
+        }
+
+        $samples_address = json_decode($samples[0], true);
+
         $url_logo = Media::where('owner_id', $newadspage->id)->where('type', 'ads_logo')->first();
-        $url_banner = Media::where('owner_id', $newadspage->id)->where('type', 'ads_banner')->first();
+        // $url_banner = Media::where('owner_id', $newadspage->id)->where('type', 'ads_banner')->first();
         $url_logo2 = env("APP_URL") . $url_logo->url;
 
         $logo = new \Contentful\Core\File\RemoteUploadFile(
@@ -65,11 +89,11 @@ class UploadCampaignToContentful implements ShouldQueue
             $url_logo2
         );
 
-        $banner = new \Contentful\Core\File\RemoteUploadFile(
-            $campaign->name . 'Collection Banner',
-            'JPEG,JPG,PNG',
-            env("APP_URL") . $url_banner->url
-        );
+        // $banner = new \Contentful\Core\File\RemoteUploadFile(
+        //     $campaign->name . 'Collection Banner',
+        //     'JPEG,JPG,PNG',
+        //     env("APP_URL") . $url_banner->url
+        // );
 
         // Prepare uploadig image
         $asset_logo = new Asset();
@@ -83,15 +107,15 @@ class UploadCampaignToContentful implements ShouldQueue
         $asset_logo->process('en-US');
 
         // Prepare uploadig image
-        $asset_banner = new Asset();
-        $asset_banner->setTitle('en-US', 'Collection Banner of ' . $campaign->name);
-        $asset_banner->setFile('en-US', $banner);
+        // $asset_banner = new Asset();
+        // $asset_banner->setTitle('en-US', 'Collection Banner of ' . $campaign->name);
+        // $asset_banner->setFile('en-US', $banner);
 
         //process Image
-        $environment->create($asset_banner);
-        $asset_banner_id = $asset_banner->getId();
-        $asset_banner = $environment->getAsset($asset_banner_id);
-        $asset_banner->process('en-US');
+        // $environment->create($asset_banner);
+        // $asset_banner_id = $asset_banner->getId();
+        // $asset_banner = $environment->getAsset($asset_banner_id);
+        // $asset_banner->process('en-US');
 
         //add collection page to contentful
         $entry_ads_page = new Entry('adsPage');
@@ -115,9 +139,10 @@ class UploadCampaignToContentful implements ShouldQueue
         $entry_ads_page->setField('collectionPageMedium', 'en-US', $newadspage->medium);
         $entry_ads_page->setField('collectionPageTelegram', 'en-US', $newadspage->telegram);
         $entry_ads_page->setField('collectionPageLogo', 'en-US', $asset_logo->asLink());
-        $entry_ads_page->setField('collectionPageBanner', 'en-US', $asset_banner->asLink());
+        // $entry_ads_page->setField('collectionPageBanner', 'en-US', $asset_banner->asLink());
         $entry_ads_page->setField('collectionPageTokenTrackerName', 'en-US', $newadspage->token_name);
         $entry_ads_page->setField('collectionPageTokenTrackerSymbol', 'en-US', $newadspage->token_symbol);
+        $entry_ads_page->setField('campaignSampleWalletAddresses', 'en-US', $samples_address);
         $environment->create($entry_ads_page);
 
         //publish ads page to contentful
@@ -211,7 +236,7 @@ class UploadCampaignToContentful implements ShouldQueue
                 $entry_ads->setField('campaignAvailability', 'en-US', $campaign->availability);
                 $entry_ads->setField('campaignStartDate', 'en-US', $campaign->start_date);
                 $entry_ads->setField('adsName', 'en-US', $ad->name);
-                $entry_ads->setField('adsText', 'en-US', $ad_text);
+                $entry_ads->setField('advertiseText', 'en-US', $ad_text);
                 $entry_ads->setField('budget', 'en-US', $aud->price);
                 if ($aud->price_airdrop == "0.019") {
                     $entry_ads->setField('audienceFile', 'en-US', $asset_file->asLink());

@@ -30,6 +30,7 @@ use Contentful\Management\Resource\Entry;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use JsonMapper\LaravelPackage\JsonMapper;
+use GrahamCampbell\Markdown\Facades\Markdown;
 
 class CampaignController extends Controller
 {
@@ -117,6 +118,8 @@ class CampaignController extends Controller
             $campaign->payment_method = 'Card';
             $campaign->status = 1;
             $campaign->is_show = 1;
+            $wallets[] = $request->wallet_address;
+            $campaign->sample_address = json_encode($wallets);
             $campaign->save();
 
             if ($request->has('campaign_audiences') && count($request->campaign_audiences) > 0) {
@@ -412,6 +415,7 @@ class CampaignController extends Controller
                     'message' => 'data not found'
                 ], 404);
             }
+         
 
             $campaign->user_id = auth('sanctum')->user()->id;
             $campaign->name = $request->campaign_name;
@@ -436,9 +440,14 @@ class CampaignController extends Controller
                 $campaign->availability = $request->campaign_end_date_day;
             }
 
+            $campaign->is_show = 1;
+            $wallets[] = $request->wallet_address;
+            $campaign->sample_address = json_encode($wallets);
             $campaign->update();
 
             if ($request->has('campaign_audiences') && count($request->campaign_audiences) > 0) {
+                Audience::where('campaign_id', $campaign->id)->delete();
+
                 foreach ($request->campaign_audiences as $audience) {
                     $audience = (object) $audience;
 
@@ -546,6 +555,8 @@ class CampaignController extends Controller
             $adsPage->facebook = $request->ads_page_facebook;
             $adsPage->instagram = $request->ads_page_instagram;
             $adsPage->external_page = $request->ads_page_external_page;
+            $adsPage->token_name = $request->ads_page_token_name;
+            $adsPage->token_symbol = $request->ads_page_token_symbol;
             $adsPage->save();
 
             if ($request->has('ads_page_logo_url') && $request->ads_page_logo_url != '') {
@@ -554,7 +565,7 @@ class CampaignController extends Controller
                     ->first();
 
                 if ($media) {
-                    unlink(public_path() . $media->url);
+                    // unlink(public_path() . $media->url);
                 } else {
                     $media = Media::where('url', $request->ads_page_logo_url)->first();
                     if ($media) {
@@ -565,21 +576,22 @@ class CampaignController extends Controller
             } elseif ($request->has('ads_page_logo') && $request->ads_page_logo != '') {
                 $media = Media::where('owner_id', $adsPage->id)->where('type', 'ads_logo')->first();
                 if ($media) {
-                    unlink(public_path() . $media->url);
+                    // unlink(public_path() . $media->url);
                 } else {
                     $media = new Media;
                     $media->owner_id = $adsPage->id;
                     $media->type = "ads_logo";
                 }
+                if (gettype($request->ads_page_logo) != 'string') {
+                    $filename = uniqid();
+                    $fileExt = $request->ads_page_logo->getClientOriginalExtension();
+                    $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
+                    $request->ads_page_logo->move(public_path() . '/assets/images/logo/', $fileNameToStore);
 
-                $filename = uniqid();
-                $fileExt = $request->ads_page_logo->getClientOriginalExtension();
-                $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
-                $request->ads_page_logo->move(public_path() . '/assets/images/logo/', $fileNameToStore);
-
-                $media->name = $fileNameToStore;
-                $media->url = '/assets/images/logo/' . $fileNameToStore;
-                $media->save();
+                    $media->name = $fileNameToStore;
+                    $media->url = '/assets/images/logo/' . $fileNameToStore;
+                    $media->save();
+                }
             }
 
             if ($request->has('ads_page_banner_url') && $request->ads_page_banner_url != '') {
@@ -588,7 +600,7 @@ class CampaignController extends Controller
                     ->first();
 
                 if ($media) {
-                    unlink(public_path() . $media->url);
+                    // unlink(public_path() . $media->url);
                 } else {
                     $media = Media::where('url', $request->ads_page_banner_url)->first();
                     if ($media) {
@@ -599,21 +611,23 @@ class CampaignController extends Controller
             } elseif ($request->has('ads_page_banner') && $request->ads_page_banner != '') {
                 $media = Media::where('owner_id', $adsPage->id)->where('type', 'ads_banner')->first();
                 if ($media) {
-                    unlink(public_path() . $media->url);
+                    // unlink(public_path() . $media->url);
                 } else {
                     $media = new Media;
                     $media->owner_id = $adsPage->id;
                     $media->type = "ads_banner";
                 }
 
-                $filename = uniqid();
-                $fileExt = $request->ads_page_banner->getClientOriginalExtension();
-                $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
-                $request->ads_page_banner->move(public_path() . '/assets/images/banner/', $fileNameToStore);
+                if (gettype($request->ads_page_banner) != 'string') {
+                    $filename = uniqid();
+                    $fileExt = $request->ads_page_banner->getClientOriginalExtension();
+                    $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
+                    $request->ads_page_banner->move(public_path() . '/assets/images/banner/', $fileNameToStore);
 
-                $media->name = $fileNameToStore;
-                $media->url = '/assets/images/banner/' . $fileNameToStore;
-                $media->save();
+                    $media->name = $fileNameToStore;
+                    $media->url = '/assets/images/banner/' . $fileNameToStore;
+                    $media->save();
+                }
             }
 
             if ($request->has('campaign_ads') && count($request->campaign_ads) > 0) {
@@ -673,21 +687,22 @@ class CampaignController extends Controller
                     } elseif (isset($ads->image) && $ads->image != '') {
                         $media = Media::where('owner_id', $oldAds->id)->where('type', 'ads_nft')->first();
                         if ($media) {
-                            unlink(public_path() . $media->url);
+                            // unlink(public_path() . $media->url);
                         } else {
                             $media = new Media;
                             $media->owner_id = $oldAds->id;
                             $media->type = "ads_nft";
                         }
+                        if (gettype($ads->image) != 'string') {
+                            $filename = uniqid();
+                            $fileExt = $ads->image->getClientOriginalExtension();
+                            $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
+                            $ads->image->move(public_path() . '/assets/images/nft/', $fileNameToStore);
 
-                        $filename = uniqid();
-                        $fileExt = $ads->image->getClientOriginalExtension();
-                        $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
-                        $ads->image->move(public_path() . '/assets/images/nft/', $fileNameToStore);
-
-                        $media->name = $fileNameToStore;
-                        $media->url = "/assets/images/nft/$fileNameToStore";
-                        $media->save();
+                            $media->name = $fileNameToStore;
+                            $media->url = "/assets/images/nft/$fileNameToStore";
+                            $media->save();
+                        }
                     }
                 }
             }
@@ -696,6 +711,9 @@ class CampaignController extends Controller
         });
 
         $data = Campaign::with('audiences', 'adsPage', 'ads')->find($campaign->id);
+
+        $campaign = Campaign::find($campaign->id);
+        UploadCampaignToContentful::dispatch($campaign)->delay(Carbon::now()->addSeconds(60));
 
         return response()->json([
             'status' => 'success',
@@ -770,9 +788,30 @@ class CampaignController extends Controller
     {
         $invoices = Invoice::where('user_id', auth('sanctum')->user()->id)->get();
 
+        $adtext = ads::where('campaign_id', '471')->get()->toArray();
+        $adtext = json_decode($adtext[0]['description'], true);
+        $adtext[0]['adtext'];
+        $i = 1;
+        foreach ($adtext as $key => $value) {
+            $multiple[] = $value['adtext'];
+        }
+
+        foreach ($multiple as $key => $value) {
+            $test = '|||Ad text ' . $i . ':';
+            $ad_text[] = $test;
+            $ad_text[] = Markdown::convertToHtml($multiple[$key]);
+            $i++;
+        }
+
+
+        $tes = nl2br(' hello, "\n" 
+        this is a test "\n" thanks, "\n" test');
+
         return response()->json([
             'status' => 'success',
-            'data' => $invoices
+            'data' => $invoices,
+            'ad_text' => $ad_text,
+            'tes' => $tes
         ], 200);
     }
 
