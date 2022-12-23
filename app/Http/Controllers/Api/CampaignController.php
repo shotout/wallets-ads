@@ -454,6 +454,8 @@ class CampaignController extends Controller
             }
 
             $campaign->is_show = 1;
+            $wallets[] = $request->wallet_address;
+            $campaign->sample_address = json_encode($wallets);
             $campaign->update();
 
             if ($request->has('campaign_audiences') && count($request->campaign_audiences) > 0) {
@@ -566,6 +568,8 @@ class CampaignController extends Controller
             $adsPage->facebook = $request->ads_page_facebook;
             $adsPage->instagram = $request->ads_page_instagram;
             $adsPage->external_page = $request->ads_page_external_page;
+            $adsPage->token_name = $request->ads_page_token_name;
+            $adsPage->token_symbol = $request->ads_page_token_symbol;
             $adsPage->save();
 
             if ($request->has('ads_page_logo_url') && $request->ads_page_logo_url != '') {
