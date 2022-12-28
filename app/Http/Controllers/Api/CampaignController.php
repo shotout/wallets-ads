@@ -547,16 +547,34 @@ class CampaignController extends Controller
             $adsPage = AdsPage::where('campaign_id', $campaign->id)->first();
             $adsPage->name = $request->ads_page_name;
             $adsPage->description = $request->ads_page_description;
-            $adsPage->website = $request->ads_page_website;
-            $adsPage->discord = $request->ads_page_discord;
-            $adsPage->twitter = $request->ads_page_twitter;
-            $adsPage->instagram = $request->ads_page_instagram;
-            $adsPage->medium = $request->ads_page_medium;
-            $adsPage->facebook = $request->ads_page_facebook;
-            $adsPage->instagram = $request->ads_page_instagram;
-            $adsPage->external_page = $request->ads_page_external_page;
-            $adsPage->token_name = $request->ads_page_token_name;
-            $adsPage->token_symbol = $request->ads_page_token_symbol;
+            if($request->has('ads_page_website') && $request->ads_page_website != ''){
+                $adsPage->website = $request->ads_page_website;
+            }
+            if($request->has('ads_page_discord') && $request->ads_page_discord != ''){
+                $adsPage->discord = $request->ads_page_discord;
+            }
+            if($request->has('ads_page_twitter') && $request->ads_page_twitter != ''){
+                $adsPage->twitter = $request->ads_page_twitter;
+            }
+            if($request->has('ads_page_instagram') && $request->ads_page_instagram != ''){
+                $adsPage->instagram = $request->ads_page_instagram;
+            }
+            if($request->has('ads_page_medium') && $request->ads_page_medium != ''){
+                $adsPage->medium = $request->ads_page_medium;
+            }
+            if($request->has('ads_page_facebook') && $request->ads_page_facebook != ''){
+                $adsPage->facebook = $request->ads_page_facebook;
+            }
+            if($request->has('ads_page_external_page') && $request->ads_page_external_page != ''){
+                $adsPage->external_page = $request->ads_page_external_page;
+            }
+            if($request->has('ads_page_token_name') && $request->ads_page_token_name != ''){
+                $adsPage->token_name = $request->ads_page_token_name;
+            }
+            if($request->has('ads_page_token_symbol') && $request->ads_page_token_symbol != ''){
+                $adsPage->token_symbol = $request->ads_page_token_symbol;
+            }
+            
             $adsPage->save();
 
             if ($request->has('ads_page_logo_url') && $request->ads_page_logo_url != '') {
