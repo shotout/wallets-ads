@@ -102,8 +102,8 @@ Route::group(
         'name' => 'payment.'
     ],
     function() {
-        Route::post('/', [PaymentController::class, 'store'])->name('store');
-        Route::patch('/{id}', [PaymentController::class, 'update'])->name('update');
+        Route::post('/', [StripeController::class, 'savepayment'])->name('store');
+        Route::patch('/update', [StripeController::class, 'updatepayment'])->name('update');
         Route::post('/cancelstripe', [CampaignController::class, 'cancelStripe'])->name('cancelStripe');
     }
 );

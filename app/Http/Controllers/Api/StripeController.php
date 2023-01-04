@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Campaign;
 use App\Models\Payment;
 use App\Models\StripePayment;
+use App\Models\User_payment;
 use App\Models\Voucher;
 use Exception;
 use Illuminate\Http\Request;
@@ -124,6 +125,40 @@ class StripeController extends Controller
             return response()->json([
                 'message' => $e->getMessage(),
                 'status' => 'Intent Failed'
+            ], 500);
+        }
+    }
+
+
+    public function savepayment(Request $request)
+    {
+        try {
+            $save_payment = new User_payment();
+            $save_payment->user_id = auth('sanctum')->user()->id;
+            $save_payment->payment_data = $request->payment_data;
+            $save_payment->save();
+
+            return response()->json(['message' => 'Payment Data Saved'], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'status' => 'Payment Data Save Failed'
+            ], 500);
+        }
+    }
+
+    public function updatepayment(Request $request)
+    {
+        try {
+            $update_payment = User_payment::where('user_id', auth('sanctum')->user()->id)->first();
+            $update_payment->payment_data = $request->payment_data;
+            $update_payment->save(); 
+
+            return response()->json(['message' => 'Payment Data Updated'], 200);
+        } 
+        catch (Exception $e) {
+            return response()->json([
+                'status' => 'Payment Data Update Failed'
             ], 500);
         }
     }
