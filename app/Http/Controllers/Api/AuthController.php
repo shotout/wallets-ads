@@ -167,7 +167,7 @@ class AuthController extends Controller
             $user->remember_token = Str::random(16);
             $user->update();
 
-            SendResetEmail::dispatch($user)->onQueue('apiCampaign');
+            SendResetEmail::dispatch($user)->delay(now()->addSeconds(5));
         }
 
         return response()->json([
