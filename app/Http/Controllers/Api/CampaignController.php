@@ -333,7 +333,7 @@ class CampaignController extends Controller
 
                             if ($audience) {
                                 $audience->ads_id = $newAds->id;
-                                $audience->fe_id = null;
+                                // $audience->fe_id = null;
                                 $audience->update();
                             }
                         }
