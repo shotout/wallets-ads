@@ -331,10 +331,21 @@ class CampaignController extends Controller
                                 ->where('fe_id', $id)
                                 ->first();
 
-                            if ($audience) {
+                            if ($audience && $audience->ads_id == null) {
                                 $audience->ads_id = $newAds->id;
                                 // $audience->fe_id = null;
                                 $audience->update();
+                            }
+                            else{
+                                $newAudience = new Audience;
+                                $newAudience->campaign_id = $audience->campaign_id;
+                                $newAudience->ads_id = $newAds->id;
+                                $newAudience->fe_id = $id;
+                                $newAudience->name = $audience->name;
+                                $newAudience->price = $audience->price;
+                                $newAudience->price_airdrop = $audience->price_airdrop;
+                                $newAudience->total_user = $audience->total_user;
+                                $newAudience->save();
                             }
                         }
                     }
