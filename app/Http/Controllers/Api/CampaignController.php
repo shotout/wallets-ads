@@ -345,6 +345,7 @@ class CampaignController extends Controller
                                 $newAudience->price = $audience->price;
                                 $newAudience->price_airdrop = $audience->price_airdrop;
                                 $newAudience->total_user = $audience->total_user;
+                                $newAudience->selected_fe_id = $audience->selected_fe_id;
                                 $newAudience->save();
                             }
                         }
