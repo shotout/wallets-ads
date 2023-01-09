@@ -685,7 +685,7 @@ class CampaignController extends Controller
                             }
                             else{
                                 $newAudience = new Audience;
-                                $newAudience->campaign_id = $audience->campaign_id;
+                                $newAudience->campaign_id = $oldAds->campaign_id;
                                 $newAudience->ads_id = $oldAds->id;
                                 $newAudience->fe_id = $id;
                                 $newAudience->name = $audience->name;
