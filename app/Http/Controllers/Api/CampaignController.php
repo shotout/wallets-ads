@@ -578,19 +578,19 @@ class CampaignController extends Controller
             $adsPage = AdsPage::where('campaign_id', $campaign->id)->first();
             $adsPage->name = $request->ads_page_name;
             $adsPage->description = $request->ads_page_description;
-            if($request->has('ads_page_website') && $request->ads_page_website != ''){
+            if($request->has('ads_page_website') && $request->ads_page_website != '' && $request->ads_page_website != 'null'){
                 $adsPage->website = $request->ads_page_website;
             }
-            if($request->has('ads_page_discord') && $request->ads_page_discord != ''){
+            if($request->has('ads_page_discord') && $request->ads_page_discord != '' && $request->ads_page_discord != 'null'){
                 $adsPage->discord = $request->ads_page_discord;
             }
-            if($request->has('ads_page_twitter') && $request->ads_page_twitter != ''){
+            if($request->has('ads_page_twitter') && $request->ads_page_twitter != '' && $request->ads_page_twitter != 'null'){
                 $adsPage->twitter = $request->ads_page_twitter;
             }
             if($request->has('ads_page_instagram') && $request->ads_page_instagram != ''){
                 $adsPage->instagram = $request->ads_page_instagram;
             }
-            if($request->has('ads_page_medium') && $request->ads_page_medium != ''){
+            if($request->has('ads_page_medium') && $request->ads_page_medium != '' && $request->ads_page_medium != 'null'){
                 $adsPage->medium = $request->ads_page_medium;
             }
             if($request->has('ads_page_facebook') && $request->ads_page_facebook != ''){
@@ -599,10 +599,10 @@ class CampaignController extends Controller
             if($request->has('ads_page_external_page') && $request->ads_page_external_page != ''){
                 $adsPage->external_page = $request->ads_page_external_page;
             }
-            if($request->has('ads_page_token_name') && $request->ads_page_token_name != ''){
+            if($request->has('ads_page_token_name') && $request->ads_page_token_name != '' && $request->ads_page_token_name != 'null'){
                 $adsPage->token_name = $request->ads_page_token_name;
             }
-            if($request->has('ads_page_token_symbol') && $request->ads_page_token_symbol != ''){
+            if($request->has('ads_page_token_symbol') && $request->ads_page_token_symbol != '' && $request->ads_page_token_symbol != 'null'){
                 $adsPage->token_symbol = $request->ads_page_token_symbol;
             }
             
