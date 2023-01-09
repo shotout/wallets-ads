@@ -723,6 +723,11 @@ class CampaignController extends Controller
                         }
                     }
 
+                    Audience::where('campaign_id', $campaign->id)
+                        ->where('ads_id', null)
+                        ->delete();
+                        
+
                     if (isset($ads->image_url) && $ads->image_url != '') {
                         $media = Media::where('owner_id', $oldAds->id)
                             ->where('type', 'ads_nft')
