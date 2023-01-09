@@ -683,23 +683,23 @@ class CampaignController extends Controller
                                 $audience->ads_id = $oldAds->id;
                                 $audience->update();
                             }
-                            else{
+                            // else{
 
-                                $audience5 = Audience::where('campaign_id', $campaign->id)
-                                ->where('fe_id', $id)
-                                ->first();
+                            //     $audience5 = Audience::where('campaign_id', $campaign->id)
+                            //     ->where('fe_id', $id)
+                            //     ->first();
 
-                                $newAudience = new Audience;
-                                $newAudience->campaign_id = $oldAds->campaign_id;
-                                $newAudience->ads_id = $oldAds->id;
-                                $newAudience->fe_id = $id;
-                                $newAudience->name = $audience5->name;
-                                $newAudience->price = $audience5->price;
-                                $newAudience->price_airdrop = $audience5->price_airdrop;
-                                $newAudience->total_user = $audience5->total_user;
-                                $newAudience->selected_fe_id = $audience5->selected_fe_id;
-                                $newAudience->save();
-                            }
+                            //     $newAudience = new Audience;
+                            //     $newAudience->campaign_id = $oldAds->campaign_id;
+                            //     $newAudience->ads_id = $oldAds->id;
+                            //     $newAudience->fe_id = $id;
+                            //     $newAudience->name = $audience5->name;
+                            //     $newAudience->price = $audience5->price;
+                            //     $newAudience->price_airdrop = $audience5->price_airdrop;
+                            //     $newAudience->total_user = $audience5->total_user;
+                            //     $newAudience->selected_fe_id = $audience5->selected_fe_id;
+                            //     $newAudience->save();
+                            // }
                         }
                     }
 
