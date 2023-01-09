@@ -703,11 +703,12 @@ class CampaignController extends Controller
                                 $audience->update();
                             }
                             else{
-
+                                
                                 $audience5 = Audience::where('campaign_id', $campaign->id)
                                 ->where('selected_fe_id', $adc_id)
                                 ->first();
 
+                                //create new aud
                                 $newAudience = new Audience;
                                 $newAudience->campaign_id = $audience5->campaign_id;
                                 $newAudience->ads_id = $oldAds->id;
