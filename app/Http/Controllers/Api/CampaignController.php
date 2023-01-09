@@ -458,26 +458,19 @@ class CampaignController extends Controller
             $campaign->update();
 
             if ($request->has('campaign_audiences') && count($request->campaign_audiences) > 0) {
-                // Audience::where('campaign_id', $campaign->id)->delete();
+                Audience::where('campaign_id', $campaign->id)->delete();
 
-                foreach ($request->campaign_audiences as $audience) {
+                foreach ($request->campaign_audiences as $i => $audience) {
                     $audience = (object) $audience;
 
                     if (isset($audience->price) && isset($audience->price_airdrop) && isset($audience->total_user)) {
 
-                        if (isset($audience->fe_id) && $audience->fe_id != '') {
-                            $adc = new Audience;
-                            if (isset($audience->fe_id)) {
-                                $adc->fe_id = $audience->fe_id;
-                            }
-
-                            $counter = Audience::where('campaign_id', $campaign->id)->count();
-                            $adc->name = "Audience " . $counter + 1;
-                        } else {
-                            $adc = Audience::find($audience->id);
-                        }
-
+                        $adc = new Audience;
                         $adc->campaign_id = $campaign->id;
+                        if (isset($audience->fe_id)) {
+                            $adc->fe_id = $audience->fe_id;
+                        }
+                        $adc->name = "Audience " . $i + 1;
                         if (isset($audience->price)) {
                             $adc->price = $audience->price;
                         }
@@ -487,15 +480,41 @@ class CampaignController extends Controller
                         if (isset($audience->total_user)) {
                             $adc->total_user = $audience->total_user;
                         }
+                        if (isset($audience->selected_fe_id)) {
+                            $adc->selected_fe_id = $audience->selected_fe_id;
+                        }
                         $adc->save();
 
-                        if (isset($audience->fe_id) && $audience->fe_id != '') {
-                            $detailTarget = new DetailTarget;
-                            $detailTarget->audience_id = $adc->id;
-                            $detailTarget->campaign_id = $campaign->id;
-                        } else {
-                            $detailTarget = DetailTarget::where('audience_id', $adc->id)->first();
-                        }
+                        // $optimizeTarget = new OptimizeTarget;
+                        // $optimizeTarget->audience_id = $adc->id;
+                        // $optimizeTarget->price = $audience->optimized_targeting_price;
+                        // $optimizeTarget->description = $audience->optimized_targeting_description;
+                        // $optimizeTarget->save();
+
+                        // $balanceTarget = new BalanceTarget;
+                        // $balanceTarget->audience_id = $adc->id;
+                        // $balanceTarget->price = $audience->balanced_targeting_price;
+                        // $balanceTarget->description = $audience->balanced_targeting_description;
+                        // $balanceTarget->cryptocurrency_used = $audience->balanced_targeting_cryptocurrency;
+                        // $balanceTarget->account_age_year = $audience->balanced_targeting_year;
+                        // $balanceTarget->account_age_month = $audience->balanced_targeting_month;
+                        // $balanceTarget->account_age_day = $audience->balanced_targeting_day;
+                        // $balanceTarget->airdrops_received = $audience->balanced_targeting_airdrops;
+
+                        // if (isset($audience->balanced_targeting_wallet) && $audience->balanced_targeting_wallet != '') {
+                        //     $balanceTarget->wallet_type = $audience->balanced_targeting_wallet;
+                        // }
+                        // if (isset($audience->balanced_targeting_location) && $audience->balanced_targeting_location != '') {
+                        //     $balanceTarget->location = $audience->balanced_targeting_location;
+                        // }
+
+                        // $balanceTarget->save();
+
+                        $detailTarget = new DetailTarget;
+                        $detailTarget->audience_id = $adc->id;
+                        $detailTarget->campaign_id = $campaign->id;
+                        // $detailTarget->price = $audience->detailed_targeting_price;
+                        // $detailTarget->description = $audience->detailed_targeting_description;
                         if (isset($audience->detailed_targeting_cryptocurrency)) {
                             $detailTarget->cryptocurrency_used = $audience->detailed_targeting_cryptocurrency;
                         }
@@ -683,36 +702,22 @@ class CampaignController extends Controller
                                 $audience->ads_id = $oldAds->id;
                                 $audience->update();
                             }
-                            // else{
+                            else{
 
-                            //     $audience5 = Audience::where('campaign_id', $campaign->id)
-                            //     ->where('fe_id', $id)
-                            //     ->first();
-
-                            //     $newAudience = new Audience;
-                            //     $newAudience->campaign_id = $oldAds->campaign_id;
-                            //     $newAudience->ads_id = $oldAds->id;
-                            //     $newAudience->fe_id = $id;
-                            //     $newAudience->name = $audience5->name;
-                            //     $newAudience->price = $audience5->price;
-                            //     $newAudience->price_airdrop = $audience5->price_airdrop;
-                            //     $newAudience->total_user = $audience5->total_user;
-                            //     $newAudience->selected_fe_id = $audience5->selected_fe_id;
-                            //     $newAudience->save();
-                            // }
-                        }
-                    }
-
-                    if (isset($ads->fe_id) && count($ads->fe_id) > 0) {
-                        foreach ($ads->fe_id as $fe_id) {
-                            $audience = Audience::where('campaign_id', $campaign->id)
-                                ->where('fe_id', $fe_id)
+                                $audience5 = Audience::where('campaign_id', $campaign->id)
+                                ->where('selected_fe_id', $adc_id)
                                 ->first();
 
-                            if ($audience) {
-                                $audience->ads_id = $oldAds->id;
-                                $audience->fe_id = null;
-                                $audience->update();
+                                $newAudience = new Audience;
+                                $newAudience->campaign_id = $audience5->campaign_id;
+                                $newAudience->ads_id = $oldAds->id;
+                                $newAudience->fe_id = $id;
+                                $newAudience->name = $audience5->name;
+                                $newAudience->price = $audience5->price;
+                                $newAudience->price_airdrop = $audience5->price_airdrop;
+                                $newAudience->total_user = $audience5->total_user;
+                                $newAudience->selected_fe_id = $audience5->selected_fe_id;
+                                $newAudience->save();
                             }
                         }
                     }
