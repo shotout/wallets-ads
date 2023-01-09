@@ -458,7 +458,7 @@ class CampaignController extends Controller
             $campaign->update();
 
             if ($request->has('campaign_audiences') && count($request->campaign_audiences) > 0) {
-                // Audience::where('campaign_id', $campaign->id)->delete();
+                Audience::where('campaign_id', $campaign->id)->delete();
 
                 foreach ($request->campaign_audiences as $audience) {
                     $audience = (object) $audience;
@@ -677,13 +677,18 @@ class CampaignController extends Controller
 
                     if (isset($ads->audience_id) && count($ads->audience_id) > 0) {
                         foreach ($ads->audience_id as $adc_id) {
-                            $audience = Audience::find($adc_id);
+                            $audience = Audience::find($adc_id);                            
 
                             if ($audience) {
                                 $audience->ads_id = $oldAds->id;
                                 $audience->update();
                             }
                             else{
+
+                                $audience = Audience::where('campaign_id', $campaign->id)
+                                ->where('fe_id', $id)
+                                ->first();
+                                
                                 $newAudience = new Audience;
                                 $newAudience->campaign_id = $oldAds->campaign_id;
                                 $newAudience->ads_id = $oldAds->id;
