@@ -683,6 +683,18 @@ class CampaignController extends Controller
                                 $audience->ads_id = $oldAds->id;
                                 $audience->update();
                             }
+                            else{
+                                $newAudience = new Audience;
+                                $newAudience->campaign_id = $audience->campaign_id;
+                                $newAudience->ads_id = $oldAds->id;
+                                $newAudience->fe_id = $id;
+                                $newAudience->name = $audience->name;
+                                $newAudience->price = $audience->price;
+                                $newAudience->price_airdrop = $audience->price_airdrop;
+                                $newAudience->total_user = $audience->total_user;
+                                $newAudience->selected_fe_id = $audience->selected_fe_id;
+                                $newAudience->save();
+                            }
                         }
                     }
 
