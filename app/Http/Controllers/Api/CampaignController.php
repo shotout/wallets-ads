@@ -764,6 +764,8 @@ class CampaignController extends Controller
             return $campaign;
         });
 
+        Audience::where('campaign_id', $campaign->id)->where('ads_id', null)->delete();
+
         $data = Campaign::with('audiences', 'adsPage', 'ads')->find($campaign->id);
 
         $campaign = Campaign::find($campaign->id);
