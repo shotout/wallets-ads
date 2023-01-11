@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Campaign;
 use App\Models\Payment;
 use App\Models\StripePayment;
+use App\Models\User;
 use App\Models\User_payment;
 use App\Models\Voucher;
 use Exception;
@@ -159,6 +160,30 @@ class StripeController extends Controller
         catch (Exception $e) {
             return response()->json([
                 'status' => 'Payment Data Update Failed'
+            ], 500);
+        }
+    }
+
+    public function customer_id ()
+    {
+        try {
+            Stripe::setApiKey(env('STRIPE_TEST_API_KEY'));
+
+            $customer = \Stripe\Customer::create([
+                'email' => auth('sanctum')->user()->email             
+            ]);
+
+            $user = User::where('id', auth('sanctum')->user()->id)->first();
+            $user->customer_id = $customer;
+            $user->save();
+
+            return response()->json($customer, 200);
+
+        } 
+        catch (Exception $e) {
+            return response()->json([
+                'status' => 'Customer ID Creation Failed',
+                'message' => $e->getMessage()
             ], 500);
         }
     }

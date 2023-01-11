@@ -105,6 +105,7 @@ Route::group(
         Route::post('/', [StripeController::class, 'savepayment'])->name('store');
         Route::patch('/update', [StripeController::class, 'updatepayment'])->name('update');
         Route::post('/cancelstripe', [CampaignController::class, 'cancelStripe'])->name('cancelStripe');
+        Route::get('/add-card', [StripeController::class, 'customer_id'])->name('customer_id');   
     }
 );
 
@@ -128,7 +129,8 @@ Route::group(
         'name' => 'invoices.'
     ],
     function() {
-         Route::get('/', [CampaignController::class, 'invoices'])->name('invoices');             
+         Route::get('/', [CampaignController::class, 'invoices'])->name('invoices');
+         Route::get('/test', [StripeController::class, 'customer_id'])->name('cid');             
     }
 );
 
