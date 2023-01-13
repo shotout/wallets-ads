@@ -779,9 +779,11 @@ class CampaignController extends Controller
 
             $audience_contentful = Audience::where('campaign_id', $campaign->id)->get();
             foreach ($audience_contentful as $audience) {
-                $delete_audience = $environment->getEntry($audience->entry_id);
-                $delete_audience->unpublish();
-                $delete_audience->delete();
+                if ($audience->entry_id != 0) {
+                    $delete_audience = $environment->getEntry($audience->entry_id);
+                    $delete_audience->unpublish();
+                    $delete_audience->delete();
+                }
             }
         }
 
