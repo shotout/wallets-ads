@@ -786,7 +786,7 @@ class CampaignController extends Controller
         }
 
         $campaign = Campaign::find($campaign->id);
-        UploadCampaignToContentful::dispatch($campaign)->delay(Carbon::now()->addSeconds(180));
+        UploadCampaignToContentful::dispatch($campaign)->delay(Carbon::now()->addSeconds(60));
 
         return response()->json([
             'status' => 'success',
