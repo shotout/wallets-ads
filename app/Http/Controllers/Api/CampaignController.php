@@ -768,7 +768,7 @@ class CampaignController extends Controller
 
         $data = Campaign::with('audiences', 'adsPage', 'ads')->find($campaign->id);
 
-        $campaign = Campaign::find($campaign->id);
+        $campaign = $data;
         UploadCampaignToContentful::dispatch($campaign)->delay(Carbon::now()->addSeconds(60));
 
         return response()->json([
