@@ -52,7 +52,7 @@ class UploadCampaignToContentful implements ShouldQueue
         $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
 
         //if record exist
-        if ($campaign->entry_id = 0 || $campaign->entry_id = null) {
+        if ($campaign->entry_id != 0 || $campaign->entry_id != null) {
             $delete_campaign = $environment->getEntry($campaign->entry_id);
             $delete_campaign->unpublish();
             $delete_campaign->delete();
