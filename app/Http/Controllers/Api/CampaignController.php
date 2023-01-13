@@ -385,7 +385,7 @@ class CampaignController extends Controller
         });
 
         //start upload campaign to contenful
-        UploadCampaignToContentful::dispatch($campaign)->delay(Carbon::now()->addSeconds(60));
+        UploadCampaignToContentful::dispatch($campaign)->delay(Carbon::now()->addSeconds(300));
 
         return response()->json([
             'status' => 'success',
@@ -768,27 +768,27 @@ class CampaignController extends Controller
 
         $data = Campaign::with('audiences', 'adsPage', 'ads')->find($campaign->id);
 
-        //if record exist
-        $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
-        $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
+        // //if record exist
+        // $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
+        // $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
 
-        if ($campaign->entry_id != 0) {
-            $delete_campaign = $environment->getEntry($campaign->entry_id);
-            $delete_campaign->unpublish();
-            $delete_campaign->delete();
+        // if ($campaign->entry_id != 0) {
+        //     $delete_campaign = $environment->getEntry($campaign->entry_id);
+        //     $delete_campaign->unpublish();
+        //     $delete_campaign->delete();
 
-            $audience_contentful = Audience::where('campaign_id', $campaign->id)->get();
-            foreach ($audience_contentful as $audience) {
-                if ($audience->entry_id != 0) {
-                    $delete_audience = $environment->getEntry($audience->entry_id);
-                    $delete_audience->unpublish();
-                    $delete_audience->delete();
-                }
-            }
-        }
+        //     $audience_contentful = Audience::where('campaign_id', $campaign->id)->get();
+        //     foreach ($audience_contentful as $audience) {
+        //         if ($audience->entry_id != 0) {
+        //             $delete_audience = $environment->getEntry($audience->entry_id);
+        //             $delete_audience->unpublish();
+        //             $delete_audience->delete();
+        //         }
+        //     }
+        // }
 
-        $campaign = Campaign::find($campaign->id);
-        UploadCampaignToContentful::dispatch($campaign)->delay(Carbon::now()->addSeconds(60));
+        // $campaign = Campaign::find($campaign->id);
+        // UploadCampaignToContentful::dispatch($campaign)->delay(Carbon::now()->addSeconds(60));
 
         return response()->json([
             'status' => 'success',
