@@ -245,20 +245,6 @@ class UploadCampaignToContentful implements ShouldQueue
                 $entry_ads = $environment->getEntry($entry_id);
                 $entry_ads->publish();
 
-                if ($campaign->entry_id != 0) {
-                    $delete_campaign = $environment->getEntry($campaign->entry_id);
-                    $delete_campaign->unpublish();
-                    $delete_campaign->delete();
-
-                    $audience_contentful = Audience::where('campaign_id', $campaign->id)->get();
-                    foreach ($audience_contentful as $audience) {
-                        $delete_audience = $environment->getEntry($audience->entry_id);
-                        $delete_audience->unpublish();
-                        $delete_audience->delete();
-                    }
-                }
-
-
                 //update ads data
                 $aud->entry_id = $entry_id;
                 $aud->update();
