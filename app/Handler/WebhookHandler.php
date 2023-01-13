@@ -49,7 +49,7 @@ class WebhookHandler extends ProcessWebhookJob
                 $updatepayment->status = '1';
                 $updatepayment->save();
 
-                UpdateStatusPayment::dispatch($campaign)->delay(now()->addSeconds(90));
+                UpdateStatusPayment::dispatch($campaign)->delay(now()->addSeconds(330));
                 $updatestatus = StripePayment::where('stripe_id', $request->data['object']['id'])->first();
                 $updatestatus->status = '1';
                 $updatestatus->save();
