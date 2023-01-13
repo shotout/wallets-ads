@@ -768,8 +768,25 @@ class CampaignController extends Controller
 
         $data = Campaign::with('audiences', 'adsPage', 'ads')->find($campaign->id);
 
-        $campaign = $data;
-        UploadCampaignToContentful::dispatch($campaign)->delay(Carbon::now()->addSeconds(60));
+        //if record exist
+        $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
+        $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
+
+        if ($campaign->entry_id != 0 || $campaign->entry_id != null) {
+            $delete_campaign = $environment->getEntry($campaign->entry_id);
+            $delete_campaign->unpublish();
+            $delete_campaign->delete();
+
+            $audience_contentful = Audience::where('campaign_id', $campaign->id)->get();
+            foreach ($audience_contentful as $audience) {
+                $delete_audience = $environment->getEntry($audience->entry_id);
+                $delete_audience->unpublish();
+                $delete_audience->delete();
+            }
+        }
+
+        $campaign = Campaign::find($campaign->id);
+        UploadCampaignToContentful::dispatch($campaign)->delay(Carbon::now()->addSeconds(180));
 
         return response()->json([
             'status' => 'success',
