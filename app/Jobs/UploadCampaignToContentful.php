@@ -148,17 +148,6 @@ class UploadCampaignToContentful implements ShouldQueue
 
         foreach ($adv as $ad) {
 
-            $adtext = ads::where('id', $ad->id)->get()->toArray();
-            $adtext = json_decode($adtext[0]['description'], true);
-            $adtext[0]['adtext'];
-
-            foreach ($adtext as $key => $value) {
-                $multiple[] = '|||Ad text'.$i.': </br>'.$value['adtext'].'</br></br></br>';
-                $i++;
-            }
-
-            $ad_text = implode(" ", $multiple);
-
             $audience = Audience::where('ads_id', $ad->id)->get();
 
 
@@ -211,9 +200,22 @@ class UploadCampaignToContentful implements ShouldQueue
                 }
 
 
+
+                $adtext1 = ads::where('id', $ad->id)->get()->toArray();
+                $adtext1 = json_decode($adtext1[0]['description'], true);
+                $adtext1[0]['adtext'];
+
+                foreach ($adtext1 as $key => $value) {
+                    $multiple[] = '|||Ad text' . $i . ': </br>' . $value['adtext'] . '</br></br></br>';
+                    $i++;
+                }
+
+                $ad_text = implode(" ", $multiple);
+
+
                 $entry_ads = new Entry('adsCreation');
                 $entry_ads->setField('userEmail', 'en-US', $user->email);
-                $entry_ads->setField('adsCreation', 'en-US', $aud->name);
+                $entry_ads->setField('adsCreation', 'en-US', $campaign->name.' - '.$aud->name.' - '.$ad->name);
                 $entry_ads->setField('campaignName', 'en-US', $campaign->name);
                 $entry_ads->setField('campaignAvailability', 'en-US', $campaign->availability);
                 $entry_ads->setField('campaignStartDate', 'en-US', $campaign->start_date);
@@ -246,6 +248,7 @@ class UploadCampaignToContentful implements ShouldQueue
                 $aud->entry_id = $entry_id;
                 $aud->update();
                 $i++;
+                $multiple = [];
             }
         }
 
