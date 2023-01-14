@@ -144,10 +144,10 @@ class UploadCampaignToContentful implements ShouldQueue
         //add ads to contentful
         $adv = Ads::where('campaign_id', $campaign->id)->get();
 
-        $i = 1;
+       
 
         foreach ($adv as $ad) {
-
+            
             $audience = Audience::where('ads_id', $ad->id)->get();
 
 
@@ -204,7 +204,8 @@ class UploadCampaignToContentful implements ShouldQueue
                 $adtext1 = ads::where('id', $ad->id)->get()->toArray();
                 $adtext1 = json_decode($adtext1[0]['description'], true);
                 $adtext1[0]['adtext'];
-
+                $i = 1;
+                
                 foreach ($adtext1 as $key => $value) {
                     $multiple[] = '|||Ad text' . $i . ': </br>' . $value['adtext'] . '</br></br></br>';
                     $i++;
@@ -247,7 +248,6 @@ class UploadCampaignToContentful implements ShouldQueue
                 //update ads data
                 $aud->entry_id = $entry_id;
                 $aud->update();
-                $i++;
                 $multiple = [];
             }
         }
