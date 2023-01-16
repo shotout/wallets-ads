@@ -264,6 +264,8 @@ class UploadCampaignToContentful implements ShouldQueue
                 $aud->entry_id = $entry_id;
                 $aud->update();
                 $i++;
+                $multiple = [];
+                $ad_text = [];
             }
         }
 
