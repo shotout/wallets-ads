@@ -335,8 +335,7 @@ class CampaignController extends Controller
                                 $audience->ads_id = $newAds->id;
                                 // $audience->fe_id = null;
                                 $audience->update();
-                            }
-                            else{
+                            } else {
                                 $newAudience = new Audience;
                                 $newAudience->campaign_id = $audience->campaign_id;
                                 $newAudience->ads_id = $newAds->id;
@@ -427,7 +426,7 @@ class CampaignController extends Controller
                     'message' => 'data not found'
                 ], 404);
             }
-         
+
 
             $campaign->user_id = auth('sanctum')->user()->id;
             $campaign->name = $request->campaign_name;
@@ -578,34 +577,34 @@ class CampaignController extends Controller
             $adsPage = AdsPage::where('campaign_id', $campaign->id)->first();
             $adsPage->name = $request->ads_page_name;
             $adsPage->description = $request->ads_page_description;
-            if($request->has('ads_page_website') && $request->ads_page_website != '' && $request->ads_page_website != 'null'){
+            if ($request->has('ads_page_website') && $request->ads_page_website != '' && $request->ads_page_website != 'null') {
                 $adsPage->website = $request->ads_page_website;
             }
-            if($request->has('ads_page_discord') && $request->ads_page_discord != '' && $request->ads_page_discord != 'null'){
+            if ($request->has('ads_page_discord') && $request->ads_page_discord != '' && $request->ads_page_discord != 'null') {
                 $adsPage->discord = $request->ads_page_discord;
             }
-            if($request->has('ads_page_twitter') && $request->ads_page_twitter != '' && $request->ads_page_twitter != 'null'){
+            if ($request->has('ads_page_twitter') && $request->ads_page_twitter != '' && $request->ads_page_twitter != 'null') {
                 $adsPage->twitter = $request->ads_page_twitter;
             }
-            if($request->has('ads_page_instagram') && $request->ads_page_instagram != ''){
+            if ($request->has('ads_page_instagram') && $request->ads_page_instagram != '') {
                 $adsPage->instagram = $request->ads_page_instagram;
             }
-            if($request->has('ads_page_medium') && $request->ads_page_medium != '' && $request->ads_page_medium != 'null'){
+            if ($request->has('ads_page_medium') && $request->ads_page_medium != '' && $request->ads_page_medium != 'null') {
                 $adsPage->medium = $request->ads_page_medium;
             }
-            if($request->has('ads_page_facebook') && $request->ads_page_facebook != ''){
+            if ($request->has('ads_page_facebook') && $request->ads_page_facebook != '') {
                 $adsPage->facebook = $request->ads_page_facebook;
             }
-            if($request->has('ads_page_external_page') && $request->ads_page_external_page != ''){
+            if ($request->has('ads_page_external_page') && $request->ads_page_external_page != '') {
                 $adsPage->external_page = $request->ads_page_external_page;
             }
-            if($request->has('ads_page_token_name') && $request->ads_page_token_name != '' && $request->ads_page_token_name != 'null'){
+            if ($request->has('ads_page_token_name') && $request->ads_page_token_name != '' && $request->ads_page_token_name != 'null') {
                 $adsPage->token_name = $request->ads_page_token_name;
             }
-            if($request->has('ads_page_token_symbol') && $request->ads_page_token_symbol != '' && $request->ads_page_token_symbol != 'null'){
+            if ($request->has('ads_page_token_symbol') && $request->ads_page_token_symbol != '' && $request->ads_page_token_symbol != 'null') {
                 $adsPage->token_symbol = $request->ads_page_token_symbol;
             }
-            
+
             $adsPage->save();
 
             if ($request->has('ads_page_logo_url') && $request->ads_page_logo_url != '') {
@@ -696,17 +695,16 @@ class CampaignController extends Controller
 
                     if (isset($ads->audience_id) && count($ads->audience_id) > 0) {
                         foreach ($ads->audience_id as $adc_id) {
-                            $audience = Audience::find($adc_id);                            
+                            $audience = Audience::find($adc_id);
 
                             if ($audience) {
                                 $audience->ads_id = $oldAds->id;
                                 $audience->update();
-                            }
-                            else{
-                                
+                            } else {
+
                                 $audience5 = Audience::where('campaign_id', $campaign->id)
-                                ->where('selected_fe_id', $adc_id)
-                                ->first();
+                                    ->where('selected_fe_id', $adc_id)
+                                    ->first();
 
                                 //create new aud
                                 $newAudience = new Audience;
@@ -723,7 +721,7 @@ class CampaignController extends Controller
                         }
                     }
 
-             
+
                     if (isset($ads->image_url) && $ads->image_url != '') {
                         $media = Media::where('owner_id', $oldAds->id)
                             ->where('type', 'ads_nft')
@@ -863,30 +861,45 @@ class CampaignController extends Controller
     {
         $invoices = Invoice::where('user_id', auth('sanctum')->user()->id)->get();
 
-        $adtext = ads::where('campaign_id', '471')->get()->toArray();
-        $adtext = json_decode($adtext[0]['description'], true);
-        $adtext[0]['adtext'];
-        $i = 1;
-        foreach ($adtext as $key => $value) {
-            $multiple[] = $value['adtext'];
+        $adv = ads::where('campaign_id', '471')->get();
+
+        foreach ($adv as $ad) {
+
+            $adtext = ads::where('id', $ad->id)->get()->toArray();
+            $adtext = json_decode($adtext[0]['description'], true);
+            $adtext[0]['adtext'];
+            $i = 1;
+            foreach ($adtext as $key => $value) {
+                $multiple[] = '|||Ad text' . $i . ': </br>' . $value['adtext'] . '</br></br></br>';
+                $i++;
+            }
+
+            // // foreach ($multiple as $key => $value) {
+            // //     $test = '|||Ad text ' . $i . ':';
+            // //     $ad_text[] = $test;
+            // //     $ad_text[] = Markdown::convertToHtml($multiple[$key]);
+            // //     $i++;
+            // // }
+
+            $ad_text = implode(" ", $multiple);
+
+            // $tes = nl2br(' hello, "\n" 
+            // this is a test "\n" thanks, "\n" test');
+
+            // $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
+            // $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
+
+            // $entry = $environment->getEntry('71oeEn7KoCa8xmLO74FgUB');
+            // $entry->setField('adtext1', 'en-US', $ad_text);
+            // $entry->update();
+            // $entry->publish();
         }
-
-        foreach ($multiple as $key => $value) {
-            $test = '|||Ad text ' . $i . ':';
-            $ad_text[] = $test;
-            $ad_text[] = Markdown::convertToHtml($multiple[$key]);
-            $i++;
-        }
-
-
-        $tes = nl2br(' hello, "\n" 
-        this is a test "\n" thanks, "\n" test');
 
         return response()->json([
             'status' => 'success',
             'data' => $invoices,
             'ad_text' => $ad_text,
-            'tes' => $tes
+            // 'tes' => $tes
         ], 200);
     }
 
