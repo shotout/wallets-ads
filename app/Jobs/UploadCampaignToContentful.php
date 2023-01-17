@@ -51,20 +51,6 @@ class UploadCampaignToContentful implements ShouldQueue
         $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
         $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
 
-        //if record exist
-        if ($campaign->entry_id != 0) {
-            $delete_campaign = $environment->getEntry($campaign->entry_id);
-            $delete_campaign->unpublish();
-            $delete_campaign->delete();
-
-            $audience_contentful = Audience::where('campaign_id', $campaign->id)->get();
-            foreach ($audience_contentful as $audience) {
-                $delete_audience = $environment->getEntry($audience->entry_id);
-                $delete_audience->unpublish();
-                $delete_audience->delete();
-            }
-        }
-
         $user = User::find($campaign->user_id);
         $voucher = Voucher::where('code', $campaign->promo_code)->first();
 
@@ -158,26 +144,10 @@ class UploadCampaignToContentful implements ShouldQueue
         //add ads to contentful
         $adv = Ads::where('campaign_id', $campaign->id)->get();
 
-        
+       
 
         foreach ($adv as $ad) {
-
-            $adtext = ads::where('id', $ad->id)->get()->toArray();
-            $adtext = json_decode($adtext[0]['description'], true);
-            $adtext[0]['adtext'];
-
-            $i = 1;
-            foreach ($adtext as $key => $value) {
-                $multiple[] = '|||Ad text ' . $i . ':' . "\n" . $value['adtext'];
-                $i++;
-            }
-
-            foreach ($multiple as $key => $value) {
-                $ad_text[] = explode("\n", $multiple[$key]);
-            }
-
-            // $ad_text = array_merge(...$ad_text);
-
+            
             $audience = Audience::where('ads_id', $ad->id)->get();
 
 
@@ -230,14 +200,29 @@ class UploadCampaignToContentful implements ShouldQueue
                 }
 
 
+
+                $adtext1 = ads::where('id', $ad->id)->get()->toArray();
+                $adtext1 = json_decode($adtext1[0]['description'], true);
+                $adtext1[0]['adtext'];
+                $i = 1;
+                
+                foreach ($adtext1 as $key => $value) {
+                    $multiple[] = '|||Ad text' . $i . ': </br>' . $value['adtext'] . '</br></br></br>';
+                    $i++;
+                }
+
+                $ad_text = implode(" ", $multiple);
+
+
                 $entry_ads = new Entry('adsCreation');
                 $entry_ads->setField('userEmail', 'en-US', $user->email);
-                $entry_ads->setField('adsCreation', 'en-US', $aud->name);
+                $entry_ads->setField('adsCreation', 'en-US', $campaign->name.' - '.$aud->name.' - '.$ad->name);
                 $entry_ads->setField('campaignName', 'en-US', $campaign->name);
                 $entry_ads->setField('campaignAvailability', 'en-US', $campaign->availability);
                 $entry_ads->setField('campaignStartDate', 'en-US', $campaign->start_date);
                 $entry_ads->setField('adsName', 'en-US', $ad->name);
-                $entry_ads->setField('advertiseText', 'en-US', $ad_text);
+                // $entry_ads->setField('advertiseText', 'en-US', $ad_text);
+                $entry_ads->setField('adtext1', 'en-US', $ad_text);
                 $entry_ads->setField('budget', 'en-US', $aud->price);
                 if ($aud->price_airdrop == "0.019") {
                     $entry_ads->setField('audienceFile', 'en-US', $asset_file->asLink());
@@ -263,9 +248,7 @@ class UploadCampaignToContentful implements ShouldQueue
                 //update ads data
                 $aud->entry_id = $entry_id;
                 $aud->update();
-                $i++;
                 $multiple = [];
-                $ad_text = [];
             }
         }
 
