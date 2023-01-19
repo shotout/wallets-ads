@@ -168,7 +168,7 @@ class AuthController extends Controller
             $user->remember_token = Str::random(16);
             $user->update();
 
-            SendResetEmail::dispatch($user)->delay(Carbon::now()->addSeconds(60));
+            SendResetEmail::dispatch($user)->delay(Carbon::now()->addSeconds(2));
         }
 
         return response()->json([
