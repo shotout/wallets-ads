@@ -11,6 +11,7 @@ use Contentful\Management\Client;
 use Contentful\Core\Api\Exception;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Contentful\Management\Resource\Entry;
 
 class AuthController extends Controller
@@ -167,7 +168,7 @@ class AuthController extends Controller
             $user->remember_token = Str::random(16);
             $user->update();
 
-            SendResetEmail::dispatch($user)->onQueue('apiCampaign');
+            SendResetEmail::dispatch($user)->delay(Carbon::now()->addSeconds(60));
         }
 
         return response()->json([
@@ -227,8 +228,8 @@ class AuthController extends Controller
     {
         $request->validate([
             'email' => 'required|email|max:100',
-            'password' => 'required|min:8|max:100',
-            'new_password' => 'required|min:8|max:100',
+            'password' => 'required|max:100',
+            'new_password' => 'required|max:100',
         ]);
 
         $credentials = $request->only('email', 'password');
@@ -251,5 +252,3 @@ class AuthController extends Controller
         ], 401);
     }
 }
-
-
