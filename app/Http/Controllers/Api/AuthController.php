@@ -167,7 +167,7 @@ class AuthController extends Controller
             $user->remember_token = Str::random(16);
             $user->update();
 
-            SendResetEmail::dispatch($user)->delay(now()->addSeconds(5));
+            SendResetEmail::dispatch($user)->onQueue('apiCampaign');
         }
 
         return response()->json([
@@ -222,4 +222,34 @@ class AuthController extends Controller
             'data' => $user,
         ], 200);
     }
+
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|max:100',
+            'password' => 'required|max:100',
+            'new_password' => 'required|max:100',
+        ]);
+
+        $credentials = $request->only('email', 'password');
+
+        if (auth()->attempt($credentials)) {
+            $user = User::where('email', $request->email)->first();
+
+            $user->password = bcrypt($request->new_password);
+            $user->update();
+
+            return response()->json([
+                'status' => 'password changed',
+                'data' => $user,
+            ], 200);
+        }
+
+        return response()->json([
+            'status' => 'failed',
+            'message' => 'email or password incorrect',
+        ], 401);
+    }
 }
+
+

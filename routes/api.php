@@ -36,6 +36,7 @@ Route::group(
         Route::post('/check-email', [AuthController::class, 'checkEmail'])->name('checkEmail');
         Route::post('/check-token', [AuthController::class, 'checkToken'])->name('checkToken');
         Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('resetPassword');
+        Route::post('/change-password', [AuthController::class, 'changePassword'])->name('changePassword');
     }
 );
 
