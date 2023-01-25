@@ -182,10 +182,11 @@ class StripeController extends Controller
             $stripe = new \Stripe\StripeClient(env('STRIPE_TEST_API_KEY'));
             
             $stripe->setupIntents->create(
-                ['payment_method_types' => ['card_present'], 'customer' =>$user->customer_id]
+                ['payment_method_types' => ['card'], 'customer' =>$user->customer_id]
               );
-            
-            $stripe = $stripe->setupIntents->all(['customer' => $user->customer_id]);
+
+                      
+            $stripe = $stripe->setupIntents->all();
 
             return response()->json([$stripe],200);
 
