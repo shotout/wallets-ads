@@ -107,7 +107,8 @@ Route::group(
         Route::patch('/update', [StripeController::class, 'updatepayment'])->name('update');
         Route::post('/cancelstripe', [CampaignController::class, 'cancelStripe'])->name('cancelStripe');
         Route::get('/add-card', [StripeController::class, 'customer_id'])->name('customer_id'); 
-        Route::get('/retrive-card', [StripeController::class, 'payment_method'])->name('payment_method');  
+        Route::get('/retrive-card', [StripeController::class, 'payment_method'])->name('payment_method');
+        Route::get('/get-payment-type', [StripeController::class, 'getpayment'])->name('getpayment');  
     }
 );
 

@@ -163,6 +163,19 @@ class StripeController extends Controller
         }
     }
 
+    public function getpayment()
+    {
+        try {
+            $get_payment = User_payment::where('user_id', auth('sanctum')->user()->id)->first();
+
+            return response()->json($get_payment, 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'Payment Data Get Failed'
+            ], 500);
+        }
+    }
+
     public function customer_id()
     {
         try {
