@@ -167,17 +167,27 @@ class StripeController extends Controller
     public function customer_id ()
     {
         try {
-            Stripe::setApiKey(env('STRIPE_TEST_API_KEY'));
+            $customer= Stripe::setApiKey(env('STRIPE_TEST_API_KEY'));
 
             $customer = \Stripe\Customer::create([
                 'email' => auth('sanctum')->user()->email             
             ]);
 
+            $customer = $customer->id;
+
             $user = User::where('id', auth('sanctum')->user()->id)->first();
             $user->customer_id = $customer;
             $user->save();
 
-            return response()->json($customer, 200);
+            $stripe = new \Stripe\StripeClient(env('STRIPE_TEST_API_KEY'));
+            
+            $stripe->setupIntents->create(
+                ['payment_method_types' => ['card_present'], 'customer' =>$user->customer_id]
+              );
+            
+            $stripe = $stripe->setupIntents->all(['customer' => $user->customer_id]);
+
+            return response()->json([$stripe],200);
 
         } 
         catch (Exception $e) {
