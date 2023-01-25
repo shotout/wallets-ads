@@ -842,7 +842,7 @@ class CampaignController extends Controller
 
             $campaign->save();
 
-            UpdateCryptoPaymet::dispatch($campaign_id);
+            UpdateCryptoPaymet::dispatch($campaign_id)->delay(Carbon::now()->addSeconds(330));
 
             return response()->json([
                 'status' => 'success',
@@ -863,43 +863,12 @@ class CampaignController extends Controller
 
         $adv = ads::where('campaign_id', '471')->get();
 
-        foreach ($adv as $ad) {
-
-            $adtext = ads::where('id', $ad->id)->get()->toArray();
-            $adtext = json_decode($adtext[0]['description'], true);
-            $adtext[0]['adtext'];
-            $i = 1;
-            foreach ($adtext as $key => $value) {
-                $multiple[] = '|||Ad text' . $i . ': </br>' . $value['adtext'] . '</br></br></br>';
-                $i++;
-            }
-
-            // // foreach ($multiple as $key => $value) {
-            // //     $test = '|||Ad text ' . $i . ':';
-            // //     $ad_text[] = $test;
-            // //     $ad_text[] = Markdown::convertToHtml($multiple[$key]);
-            // //     $i++;
-            // // }
-
-            $ad_text = implode(" ", $multiple);
-
-            // $tes = nl2br(' hello, "\n" 
-            // this is a test "\n" thanks, "\n" test');
-
-            // $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
-            // $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
-
-            // $entry = $environment->getEntry('71oeEn7KoCa8xmLO74FgUB');
-            // $entry->setField('adtext1', 'en-US', $ad_text);
-            // $entry->update();
-            // $entry->publish();
-        }
+        
+        
 
         return response()->json([
             'status' => 'success',
-            'data' => $invoices,
-            'ad_text' => $ad_text,
-            // 'tes' => $tes
+            'data' => $invoices
         ], 200);
     }
 
