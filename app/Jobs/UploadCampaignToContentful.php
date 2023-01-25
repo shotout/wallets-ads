@@ -144,11 +144,11 @@ class UploadCampaignToContentful implements ShouldQueue
         //add ads to contentful
         $adv = Ads::where('campaign_id', $campaign->id)->get();
 
-       
+
 
         foreach ($adv as $ad) {
-            
-            $audience = Audience::where('ads_id', $ad->id)->first();
+
+            $audience = Audience::where('ads_id', $ad->id)->get();
 
 
             foreach ($audience as $aud) {
@@ -182,11 +182,13 @@ class UploadCampaignToContentful implements ShouldQueue
                 } else {
                     $package = "Upload Own Audience Targeting";
 
-                    $file = new \Contentful\Core\File\RemoteUploadFile(
-                        $url_file->original_name,
-                        'xlsx/xls/csv',
-                        env("APP_URL") . $url_file->url
-                    );
+                    if ($url_file != NULL and $url_file != '') {
+                        $file = new \Contentful\Core\File\RemoteUploadFile(
+                            $url_file->original_name,
+                            'xlsx/xls/csv',
+                            env("APP_URL") . $url_file->url
+                        );
+                    }
 
                     $asset_file = new Asset();
                     $asset_file->setTitle('en-US', 'Audience file of ' . $campaign->name);
@@ -205,7 +207,7 @@ class UploadCampaignToContentful implements ShouldQueue
                 $adtext1 = json_decode($adtext1[0]['description'], true);
                 $adtext1[0]['adtext'];
                 $i = 1;
-                
+
                 foreach ($adtext1 as $key => $value) {
                     $multiple[] = '|||Ad text' . $i . ': </br>' . $value['adtext'] . '</br></br></br>';
                     $i++;
@@ -216,7 +218,7 @@ class UploadCampaignToContentful implements ShouldQueue
 
                 $entry_ads = new Entry('adsCreation');
                 $entry_ads->setField('userEmail', 'en-US', $user->email);
-                $entry_ads->setField('adsCreation', 'en-US', $campaign->name.' - '.$aud->name.' - '.$ad->name);
+                $entry_ads->setField('adsCreation', 'en-US', $campaign->name . ' - ' . $aud->name . ' - ' . $ad->name);
                 $entry_ads->setField('campaignName', 'en-US', $campaign->name);
                 $entry_ads->setField('campaignAvailability', 'en-US', $campaign->availability);
                 $entry_ads->setField('campaignStartDate', 'en-US', $campaign->start_date);
