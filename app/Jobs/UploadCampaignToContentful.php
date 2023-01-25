@@ -148,7 +148,7 @@ class UploadCampaignToContentful implements ShouldQueue
 
         foreach ($adv as $ad) {
             
-            $audience = Audience::where('ads_id', $ad->id)->get();
+            $audience = Audience::where('ads_id', $ad->id)->first();
 
 
             foreach ($audience as $aud) {
