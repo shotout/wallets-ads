@@ -153,24 +153,23 @@ class StripeController extends Controller
         try {
             $update_payment = User_payment::where('user_id', auth('sanctum')->user()->id)->first();
             $update_payment->payment_data = $request->payment_data;
-            $update_payment->save(); 
+            $update_payment->save();
 
             return response()->json(['message' => 'Payment Data Updated'], 200);
-        } 
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return response()->json([
                 'status' => 'Payment Data Update Failed'
             ], 500);
         }
     }
 
-    public function customer_id ()
+    public function customer_id()
     {
         try {
-            $customer= Stripe::setApiKey(env('STRIPE_TEST_API_KEY'));
+            $customer = Stripe::setApiKey(env('STRIPE_TEST_API_KEY'));
 
             $customer = \Stripe\Customer::create([
-                'email' => auth('sanctum')->user()->email             
+                'email' => auth('sanctum')->user()->email
             ]);
 
             $customer = $customer->id;
@@ -180,20 +179,41 @@ class StripeController extends Controller
             $user->save();
 
             $stripe = new \Stripe\StripeClient(env('STRIPE_TEST_API_KEY'));
-            
-            $stripe->setupIntents->create(
-                ['payment_method_types' => ['card'], 'customer' =>$user->customer_id]
-              );
 
-                      
+            $stripe->setupIntents->create(
+                ['payment_method_types' => ['card'], 'customer' => $user->customer_id]
+            );
+
+
             $stripe = $stripe->setupIntents->all();
 
-            return response()->json([$stripe],200);
-
-        } 
-        catch (Exception $e) {
+            return response()->json([$stripe], 200);
+        } catch (Exception $e) {
             return response()->json([
                 'status' => 'Customer ID Creation Failed',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function payment_method(Request $request)
+    {
+        try {
+            $user = User::where('id', auth('sanctum')->user()->id)->first();
+
+            $stripe = new \Stripe\StripeClient(env('STRIPE_TEST_API_KEY'));
+
+           
+            $stripe = $stripe->customers->allPaymentMethods(
+                $user->customer_id,
+                ['type' => 'card']
+              );
+
+            return response()->json([$stripe], 200);
+
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'Payment Method Creation Failed',
                 'message' => $e->getMessage()
             ], 500);
         }
