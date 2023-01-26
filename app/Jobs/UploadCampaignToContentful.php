@@ -104,10 +104,10 @@ class UploadCampaignToContentful implements ShouldQueue
         // $asset_banner->process('en-US');
         
        
-        $budget = Audience::where('campaign_id', '798')->distinct()->get('fe_id');
+        $budget = Audience::where('campaign_id', $campaign->id)->distinct()->get('fe_id');
         $total_budget = 0;        
         foreach ($budget as $key => $value) {
-            $total_budget = $total_budget + Audience::where('campaign_id', '798')->where('fe_id', $value->fe_id)->sum('price');
+            $total_budget = $total_budget + Audience::where('campaign_id', $campaign->id)->where('fe_id', $value->fe_id)->sum('price');
         }
         $total_budget = (string)$total_budget;
         //add collection page to contentful
