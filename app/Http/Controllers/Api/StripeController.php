@@ -63,6 +63,10 @@ class StripeController extends Controller
             $user = User::where('id', auth('sanctum')->user()->id)->first();
             $user = $user->customer_id;
 
+            $data = User_payment::where('user_id', auth('sanctum')->user()->id)->first();
+            $data = json_decode($data->payment_data);
+            $pm =  $data[0][0];
+
             if (isset($request->promo)) {
                 $coupon = Voucher::where('code', $request->promo)->first();
 
@@ -98,7 +102,7 @@ class StripeController extends Controller
 
 
                 $session = \Stripe\Checkout\Session::create([
-                    'payment_method_types'  => ['card'],
+                    'payment_method'  => $pm,
                     'customer'              => $user,
                     'line_items'            => [[
                         'price_data' => [
