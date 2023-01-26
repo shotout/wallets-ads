@@ -60,12 +60,6 @@ class StripeController extends Controller
     {
         try {
             Stripe::setApiKey(env('STRIPE_TEST_API_KEY'));
-            $user = User::where('id', auth('sanctum')->user()->id)->first();
-            $user = $user->customer_id;
-
-            $data = User_payment::where('user_id', auth('sanctum')->user()->id)->first();
-            $data = json_decode($data->payment_data);
-            $pm =  $data[0][0];
 
             if (isset($request->promo)) {
                 $coupon = Voucher::where('code', $request->promo)->first();
@@ -75,11 +69,8 @@ class StripeController extends Controller
                 $campaign->promo_code = $request->promo;
                 $campaign->save();
 
-
-
                 $session = \Stripe\Checkout\Session::create([
                     'payment_method_types'  => ['card'],
-                    'customer'              => $user,
                     'line_items'            => [[
                         'price_data' => [
                             'currency'      => 'usd',
@@ -95,6 +86,7 @@ class StripeController extends Controller
                         'coupon' => $coupon->coupon_id,
                     ]],
                     'client_reference_id' => 'INV_001',
+                    'customer_email' => auth('sanctum')->user()->email,
                     'success_url' => "https://wallet-ads-frontend.vercel.app/create-campaign/?id=" . $request->campaign_id . "&status=success",
                     'cancel_url' =>  "https://wallet-ads-frontend.vercel.app/create-campaign/?id=" . $request->campaign_id . "&status=fail"
                 ]);
@@ -102,8 +94,7 @@ class StripeController extends Controller
 
 
                 $session = \Stripe\Checkout\Session::create([
-                    'payment_method'  => $pm,
-                    'customer'              => $user,
+                    'payment_method_types'  => ['card'],
                     'line_items'            => [[
                         'price_data' => [
                             'currency'      => 'usd',
@@ -116,6 +107,7 @@ class StripeController extends Controller
                     ]],
                     'mode' => 'payment',
                     'client_reference_id' => 'INV_001',
+                    'customer_email' => auth('sanctum')->user()->email,
                     'success_url' => "https://wallet-ads-frontend.vercel.app/create-campaign/?id=" . $request->campaign_id . "&status=success",
                     'cancel_url' =>  "https://wallet-ads-frontend.vercel.app/create-campaign/?id=" . $request->campaign_id . "&status=fail"
                 ]);
@@ -304,27 +296,42 @@ class StripeController extends Controller
     }
 
 
-    public function charge_saved_payment()
+    public function charge_saved_payment(Request $request)
     {
-        $data = User_payment::where('user_id', '22')->first();
+
+        $data = User_payment::where('user_id', auth('sanctum')->user()->id)->first();
         $data = json_decode($data->payment_data);
+        $user = User::where('id', auth('sanctum')->user()->id)->first();
 
         Stripe::setApiKey(env('STRIPE_TEST_API_KEY'));
         try {
             $pi = \Stripe\PaymentIntent::create([
-              'amount' => 1099,
+              'amount' => $request->total_budget,
               'currency' => 'usd',
-              'customer' => 'cus_NEwDx8i0ar7jLw',
-              'payment_method' => 'pm_1MUSKvDKJFuPZhC41BnZ79o2',
-              'description' => 'My First Test Payment (created for API docs)',
+              'customer' => $user->customer_id,
+              'payment_method' => $data[0][0],
+              'description' => $request->campaign_name,
               'off_session' => true,
               'confirm' => true,
             ]);
+
+            return response()->json([
+                'message' => 'Payment Successful',
+                'receipt_url' => $pi['charges']['data'][0]['receipt_url']
+            ], 200);
+
           } catch (\Stripe\Exception\CardException $e) {
             // Error code will be authentication_required if authentication is needed
             echo 'Error code is:' . $e->getError()->code;
             $payment_intent_id = $e->getError()->payment_intent->id;
             $payment_intent = \Stripe\PaymentIntent::retrieve($payment_intent_id);
+
+            return response()->json([
+                'message' => 'Payment Failed',
+                'error' => $e->getError()->message
+            ], 500);
           }
+
+         
     }
 }
