@@ -60,6 +60,8 @@ class StripeController extends Controller
     {
         try {
             Stripe::setApiKey(env('STRIPE_TEST_API_KEY'));
+            $user = User::where('id', auth('sanctum')->user()->id)->first();
+            $user = $user->customer_id;
 
             if (isset($request->promo)) {
                 $coupon = Voucher::where('code', $request->promo)->first();
@@ -69,8 +71,11 @@ class StripeController extends Controller
                 $campaign->promo_code = $request->promo;
                 $campaign->save();
 
+
+
                 $session = \Stripe\Checkout\Session::create([
                     'payment_method_types'  => ['card'],
+                    'customer'              => $user,
                     'line_items'            => [[
                         'price_data' => [
                             'currency'      => 'usd',
@@ -95,6 +100,7 @@ class StripeController extends Controller
 
                 $session = \Stripe\Checkout\Session::create([
                     'payment_method_types'  => ['card'],
+                    'customer'              => $user,
                     'line_items'            => [[
                         'price_data' => [
                             'currency'      => 'usd',
@@ -163,8 +169,7 @@ class StripeController extends Controller
                     $update_payment->payment_data = '';
                 }
                 $update_payment->save();
-            }else
-            {
+            } else {
                 $save_payment = new User_payment();
                 $save_payment->user_id = auth('sanctum')->user()->id;
                 $save_payment->payment_method = $request->payment_data;
