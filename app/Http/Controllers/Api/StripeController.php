@@ -187,12 +187,11 @@ class StripeController extends Controller
     {
         try {
             $customer = Stripe::setApiKey(env('STRIPE_TEST_API_KEY'));
+            // $deleteuser = User::where('id', auth('sanctum')->user()->id)->first();
 
-            $deleteuser = User::where('id', auth('sanctum')->user()->id)->first();
-
-            if($deleteuser->customer_id != null && $deleteuser->customer_id != ''){
-                $deleteuser = \Stripe\Customer::delete($deleteuser->customer_id);
-            } 
+            // if($deleteuser->customer_id != null && $deleteuser->customer_id != ''){
+            //     $deleteuser = \Stripe\Customer::delete($deleteuser->customer_id);
+            // } 
 
             $customer = \Stripe\Customer::create([
                 'email' => auth('sanctum')->user()->email
