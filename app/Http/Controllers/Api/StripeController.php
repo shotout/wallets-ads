@@ -138,7 +138,8 @@ class StripeController extends Controller
         try {
             $save_payment = new User_payment();
             $save_payment->user_id = auth('sanctum')->user()->id;
-            $save_payment->payment_data = $request->payment_data;
+            $save_payment->payment_method = $request->payment_data;
+            $save_payment->payment_data = ' ';
             $save_payment->save();
 
             return response()->json(['message' => 'Payment Data Saved'], 200);
