@@ -109,7 +109,8 @@ Route::group(
         Route::get('/add-card', [StripeController::class, 'customer_id'])->name('customer_id'); 
         Route::get('/retrive-card', [StripeController::class, 'payment_method'])->name('payment_method');
         Route::get('/get-payment-type', [StripeController::class, 'getpayment'])->name('getpayment'); 
-        Route::get('/delete-payment', [StripeController::class, 'delete_payment'])->name('getpayment'); 
+        Route::get('/delete-payment', [StripeController::class, 'delete_payment'])->name('delete_payment'); 
+        Route::post('/charge-card', [StripeController::class, 'charge_saved_payment'])->name('charge_saved_payment');
     }
 );
 
