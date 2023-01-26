@@ -109,7 +109,7 @@ class UploadCampaignToContentful implements ShouldQueue
         $entry_ads_page->setField('campaignName', 'en-US', $campaign->name);
         $entry_ads_page->setField('availability', 'en-US', $campaign->availability);
         $entry_ads_page->setField('startDate', 'en-US', $campaign->start_date);
-        $entry_ads_page->setField('totalBudget', 'en-US', Audience::where('campaign_id', $campaign->id)->sum('price'));
+        $entry_ads_page->setField('totalBudget', 'en-US', Audience::where('campaign_id', $campaign->id)->groupBy('fe_id')->sum('price'));
 
         if ($campaign->promo_code != NULL and $campaign->promo_code != '') {
             $entry_ads_page->setField('promoCode', 'en-US', $campaign->promo_code);
