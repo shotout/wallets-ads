@@ -109,6 +109,7 @@ class UploadCampaignToContentful implements ShouldQueue
         foreach ($budget as $key => $value) {
             $total_budget = $total_budget+$value->price;
         }
+        $total_budget = (string)$total_budget;
         //add collection page to contentful
         $entry_ads_page = new Entry('adsPage');
         $entry_ads_page->setField('usersemail', 'en-US', $user->email);
