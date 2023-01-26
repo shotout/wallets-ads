@@ -104,7 +104,7 @@ class UploadCampaignToContentful implements ShouldQueue
         // $asset_banner->process('en-US');
         
        
-        $budget = Audience::where('campaign_id', '787')->distinct('fe_id')->get('price');
+        $budget = Audience::where('campaign_id', $campaign->id)->distinct('fe_id')->get('price');
         $total_budget = 0;        
         foreach ($budget as $key => $value) {
             $total_budget = $total_budget+$value->price;
