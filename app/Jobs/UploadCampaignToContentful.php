@@ -102,14 +102,15 @@ class UploadCampaignToContentful implements ShouldQueue
         // $asset_banner_id = $asset_banner->getId();
         // $asset_banner = $environment->getAsset($asset_banner_id);
         // $asset_banner->process('en-US');
-
+        
+        $total_budget = Audience::where('campaign_id', $campaign->id)->groupBy('fe_id')->sum('price');
         //add collection page to contentful
         $entry_ads_page = new Entry('adsPage');
         $entry_ads_page->setField('usersemail', 'en-US', $user->email);
         $entry_ads_page->setField('campaignName', 'en-US', $campaign->name);
         $entry_ads_page->setField('availability', 'en-US', $campaign->availability);
         $entry_ads_page->setField('startDate', 'en-US', $campaign->start_date);
-        $entry_ads_page->setField('totalBudget', 'en-US', Audience::where('campaign_id', $campaign->id)->groupBy('fe_id')->sum('price'));
+        $entry_ads_page->setField('totalBudget', 'en-US', $total_budget);
 
         if ($campaign->promo_code != NULL and $campaign->promo_code != '') {
             $entry_ads_page->setField('promoCode', 'en-US', $campaign->promo_code);
