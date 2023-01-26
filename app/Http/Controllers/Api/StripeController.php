@@ -91,7 +91,6 @@ class StripeController extends Controller
                         'coupon' => $coupon->coupon_id,
                     ]],
                     'client_reference_id' => 'INV_001',
-                    'customer_email' => auth('sanctum')->user()->email,
                     'success_url' => "https://wallet-ads-frontend.vercel.app/create-campaign/?id=" . $request->campaign_id . "&status=success",
                     'cancel_url' =>  "https://wallet-ads-frontend.vercel.app/create-campaign/?id=" . $request->campaign_id . "&status=fail"
                 ]);
@@ -113,7 +112,6 @@ class StripeController extends Controller
                     ]],
                     'mode' => 'payment',
                     'client_reference_id' => 'INV_001',
-                    'customer_email' => auth('sanctum')->user()->email,
                     'success_url' => "https://wallet-ads-frontend.vercel.app/create-campaign/?id=" . $request->campaign_id . "&status=success",
                     'cancel_url' =>  "https://wallet-ads-frontend.vercel.app/create-campaign/?id=" . $request->campaign_id . "&status=fail"
                 ]);
