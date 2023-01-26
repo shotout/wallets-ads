@@ -251,7 +251,15 @@ class StripeController extends Controller
                 $new->save();
             }
 
-            return response()->json([$data], 200);
+            
+
+            return response()->json([
+                'status' => 'Card Data Retrieved',
+                'card_type' => $stripe->data[0]['card']['brand'],
+                'card_last4' => $stripe->data[0]['card']['last4'],
+                'card_exp_month' => $stripe->data[0]['card']['exp_month'],
+                'card_exp_year' => $stripe->data[0]['card']['exp_year']
+            ], 200);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'Payment Method Creation Failed',
