@@ -156,12 +156,21 @@ class StripeController extends Controller
         try {
             $update_payment = User_payment::where('user_id', auth('sanctum')->user()->id)->first();
 
-            $update_payment->payment_method = $request->payment_data;
+            if ($update_payment) {
 
-            if($request->payment_data == '2'){
-                $update_payment->payment_data = '';
+                $update_payment->payment_method = $request->payment_data;
+                if ($request->payment_data == '2') {
+                    $update_payment->payment_data = '';
+                }
+                $update_payment->save();
+            }else
+            {
+                $save_payment = new User_payment();
+                $save_payment->user_id = auth('sanctum')->user()->id;
+                $save_payment->payment_method = $request->payment_data;
+                $save_payment->payment_data = ' ';
+                $save_payment->save();
             }
-            $update_payment->save();
 
             return response()->json(['message' => 'Payment Data Updated'], 200);
         } catch (Exception $e) {
@@ -251,7 +260,7 @@ class StripeController extends Controller
                 $new->save();
             }
 
-            
+
 
             return response()->json([
                 'status' => 'Card Data Retrieved',
@@ -273,7 +282,7 @@ class StripeController extends Controller
     {
         $delete = User_payment::where('user_id', auth('sanctum')->user()->id)->first();
 
-        if($delete){
+        if ($delete) {
             $delete->payment_method = 0;
             $delete->payment_data = '';
             $delete->save();
