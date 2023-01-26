@@ -251,7 +251,7 @@ class StripeController extends Controller
                 ['type' => 'card']
             );
 
-            $data[] = [$stripe->data[0]['id'],$stripe->data[0]['card']['brand'], $stripe->data[0]['card']['last4'], $stripe->data[0]['card']['exp_month'], $stripe->data[0]['card']['exp_year']];
+            $data[] = [$stripe->data[0]['id'], $stripe->data[0]['card']['brand'], $stripe->data[0]['card']['last4'], $stripe->data[0]['card']['exp_month'], $stripe->data[0]['card']['exp_year']];
 
             $new = User_payment::where('user_id', auth('sanctum')->user()->id)->first();
 
@@ -288,13 +288,43 @@ class StripeController extends Controller
     public function delete_payment()
     {
         $delete = User_payment::where('user_id', auth('sanctum')->user()->id)->first();
+        $user = User::where('id', auth('sanctum')->user()->id)->first();
 
         if ($delete) {
             $delete->payment_method = 0;
             $delete->payment_data = '';
             $delete->save();
+
+
+            $user->customer_id = '';
+            $user->save();
         }
 
         return response()->json(['message' => 'Payment Method Deleted'], 200);
+    }
+
+
+    public function charge_saved_payment()
+    {
+        $data = User_payment::where('user_id', '22')->first();
+        $data = json_decode($data->payment_data);
+
+        Stripe::setApiKey(env('STRIPE_TEST_API_KEY'));
+        try {
+            $pi = \Stripe\PaymentIntent::create([
+              'amount' => 1099,
+              'currency' => 'usd',
+              'customer' => 'cus_NEwDx8i0ar7jLw',
+              'payment_method' => 'pm_1MUSKvDKJFuPZhC41BnZ79o2',
+              'description' => 'My First Test Payment (created for API docs)',
+              'off_session' => true,
+              'confirm' => true,
+            ]);
+          } catch (\Stripe\Exception\CardException $e) {
+            // Error code will be authentication_required if authentication is needed
+            echo 'Error code is:' . $e->getError()->code;
+            $payment_intent_id = $e->getError()->payment_intent->id;
+            $payment_intent = \Stripe\PaymentIntent::retrieve($payment_intent_id);
+          }
     }
 }

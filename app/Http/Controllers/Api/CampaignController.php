@@ -24,6 +24,7 @@ use App\Jobs\UpdateShowStatus;
 use App\Jobs\UploadCampaignToContentful;
 use App\Models\Invoice;
 use App\Models\User;
+use App\Models\User_payment;
 use Contentful\Management\Client;
 use Contentful\Management\Resource\Asset;
 use Contentful\Management\Resource\Entry;
@@ -31,6 +32,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use JsonMapper\LaravelPackage\JsonMapper;
 use GrahamCampbell\Markdown\Facades\Markdown;
+use Stripe\Stripe;
 
 class CampaignController extends Controller
 {
@@ -384,7 +386,7 @@ class CampaignController extends Controller
         });
 
         //start upload campaign to contenful
-        UploadCampaignToContentful::dispatch($campaign)->delay(Carbon::now()->addSeconds(300));
+        UploadCampaignToContentful::dispatch($campaign)->delay(Carbon::now()->addSeconds(5));
 
         return response()->json([
             'status' => 'success',
@@ -863,12 +865,16 @@ class CampaignController extends Controller
 
         $adv = ads::where('campaign_id', '471')->get();
 
-        
-        
+        $budget = Audience::where('campaign_id', '798')->distinct()->get('fe_id');  
+        $total = 0;
+        foreach ($budget as $key => $value) {
+           $total = $total + Audience::where('campaign_id', '798')->where('fe_id', $value->fe_id)->sum('price');
+        }
 
         return response()->json([
             'status' => 'success',
-            'data' => $invoices
+            'data' => $invoices,
+            'budget' => $total
         ], 200);
     }
 
