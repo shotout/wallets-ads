@@ -108,7 +108,8 @@ Route::group(
         Route::post('/cancelstripe', [CampaignController::class, 'cancelStripe'])->name('cancelStripe');
         Route::get('/add-card', [StripeController::class, 'customer_id'])->name('customer_id'); 
         Route::get('/retrive-card', [StripeController::class, 'payment_method'])->name('payment_method');
-        Route::get('/get-payment-type', [StripeController::class, 'getpayment'])->name('getpayment');  
+        Route::get('/get-payment-type', [StripeController::class, 'getpayment'])->name('getpayment'); 
+        Route::get('/delete-payment', [StripeController::class, 'delete_payment'])->name('getpayment'); 
     }
 );
 
