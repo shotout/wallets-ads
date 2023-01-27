@@ -102,10 +102,10 @@ class UploadCampaignToContentful implements ShouldQueue
         // $asset_banner_id = $asset_banner->getId();
         // $asset_banner = $environment->getAsset($asset_banner_id);
         // $asset_banner->process('en-US');
-        
-       
+
+
         $budget = Audience::where('campaign_id', $campaign->id)->distinct()->get('fe_id');
-        $total_budget = 0;        
+        $total_budget = 0;
 
         foreach ($budget as $key => $value) {
             $price = Audience::where('campaign_id', $campaign->id)->where('fe_id', $value->fe_id)->first('price');
@@ -192,12 +192,15 @@ class UploadCampaignToContentful implements ShouldQueue
                 } else {
                     $package = "Upload Own Audience Targeting";
 
-                    if ($url_file != NULL and $url_file != '') {
-                        $file = new \Contentful\Core\File\RemoteUploadFile(
-                            $url_file->original_name,
-                            'xlsx/xls/csv',
-                            env("APP_URL") . $url_file->url
-                        );
+                    $checkaudience = Audience::where('campaign_id', $campaign->id)->where('fe_id', $aud->fe_id)->where('id', '!=', $aud->id)->first();
+                    if (!$checkaudience) {
+                        if ($url_file != NULL and $url_file != '') {
+                            $file = new \Contentful\Core\File\RemoteUploadFile(
+                                $url_file->original_name,
+                                'xlsx/xls/csv',
+                                env("APP_URL") . $url_file->url
+                            );
+                        }
                     }
 
                     $asset_file = new Asset();
