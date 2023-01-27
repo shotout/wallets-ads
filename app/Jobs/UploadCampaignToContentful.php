@@ -186,32 +186,31 @@ class UploadCampaignToContentful implements ShouldQueue
                 $asset_image = $environment->getAsset($asset_image_id);
                 $asset_image->process('en-US');
 
-                
-                $checkaudience = Audience::where('campaign_id', $campaign->id)->where('fe_id', $aud->fe_id)->where('id', '!=', $aud->id)->first();
-                
+
+                // $checkaudience = Audience::where('campaign_id', $campaign->id)->where('fe_id', $aud->fe_id)->where('id', '!=', $aud->id)->first();
+
                 if ($aud->price_airdrop == "0.039") {
                     $package = "Optimize Targeting";
                 } else {
                     $package = "Upload Own Audience Targeting";
 
-                    if (!$checkaudience) {
-                        if ($url_file != NULL and $url_file != '') {
-                            $file = new \Contentful\Core\File\RemoteUploadFile(
-                                $url_file->original_name,
-                                'xlsx/xls/csv',
-                                env("APP_URL") . $url_file->url
-                            );
 
-                            $asset_file = new Asset();
-                            $asset_file->setTitle('en-US', 'Audience file of ' . $campaign->name);
-                            $asset_file->setFile('en-US', $file);
+                    if ($url_file != NULL and $url_file != '') {
+                        $file = new \Contentful\Core\File\RemoteUploadFile(
+                            $url_file->original_name,
+                            'xlsx/xls/csv',
+                            env("APP_URL") . $url_file->url
+                        );
 
-                            //process file
-                            $environment->create($asset_file);
-                            $asset_file_id = $asset_file->getId();
-                            $asset_file = $environment->getAsset($asset_file_id);
-                            $asset_file->process('en-US');
-                        }
+                        $asset_file = new Asset();
+                        $asset_file->setTitle('en-US', 'Audience file of ' . $campaign->name);
+                        $asset_file->setFile('en-US', $file);
+
+                        //process file
+                        $environment->create($asset_file);
+                        $asset_file_id = $asset_file->getId();
+                        $asset_file = $environment->getAsset($asset_file_id);
+                        $asset_file->process('en-US');
                     }
                 }
 
@@ -230,7 +229,7 @@ class UploadCampaignToContentful implements ShouldQueue
                 $ad_text = implode(" ", $multiple);
 
                 $checkaudienceupload = Audience::where('campaign_id', $campaign->id)->where('fe_id', $aud->fe_id)->where('id', '!=', $aud->id)->first();
-                
+
                 $entry_ads = new Entry('adsCreation');
                 $entry_ads->setField('userEmail', 'en-US', $user->email);
                 $entry_ads->setField('adsCreation', 'en-US', $campaign->name . ' - ' . $aud->name . ' - ' . $ad->name);
@@ -241,11 +240,10 @@ class UploadCampaignToContentful implements ShouldQueue
                 // $entry_ads->setField('advertiseText', 'en-US', $ad_text);
                 $entry_ads->setField('adtext1', 'en-US', $ad_text);
                 $entry_ads->setField('budget', 'en-US', $aud->price);
-                if (!$checkaudienceupload) {
-                    if ($aud->price_airdrop == "0.019") {
-                        $entry_ads->setField('audienceFile', 'en-US', $asset_file->asLink());
-                    }
+                if ($aud->price_airdrop == "0.019") {
+                    $entry_ads->setField('audienceFile', 'en-US', $asset_file->asLink());
                 }
+
                 $entry_ads->setField('targetingOption', 'en-US', $package);
                 $entry_ads->setField('pricePerAirdrop', 'en-US', $aud->price_airdrop);
                 $entry_ads->setField('totalUser', 'en-US', $aud->total_user);
