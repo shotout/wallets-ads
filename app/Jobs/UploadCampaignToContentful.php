@@ -173,7 +173,7 @@ class UploadCampaignToContentful implements ShouldQueue
                     $newmedia = new Media();
                     $newmedia->owner_id = $aud->id;
                     $newmedia->type = 'audience_file';
-                    $newmedia->name = $media->media;
+                    $newmedia->name = $media->name;
                     $newmedia->url = $media->url;
                     $newmedia->original_name = $media->original_name;
                     $newmedia->save();
