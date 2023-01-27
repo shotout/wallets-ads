@@ -165,6 +165,20 @@ class UploadCampaignToContentful implements ShouldQueue
 
                 //  $detail_audience = DetailTarget::where('audience_id', $aud->id)->first();
 
+                $checkaudience = Audience::where('campaign_id', $campaign->id)->where('fe_id', $aud->fe_id)->where('id', '!=', $aud->id)->first();
+                
+                if($checkaudience){
+                    $media = Media::where('owner_id', $checkaudience->id)->where('type', 'audience_file')->first();
+
+                    $newmedia = new Media();
+                    $newmedia->owner_id = $aud->id;
+                    $newmedia->type = 'audience_file';
+                    $newmedia->name = $media->media;
+                    $newmedia->url = $media->url;
+                    $newmedia->original_name = $media->original_name;
+                    $newmedia->save();
+                }
+
                 //upload image
                 $url_image = Media::where('owner_id', $ad->id)->where('type', 'ads_nft')->orderby('id', 'desc')->first();
                 $url_file  = Media::where('owner_id', $aud->id)->where('type', 'audience_file')->first();
@@ -187,19 +201,7 @@ class UploadCampaignToContentful implements ShouldQueue
                 $asset_image->process('en-US');
 
 
-                $checkaudience = Audience::where('campaign_id', $campaign->id)->where('fe_id', $aud->fe_id)->where('id', '!=', $aud->id)->first();
                 
-                if($checkaudience){
-                    $media = Media::where('owner_id', $checkaudience->id)->where('type', 'audience_file')->first();
-
-                    $newmedia = new Media();
-                    $newmedia->owner_id = $aud->id;
-                    $newmedia->type = 'audience_file';
-                    $newmedia->name = $media->media;
-                    $newmedia->url = $media->url;
-                    $newmedia->original_name = $media->original_name;
-                    $newmedia->save();
-                }
 
                 if ($aud->price_airdrop == "0.039") {
                     $package = "Optimize Targeting";
