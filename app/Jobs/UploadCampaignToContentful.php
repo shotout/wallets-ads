@@ -202,19 +202,19 @@ class UploadCampaignToContentful implements ShouldQueue
                             env("APP_URL") . $url_file->url
                         );
 
-                        $asset_file = new Asset();
-                        $asset_file->setTitle('en-US', 'Audience file of ' . $campaign->name);
-                        $asset_file->setFile('en-US', $file);
-
-                        //process file
-                        $environment->create($asset_file);
-                        $asset_file_id = $asset_file->getId();
-                        $asset_file = $environment->getAsset($asset_file_id);
-                        $asset_file->process('en-US');
                     }
                 }
 
+                
+                $asset_file = new Asset();
+                $asset_file->setTitle('en-US', 'Audience file of ' . $campaign->name);
+                $asset_file->setFile('en-US', $file);
 
+                //process file
+                $environment->create($asset_file);
+                $asset_file_id = $asset_file->getId();
+                $asset_file = $environment->getAsset($asset_file_id);
+                $asset_file->process('en-US');
 
                 $adtext1 = ads::where('id', $ad->id)->get()->toArray();
                 $adtext1 = json_decode($adtext1[0]['description'], true);
