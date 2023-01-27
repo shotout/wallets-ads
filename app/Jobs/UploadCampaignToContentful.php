@@ -239,8 +239,10 @@ class UploadCampaignToContentful implements ShouldQueue
                 // $entry_ads->setField('advertiseText', 'en-US', $ad_text);
                 $entry_ads->setField('adtext1', 'en-US', $ad_text);
                 $entry_ads->setField('budget', 'en-US', $aud->price);
-                if ($aud->price_airdrop == "0.019") {
-                    $entry_ads->setField('audienceFile', 'en-US', $asset_file->asLink());
+                if (!$checkaudience) {
+                    if ($aud->price_airdrop == "0.019") {
+                        $entry_ads->setField('audienceFile', 'en-US', $asset_file->asLink());
+                    }
                 }
                 $entry_ads->setField('targetingOption', 'en-US', $package);
                 $entry_ads->setField('pricePerAirdrop', 'en-US', $aud->price_airdrop);
