@@ -200,18 +200,18 @@ class UploadCampaignToContentful implements ShouldQueue
                                 'xlsx/xls/csv',
                                 env("APP_URL") . $url_file->url
                             );
+
+                            $asset_file = new Asset();
+                            $asset_file->setTitle('en-US', 'Audience file of ' . $campaign->name);
+                            $asset_file->setFile('en-US', $file);
+
+                            //process file
+                            $environment->create($asset_file);
+                            $asset_file_id = $asset_file->getId();
+                            $asset_file = $environment->getAsset($asset_file_id);
+                            $asset_file->process('en-US');
                         }
                     }
-
-                    $asset_file = new Asset();
-                    $asset_file->setTitle('en-US', 'Audience file of ' . $campaign->name);
-                    $asset_file->setFile('en-US', $file);
-
-                    //process file
-                    $environment->create($asset_file);
-                    $asset_file_id = $asset_file->getId();
-                    $asset_file = $environment->getAsset($asset_file_id);
-                    $asset_file->process('en-US');
                 }
 
 
