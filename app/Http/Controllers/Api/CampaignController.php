@@ -386,7 +386,7 @@ class CampaignController extends Controller
         });
 
         //start upload campaign to contenful
-        UploadCampaignToContentful::dispatch($campaign)->delay(Carbon::now()->addSeconds(5));
+        UploadCampaignToContentful::dispatch($campaign)->delay(Carbon::now()->addSeconds(300));
 
         return response()->json([
             'status' => 'success',
@@ -861,20 +861,36 @@ class CampaignController extends Controller
 
     public function invoices()
     {
+        $data = User_payment::where('user_id', '22')->first();
+        $data = json_decode($data->payment_data);
+
         $invoices = Invoice::where('user_id', auth('sanctum')->user()->id)->get();
 
-        $adv = ads::where('campaign_id', '471')->get();
+        Stripe::setApiKey(env('STRIPE_TEST_API_KEY'));
 
-        $budget = Audience::where('campaign_id', '798')->distinct()->get('fe_id');  
-        $total = 0;
-        foreach ($budget as $key => $value) {
-           $total = $total + Audience::where('campaign_id', '798')->where('fe_id', $value->fe_id)->sum('price');
-        }
+        try {
+            $pi = \Stripe\PaymentIntent::create([
+              'amount' => 1099,
+              'currency' => 'usd',
+              'customer' => 'cus_NEwDx8i0ar7jLw',
+              'payment_method' => 'pm_1MUSKvDKJFuPZhC41BnZ79o2',
+              'description' => 'My First Test Payment (created for API docs)',
+              'off_session' => true,
+              'confirm' => true,
+            ]);
+          } catch (\Stripe\Exception\CardException $e) {
+            // Error code will be authentication_required if authentication is needed
+            echo 'Error code is:' . $e->getError()->code;
+            $payment_intent_id = $e->getError()->payment_intent->id;
+            $payment_intent = \Stripe\PaymentIntent::retrieve($payment_intent_id);
+          }
 
         return response()->json([
             'status' => 'success',
             'data' => $invoices,
-            'budget' => $total
+            'url' => $pi->client_secret,
+            'budget' => $pi['charges']['data'][0]['receipt_url'],
+            'data' => $data[0][0]
         ], 200);
     }
 
