@@ -166,17 +166,19 @@ class UploadCampaignToContentful implements ShouldQueue
                 //  $detail_audience = DetailTarget::where('audience_id', $aud->id)->first();
 
                 $checkaudience = Audience::where('campaign_id', $campaign->id)->where('fe_id', $aud->fe_id)->where('id', '!=', $aud->id)->first();
-                
-                if($checkaudience){
+
+                if ($checkaudience) {
                     $media = Media::where('owner_id', $checkaudience->id)->where('type', 'audience_file')->first();
 
-                    $newmedia = new Media();
-                    $newmedia->owner_id = $aud->id;
-                    $newmedia->type = 'audience_file';
-                    $newmedia->name = $media->name;
-                    $newmedia->url = $media->url;
-                    $newmedia->original_name = $media->original_name;
-                    $newmedia->save();
+                    if ($media) {
+                        $newmedia = new Media();
+                        $newmedia->owner_id = $aud->id;
+                        $newmedia->type = 'audience_file';
+                        $newmedia->name = $media->name;
+                        $newmedia->url = $media->url;
+                        $newmedia->original_name = $media->original_name;
+                        $newmedia->save();
+                    }
                 }
 
                 //upload image
@@ -201,7 +203,7 @@ class UploadCampaignToContentful implements ShouldQueue
                 $asset_image->process('en-US');
 
 
-                
+
 
                 if ($aud->price_airdrop == "0.039") {
                     $package = "Optimize Targeting";
