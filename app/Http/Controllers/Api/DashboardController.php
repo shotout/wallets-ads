@@ -140,13 +140,13 @@ class DashboardController extends Controller
             ], 404); 
         }
         
-        $audiences = Audience::where('campaign_id', $id)->with('ads')->get();
+        $audiences = Audience::where('campaign_id', $id)->with('ads')->orderBy('name', 'asc')->get();
 
-        $airdrop =  Audience::where('campaign_id', $id)->sum('count_airdrop');
-        $click =  Audience::where('campaign_id', $id)->sum('count_click');
-        $mint =  Audience::where('campaign_id', $id)->sum('count_mint');
-        $impression =  Audience::where('campaign_id', $id)->sum('count_impression');
-        $view =  Audience::where('campaign_id', $id)->sum('count_view');
+        $airdrop =  Audience::where('campaign_id', $id)->orderBy('name', 'asc')->sum('count_airdrop');
+        $click =  Audience::where('campaign_id', $id)->orderBy('name', 'asc')->sum('count_click');
+        $mint =  Audience::where('campaign_id', $id)->orderBy('name', 'asc')->sum('count_mint');
+        $impression =  Audience::where('campaign_id', $id)->orderBy('name', 'asc')->sum('count_impression');
+        $view =  Audience::where('campaign_id', $id)->orderBy('name', 'asc')->sum('count_view');
 
         $counter = (object) array(
             "airdrop" => $airdrop,

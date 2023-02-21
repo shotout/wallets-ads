@@ -24,6 +24,7 @@ use App\Jobs\UpdateShowStatus;
 use App\Jobs\UploadCampaignToContentful;
 use App\Models\Invoice;
 use App\Models\User;
+use App\Models\User_payment;
 use Contentful\Management\Client;
 use Contentful\Management\Resource\Asset;
 use Contentful\Management\Resource\Entry;
@@ -31,6 +32,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use JsonMapper\LaravelPackage\JsonMapper;
 use GrahamCampbell\Markdown\Facades\Markdown;
+use Stripe\Stripe;
 
 class CampaignController extends Controller
 {
@@ -331,10 +333,21 @@ class CampaignController extends Controller
                                 ->where('fe_id', $id)
                                 ->first();
 
-                            if ($audience) {
+                            if ($audience && $audience->ads_id == null) {
                                 $audience->ads_id = $newAds->id;
-                                $audience->fe_id = null;
+                                // $audience->fe_id = null;
                                 $audience->update();
+                            } else {
+                                $newAudience = new Audience;
+                                $newAudience->campaign_id = $audience->campaign_id;
+                                $newAudience->ads_id = $newAds->id;
+                                $newAudience->fe_id = $id;
+                                $newAudience->name = $audience->name;
+                                $newAudience->price = $audience->price;
+                                $newAudience->price_airdrop = $audience->price_airdrop;
+                                $newAudience->total_user = $audience->total_user;
+                                $newAudience->selected_fe_id = $audience->selected_fe_id;
+                                $newAudience->save();
                             }
                         }
                     }
@@ -373,7 +386,7 @@ class CampaignController extends Controller
         });
 
         //start upload campaign to contenful
-        UploadCampaignToContentful::dispatch($campaign)->delay(Carbon::now()->addSeconds(60));
+        UploadCampaignToContentful::dispatch($campaign)->delay(Carbon::now()->addSeconds(300));
 
         return response()->json([
             'status' => 'success',
@@ -415,7 +428,7 @@ class CampaignController extends Controller
                     'message' => 'data not found'
                 ], 404);
             }
-         
+
 
             $campaign->user_id = auth('sanctum')->user()->id;
             $campaign->name = $request->campaign_name;
@@ -448,24 +461,17 @@ class CampaignController extends Controller
             if ($request->has('campaign_audiences') && count($request->campaign_audiences) > 0) {
                 Audience::where('campaign_id', $campaign->id)->delete();
 
-                foreach ($request->campaign_audiences as $audience) {
+                foreach ($request->campaign_audiences as $i => $audience) {
                     $audience = (object) $audience;
 
                     if (isset($audience->price) && isset($audience->price_airdrop) && isset($audience->total_user)) {
 
-                        if (isset($audience->fe_id) && $audience->fe_id != '') {
-                            $adc = new Audience;
-                            if (isset($audience->fe_id)) {
-                                $adc->fe_id = $audience->fe_id;
-                            }
-
-                            $counter = Audience::where('campaign_id', $campaign->id)->count();
-                            $adc->name = "Audience " . $counter + 1;
-                        } else {
-                            $adc = Audience::find($audience->id);
-                        }
-
+                        $adc = new Audience;
                         $adc->campaign_id = $campaign->id;
+                        if (isset($audience->fe_id)) {
+                            $adc->fe_id = $audience->fe_id;
+                        }
+                        $adc->name = "Audience " . $i + 1;
                         if (isset($audience->price)) {
                             $adc->price = $audience->price;
                         }
@@ -475,15 +481,41 @@ class CampaignController extends Controller
                         if (isset($audience->total_user)) {
                             $adc->total_user = $audience->total_user;
                         }
+                        if (isset($audience->selected_fe_id)) {
+                            $adc->selected_fe_id = $audience->selected_fe_id;
+                        }
                         $adc->save();
 
-                        if (isset($audience->fe_id) && $audience->fe_id != '') {
-                            $detailTarget = new DetailTarget;
-                            $detailTarget->audience_id = $adc->id;
-                            $detailTarget->campaign_id = $campaign->id;
-                        } else {
-                            $detailTarget = DetailTarget::where('audience_id', $adc->id)->first();
-                        }
+                        // $optimizeTarget = new OptimizeTarget;
+                        // $optimizeTarget->audience_id = $adc->id;
+                        // $optimizeTarget->price = $audience->optimized_targeting_price;
+                        // $optimizeTarget->description = $audience->optimized_targeting_description;
+                        // $optimizeTarget->save();
+
+                        // $balanceTarget = new BalanceTarget;
+                        // $balanceTarget->audience_id = $adc->id;
+                        // $balanceTarget->price = $audience->balanced_targeting_price;
+                        // $balanceTarget->description = $audience->balanced_targeting_description;
+                        // $balanceTarget->cryptocurrency_used = $audience->balanced_targeting_cryptocurrency;
+                        // $balanceTarget->account_age_year = $audience->balanced_targeting_year;
+                        // $balanceTarget->account_age_month = $audience->balanced_targeting_month;
+                        // $balanceTarget->account_age_day = $audience->balanced_targeting_day;
+                        // $balanceTarget->airdrops_received = $audience->balanced_targeting_airdrops;
+
+                        // if (isset($audience->balanced_targeting_wallet) && $audience->balanced_targeting_wallet != '') {
+                        //     $balanceTarget->wallet_type = $audience->balanced_targeting_wallet;
+                        // }
+                        // if (isset($audience->balanced_targeting_location) && $audience->balanced_targeting_location != '') {
+                        //     $balanceTarget->location = $audience->balanced_targeting_location;
+                        // }
+
+                        // $balanceTarget->save();
+
+                        $detailTarget = new DetailTarget;
+                        $detailTarget->audience_id = $adc->id;
+                        $detailTarget->campaign_id = $campaign->id;
+                        // $detailTarget->price = $audience->detailed_targeting_price;
+                        // $detailTarget->description = $audience->detailed_targeting_description;
                         if (isset($audience->detailed_targeting_cryptocurrency)) {
                             $detailTarget->cryptocurrency_used = $audience->detailed_targeting_cryptocurrency;
                         }
@@ -547,34 +579,34 @@ class CampaignController extends Controller
             $adsPage = AdsPage::where('campaign_id', $campaign->id)->first();
             $adsPage->name = $request->ads_page_name;
             $adsPage->description = $request->ads_page_description;
-            if($request->has('ads_page_website') && $request->ads_page_website != ''){
+            if ($request->has('ads_page_website') && $request->ads_page_website != '' && $request->ads_page_website != 'null') {
                 $adsPage->website = $request->ads_page_website;
             }
-            if($request->has('ads_page_discord') && $request->ads_page_discord != ''){
+            if ($request->has('ads_page_discord') && $request->ads_page_discord != '' && $request->ads_page_discord != 'null') {
                 $adsPage->discord = $request->ads_page_discord;
             }
-            if($request->has('ads_page_twitter') && $request->ads_page_twitter != ''){
+            if ($request->has('ads_page_twitter') && $request->ads_page_twitter != '' && $request->ads_page_twitter != 'null') {
                 $adsPage->twitter = $request->ads_page_twitter;
             }
-            if($request->has('ads_page_instagram') && $request->ads_page_instagram != ''){
+            if ($request->has('ads_page_instagram') && $request->ads_page_instagram != '') {
                 $adsPage->instagram = $request->ads_page_instagram;
             }
-            if($request->has('ads_page_medium') && $request->ads_page_medium != ''){
+            if ($request->has('ads_page_medium') && $request->ads_page_medium != '' && $request->ads_page_medium != 'null') {
                 $adsPage->medium = $request->ads_page_medium;
             }
-            if($request->has('ads_page_facebook') && $request->ads_page_facebook != ''){
+            if ($request->has('ads_page_facebook') && $request->ads_page_facebook != '') {
                 $adsPage->facebook = $request->ads_page_facebook;
             }
-            if($request->has('ads_page_external_page') && $request->ads_page_external_page != ''){
+            if ($request->has('ads_page_external_page') && $request->ads_page_external_page != '') {
                 $adsPage->external_page = $request->ads_page_external_page;
             }
-            if($request->has('ads_page_token_name') && $request->ads_page_token_name != ''){
+            if ($request->has('ads_page_token_name') && $request->ads_page_token_name != '' && $request->ads_page_token_name != 'null') {
                 $adsPage->token_name = $request->ads_page_token_name;
             }
-            if($request->has('ads_page_token_symbol') && $request->ads_page_token_symbol != ''){
+            if ($request->has('ads_page_token_symbol') && $request->ads_page_token_symbol != '' && $request->ads_page_token_symbol != 'null') {
                 $adsPage->token_symbol = $request->ads_page_token_symbol;
             }
-            
+
             $adsPage->save();
 
             if ($request->has('ads_page_logo_url') && $request->ads_page_logo_url != '') {
@@ -670,23 +702,27 @@ class CampaignController extends Controller
                             if ($audience) {
                                 $audience->ads_id = $oldAds->id;
                                 $audience->update();
+                            } else {
+
+                                $audience5 = Audience::where('campaign_id', $campaign->id)
+                                    ->where('selected_fe_id', $adc_id)
+                                    ->first();
+
+                                //create new aud
+                                $newAudience = new Audience;
+                                $newAudience->campaign_id = $audience5->campaign_id;
+                                $newAudience->ads_id = $oldAds->id;
+                                $newAudience->fe_id = $id;
+                                $newAudience->name = $audience5->name;
+                                $newAudience->price = $audience5->price;
+                                $newAudience->price_airdrop = $audience5->price_airdrop;
+                                $newAudience->total_user = $audience5->total_user;
+                                $newAudience->selected_fe_id = $audience5->selected_fe_id;
+                                $newAudience->save();
                             }
                         }
                     }
 
-                    if (isset($ads->fe_id) && count($ads->fe_id) > 0) {
-                        foreach ($ads->fe_id as $fe_id) {
-                            $audience = Audience::where('campaign_id', $campaign->id)
-                                ->where('fe_id', $fe_id)
-                                ->first();
-
-                            if ($audience) {
-                                $audience->ads_id = $oldAds->id;
-                                $audience->fe_id = null;
-                                $audience->update();
-                            }
-                        }
-                    }
 
                     if (isset($ads->image_url) && $ads->image_url != '') {
                         $media = Media::where('owner_id', $oldAds->id)
@@ -728,10 +764,31 @@ class CampaignController extends Controller
             return $campaign;
         });
 
+        Audience::where('campaign_id', $campaign->id)->where('ads_id', null)->delete();
+
         $data = Campaign::with('audiences', 'adsPage', 'ads')->find($campaign->id);
 
-        $campaign = Campaign::find($campaign->id);
-        UploadCampaignToContentful::dispatch($campaign)->delay(Carbon::now()->addSeconds(60));
+        // //if record exist
+        // $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
+        // $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
+
+        // if ($campaign->entry_id != 0) {
+        //     $delete_campaign = $environment->getEntry($campaign->entry_id);
+        //     $delete_campaign->unpublish();
+        //     $delete_campaign->delete();
+
+        //     $audience_contentful = Audience::where('campaign_id', $campaign->id)->get();
+        //     foreach ($audience_contentful as $audience) {
+        //         if ($audience->entry_id != 0) {
+        //             $delete_audience = $environment->getEntry($audience->entry_id);
+        //             $delete_audience->unpublish();
+        //             $delete_audience->delete();
+        //         }
+        //     }
+        // }
+
+        // $campaign = Campaign::find($campaign->id);
+        // UploadCampaignToContentful::dispatch($campaign)->delay(Carbon::now()->addSeconds(60));
 
         return response()->json([
             'status' => 'success',
@@ -787,7 +844,7 @@ class CampaignController extends Controller
 
             $campaign->save();
 
-            UpdateCryptoPaymet::dispatch($campaign_id);
+            UpdateCryptoPaymet::dispatch($campaign_id)->delay(Carbon::now()->addSeconds(330));
 
             return response()->json([
                 'status' => 'success',
@@ -804,32 +861,36 @@ class CampaignController extends Controller
 
     public function invoices()
     {
+        // $data = User_payment::where('user_id', '22')->first();
+        // $data = json_decode($data->payment_data);
+
         $invoices = Invoice::where('user_id', auth('sanctum')->user()->id)->get();
 
-        $adtext = ads::where('campaign_id', '471')->get()->toArray();
-        $adtext = json_decode($adtext[0]['description'], true);
-        $adtext[0]['adtext'];
-        $i = 1;
-        foreach ($adtext as $key => $value) {
-            $multiple[] = $value['adtext'];
-        }
+        Stripe::setApiKey(env('STRIPE_TEST_API_KEY'));
 
-        foreach ($multiple as $key => $value) {
-            $test = '|||Ad text ' . $i . ':';
-            $ad_text[] = $test;
-            $ad_text[] = Markdown::convertToHtml($multiple[$key]);
-            $i++;
-        }
-
-
-        $tes = nl2br(' hello, "\n" 
-        this is a test "\n" thanks, "\n" test');
+        try {
+            $pi = \Stripe\PaymentIntent::create([
+              'amount' => 1099,
+              'currency' => 'usd',
+              'customer' => 'cus_NEwDx8i0ar7jLw',
+              'payment_method' => 'pm_1MUSKvDKJFuPZhC41BnZ79o2',
+              'description' => 'My First Test Payment (created for API docs)',
+              'off_session' => true,
+              'confirm' => true,
+            ]);
+          } catch (\Stripe\Exception\CardException $e) {
+            // Error code will be authentication_required if authentication is needed
+            echo 'Error code is:' . $e->getError()->code;
+            $payment_intent_id = $e->getError()->payment_intent->id;
+            $payment_intent = \Stripe\PaymentIntent::retrieve($payment_intent_id);
+          }
 
         return response()->json([
             'status' => 'success',
             'data' => $invoices,
-            'ad_text' => $ad_text,
-            'tes' => $tes
+            'url' => $pi->client_secret,
+            'budget' => $pi['charges']['data'][0]['receipt_url'],
+            // 'data' => $data[0][0]
         ], 200);
     }
 
