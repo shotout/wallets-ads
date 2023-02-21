@@ -103,13 +103,23 @@ class UploadCampaignToContentful implements ShouldQueue
         // $asset_banner = $environment->getAsset($asset_banner_id);
         // $asset_banner->process('en-US');
 
+
+        $budget = Audience::where('campaign_id', $campaign->id)->distinct()->get('fe_id');
+        $total_budget = 0;
+
+        foreach ($budget as $key => $value) {
+            $price = Audience::where('campaign_id', $campaign->id)->where('fe_id', $value->fe_id)->first('price');
+            $total_budget = $total_budget + (int) $price->price;
+        }
+
+        $total_budget = (string)$total_budget;
         //add collection page to contentful
         $entry_ads_page = new Entry('adsPage');
         $entry_ads_page->setField('usersemail', 'en-US', $user->email);
         $entry_ads_page->setField('campaignName', 'en-US', $campaign->name);
         $entry_ads_page->setField('availability', 'en-US', $campaign->availability);
         $entry_ads_page->setField('startDate', 'en-US', $campaign->start_date);
-        $entry_ads_page->setField('totalBudget', 'en-US', Audience::where('campaign_id', $campaign->id)->sum('price'));
+        $entry_ads_page->setField('totalBudget', 'en-US', $total_budget);
 
         if ($campaign->promo_code != NULL and $campaign->promo_code != '') {
             $entry_ads_page->setField('promoCode', 'en-US', $campaign->promo_code);
@@ -142,18 +152,34 @@ class UploadCampaignToContentful implements ShouldQueue
         $updatecampaign->save();
 
         //add ads to contentful
-        $adv = Ads::where('campaign_id', $campaign->id)->get();
+        $adv = Ads::where('campaign_id', $campaign->id)->orderBy('id', 'desc')->get();
 
-       
+
 
         foreach ($adv as $ad) {
-            
-            $audience = Audience::where('ads_id', $ad->id)->get();
+
+            $audience = Audience::where('ads_id', $ad->id)->orderBy('id', 'desc')->get();
 
 
             foreach ($audience as $aud) {
 
                 //  $detail_audience = DetailTarget::where('audience_id', $aud->id)->first();
+
+                $checkaudience = Audience::where('campaign_id', $campaign->id)->where('fe_id', $aud->fe_id)->where('id', '!=', $aud->id)->first();
+
+                if ($checkaudience) {
+                    $media = Media::where('owner_id', $checkaudience->id)->where('type', 'audience_file')->first();
+
+                    if ($media) {
+                        $newmedia = new Media();
+                        $newmedia->owner_id = $aud->id;
+                        $newmedia->type = 'audience_file';
+                        $newmedia->name = $media->name;
+                        $newmedia->url = $media->url;
+                        $newmedia->original_name = $media->original_name;
+                        $newmedia->save();
+                    }
+                }
 
                 //upload image
                 $url_image = Media::where('owner_id', $ad->id)->where('type', 'ads_nft')->orderby('id', 'desc')->first();
@@ -175,6 +201,8 @@ class UploadCampaignToContentful implements ShouldQueue
                 $asset_image_id = $asset_image->getId();
                 $asset_image = $environment->getAsset($asset_image_id);
                 $asset_image->process('en-US');
+
+
 
 
                 if ($aud->price_airdrop == "0.039") {
@@ -201,11 +229,12 @@ class UploadCampaignToContentful implements ShouldQueue
 
 
 
+
                 $adtext1 = ads::where('id', $ad->id)->get()->toArray();
                 $adtext1 = json_decode($adtext1[0]['description'], true);
                 $adtext1[0]['adtext'];
                 $i = 1;
-                
+
                 foreach ($adtext1 as $key => $value) {
                     $multiple[] = '|||Ad text' . $i . ': </br>' . $value['adtext'] . '</br></br></br>';
                     $i++;
@@ -213,10 +242,11 @@ class UploadCampaignToContentful implements ShouldQueue
 
                 $ad_text = implode(" ", $multiple);
 
+                $checkaudienceupload = Audience::where('campaign_id', $campaign->id)->where('fe_id', $aud->fe_id)->where('id', '!=', $aud->id)->first();
 
                 $entry_ads = new Entry('adsCreation');
                 $entry_ads->setField('userEmail', 'en-US', $user->email);
-                $entry_ads->setField('adsCreation', 'en-US', $campaign->name.' - '.$aud->name.' - '.$ad->name);
+                $entry_ads->setField('adsCreation', 'en-US', $campaign->name . ' - ' . $aud->name . ' - ' . $ad->name);
                 $entry_ads->setField('campaignName', 'en-US', $campaign->name);
                 $entry_ads->setField('campaignAvailability', 'en-US', $campaign->availability);
                 $entry_ads->setField('campaignStartDate', 'en-US', $campaign->start_date);
@@ -227,6 +257,7 @@ class UploadCampaignToContentful implements ShouldQueue
                 if ($aud->price_airdrop == "0.019") {
                     $entry_ads->setField('audienceFile', 'en-US', $asset_file->asLink());
                 }
+
                 $entry_ads->setField('targetingOption', 'en-US', $package);
                 $entry_ads->setField('pricePerAirdrop', 'en-US', $aud->price_airdrop);
                 $entry_ads->setField('totalUser', 'en-US', $aud->total_user);
