@@ -36,7 +36,7 @@ Route::group(
         Route::post('/check-email', [AuthController::class, 'checkEmail'])->name('checkEmail');
         Route::post('/check-token', [AuthController::class, 'checkToken'])->name('checkToken');
         Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('resetPassword');
-        Route::post('/change-password', [AuthController::class, 'changePassword'])->name('changePassword2');
+        Route::post('/change-password', [AuthController::class, 'changePassword'])->name('changePassword');
     }
 );
 
@@ -81,6 +81,7 @@ Route::group(
         Route::post('/', [CampaignController::class, 'store'])->name('store');
         Route::get('/{id}', [CampaignController::class, 'show'])->name('show');
         Route::patch('/{id}', [CampaignController::class, 'update'])->name('update');
+        Route::post('/update/{id}', [CampaignController::class, 'update'])->name('updatecampaign');
     }
 );
 
@@ -102,9 +103,14 @@ Route::group(
         'name' => 'payment.'
     ],
     function() {
-        Route::post('/', [PaymentController::class, 'store'])->name('store');
-        Route::patch('/{id}', [PaymentController::class, 'update'])->name('update');
+        Route::post('/', [StripeController::class, 'savepayment'])->name('store');
+        Route::patch('/update', [StripeController::class, 'updatepayment'])->name('update');
         Route::post('/cancelstripe', [CampaignController::class, 'cancelStripe'])->name('cancelStripe');
+        Route::get('/add-card', [StripeController::class, 'customer_id'])->name('customer_id'); 
+        Route::get('/retrive-card', [StripeController::class, 'payment_method'])->name('payment_method');
+        Route::get('/get-payment-type', [StripeController::class, 'getpayment'])->name('getpayment'); 
+        Route::get('/delete-payment', [StripeController::class, 'delete_payment'])->name('delete_payment'); 
+        Route::post('/charge-card', [StripeController::class, 'charge_saved_payment'])->name('charge_saved_payment');
     }
 );
 
@@ -128,7 +134,8 @@ Route::group(
         'name' => 'invoices.'
     ],
     function() {
-         Route::get('/', [CampaignController::class, 'invoices'])->name('invoices');             
+         Route::get('/', [CampaignController::class, 'invoices'])->name('invoices');
+         Route::get('/test', [StripeController::class, 'customer_id'])->name('cid');             
     }
 );
 
