@@ -888,8 +888,8 @@ class CampaignController extends Controller
         return response()->json([
             'status' => 'success',
             'data' => $invoices,
-            'url' => $pi->client_secret,
-            'budget' => $pi['charges']['data'][0]['receipt_url'],
+            // 'url' => $pi->client_secret,
+            // 'budget' => $pi['charges']['data'][0]['receipt_url'],
             // 'data' => $data[0][0]
         ], 200);
     }
