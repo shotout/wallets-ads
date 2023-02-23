@@ -564,16 +564,16 @@ class CampaignController extends Controller
                             }
 
 
-                            if ($request->campaign_audiences->hasFile('file')) {
-                                $filename = uniqid();
-                                $fileExt = $audience->file->getClientOriginalExtension();
-                                $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
-                                $audience->file->move(public_path() . '/assets/files/audience/', $fileNameToStore);
+                            // if ($request->campaign_audiences->hasFile('file')) {
+                            //     $filename = uniqid();
+                            //     $fileExt = $audience->file->getClientOriginalExtension();
+                            //     $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
+                            //     $audience->file->move(public_path() . '/assets/files/audience/', $fileNameToStore);
 
-                                $media->name = $fileNameToStore;
-                                $media->url = '/assets/files/audience/' . $fileNameToStore;
-                                $media->save();
-                            }
+                            //     $media->name = $fileNameToStore;
+                            //     $media->url = '/assets/files/audience/' . $fileNameToStore;
+                            //     $media->save();
+                            // }
                         }
                     }
                 }
