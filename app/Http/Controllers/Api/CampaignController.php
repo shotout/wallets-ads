@@ -563,14 +563,16 @@ class CampaignController extends Controller
                                 $media->type = "audience_file";
                             }
 
-                            $filename = uniqid();
-                            $fileExt = $audience->file->getClientOriginalExtension();
-                            $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
-                            $audience->file->move(public_path() . '/assets/files/audience/', $fileNameToStore);
+                            if ($audience->file->isFile()) {
+                                $filename = uniqid();
+                                $fileExt = $audience->file->getClientOriginalExtension();
+                                $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
+                                $audience->file->move(public_path() . '/assets/files/audience/', $fileNameToStore);
 
-                            $media->name = $fileNameToStore;
-                            $media->url = '/assets/files/audience/' . $fileNameToStore;
-                            $media->save();
+                                $media->name = $fileNameToStore;
+                                $media->url = '/assets/files/audience/' . $fileNameToStore;
+                                $media->save();
+                            }
                         }
                     }
                 }
@@ -870,20 +872,20 @@ class CampaignController extends Controller
 
         try {
             $pi = \Stripe\PaymentIntent::create([
-              'amount' => 1099,
-              'currency' => 'usd',
-              'customer' => 'cus_NEwDx8i0ar7jLw',
-              'payment_method' => 'pm_1MUSKvDKJFuPZhC41BnZ79o2',
-              'description' => 'My First Test Payment (created for API docs)',
-              'off_session' => true,
-              'confirm' => true,
+                'amount' => 1099,
+                'currency' => 'usd',
+                'customer' => 'cus_NEwDx8i0ar7jLw',
+                'payment_method' => 'pm_1MUSKvDKJFuPZhC41BnZ79o2',
+                'description' => 'My First Test Payment (created for API docs)',
+                'off_session' => true,
+                'confirm' => true,
             ]);
-          } catch (\Stripe\Exception\CardException $e) {
+        } catch (\Stripe\Exception\CardException $e) {
             // Error code will be authentication_required if authentication is needed
             echo 'Error code is:' . $e->getError()->code;
             $payment_intent_id = $e->getError()->payment_intent->id;
             $payment_intent = \Stripe\PaymentIntent::retrieve($payment_intent_id);
-          }
+        }
 
         return response()->json([
             'status' => 'success',
