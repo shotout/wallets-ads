@@ -861,9 +861,7 @@ class CampaignController extends Controller
 
     public function invoices()
     {
-        // $data = User_payment::where('user_id', '22')->first();
-        // $data = json_decode($data->payment_data);
-
+       
         $invoices = Invoice::where('user_id', auth('sanctum')->user()->id)->get();
 
         Stripe::setApiKey(env('STRIPE_TEST_API_KEY'));
