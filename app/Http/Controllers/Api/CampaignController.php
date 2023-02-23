@@ -563,8 +563,8 @@ class CampaignController extends Controller
                                 $media->type = "audience_file";
                             }
 
-                            if ($audience->file->isString()) {
-                            } else {
+
+                            if ($request->campaign_audiences->hasFile('file')) {
                                 $filename = uniqid();
                                 $fileExt = $audience->file->getClientOriginalExtension();
                                 $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
