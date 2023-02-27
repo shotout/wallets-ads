@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Campaign;
 use App\Models\Payment;
 use App\Models\StripePayment;
+use App\Models\User;
+use App\Models\User_payment;
 use App\Models\Voucher;
 use Exception;
 use Illuminate\Http\Request;
@@ -128,4 +130,210 @@ class StripeController extends Controller
             ], 500);
         }
     }
+
+    
+    public function savepayment(Request $request)
+    {
+        try {
+            $save_payment = new User_payment();
+            $save_payment->user_id = auth('sanctum')->user()->id;
+            $save_payment->payment_method = $request->payment_data;
+            $save_payment->payment_data = ' ';
+            $save_payment->save();
+
+            return response()->json(['message' => 'Payment Data Saved'], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'status' => 'Payment Data Save Failed'
+            ], 500);
+        }
+    }
+
+    public function updatepayment(Request $request)
+    {
+        try {
+            $update_payment = User_payment::where('user_id', auth('sanctum')->user()->id)->first();
+
+            if ($update_payment) {
+
+                $update_payment->payment_method = $request->payment_data;
+                if ($request->payment_data == '2') {
+                    $update_payment->payment_data = '';
+                }
+                $update_payment->save();
+            } else {
+                $save_payment = new User_payment();
+                $save_payment->user_id = auth('sanctum')->user()->id;
+                $save_payment->payment_method = $request->payment_data;
+                $save_payment->payment_data = ' ';
+                $save_payment->save();
+            }
+
+            return response()->json(['message' => 'Payment Data Updated'], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'Payment Data Update Failed'
+            ], 500);
+        }
+    }
+
+    public function getpayment()
+    {
+        try {
+            $get_payment = User_payment::where('user_id', auth('sanctum')->user()->id)->first();
+
+            return response()->json($get_payment, 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'Payment Data Get Failed'
+            ], 500);
+        }
+    }
+
+    public function customer_id()
+    {
+        try {
+            $customer = Stripe::setApiKey(env('STRIPE_TEST_API_KEY'));
+            // $deleteuser = User::where('id', auth('sanctum')->user()->id)->first();
+
+            // if($deleteuser->customer_id != null && $deleteuser->customer_id != ''){
+            //     $deleteuser = \Stripe\Customer::delete($deleteuser->customer_id);
+            // } 
+
+            $customer = \Stripe\Customer::create([
+                'email' => auth('sanctum')->user()->email
+            ]);
+
+            $customer = $customer->id;
+
+            $user = User::where('id', auth('sanctum')->user()->id)->first();
+            $user->customer_id = $customer;
+            $user->save();
+
+            $stripe = new \Stripe\StripeClient(env('STRIPE_TEST_API_KEY'));
+
+            $stripe->setupIntents->create(
+                ['payment_method_types' => ['card'], 'customer' => $user->customer_id]
+            );
+
+
+            $stripe = $stripe->setupIntents->all();
+
+            return response()->json([$stripe], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'Customer ID Creation Failed',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function payment_method(Request $request)
+    {
+        try {
+            $user = User::where('id', auth('sanctum')->user()->id)->first();
+
+            $stripe = new \Stripe\StripeClient(env('STRIPE_TEST_API_KEY'));
+
+
+            $stripe = $stripe->customers->allPaymentMethods(
+                $user->customer_id,
+                ['type' => 'card']
+            );
+
+            $data[] = [$stripe->data[0]['id'], $stripe->data[0]['card']['brand'], $stripe->data[0]['card']['last4'], $stripe->data[0]['card']['exp_month'], $stripe->data[0]['card']['exp_year']];
+
+            $new = User_payment::where('user_id', auth('sanctum')->user()->id)->first();
+
+            if ($new) {
+                $new->payment_method = 1;
+                $new->payment_data = $data;
+                $new->save();
+            } else {
+                $new = new User_payment();
+                $new->user_id = auth('sanctum')->user()->id;
+                $new->payment_method = 1;
+                $new->payment_data = $data;
+                $new->save();
+            }
+
+
+
+            return response()->json([
+                'status' => 'Card Data Retrieved',
+                'card_type' => $stripe->data[0]['card']['brand'],
+                'card_last4' => $stripe->data[0]['card']['last4'],
+                'card_exp_month' => $stripe->data[0]['card']['exp_month'],
+                'card_exp_year' => $stripe->data[0]['card']['exp_year']
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'Payment Method Creation Failed',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+
+    public function delete_payment()
+    {
+        $delete = User_payment::where('user_id', auth('sanctum')->user()->id)->first();
+        $user = User::where('id', auth('sanctum')->user()->id)->first();
+
+        if ($delete) {
+            $delete->payment_method = 0;
+            $delete->payment_data = '';
+            $delete->save();
+
+
+            $user->customer_id = '';
+            $user->save();
+        }
+
+        return response()->json(['message' => 'Payment Method Deleted'], 200);
+    }
+
+
+    public function charge_saved_payment(Request $request)
+    {
+
+        $data = User_payment::where('user_id', auth('sanctum')->user()->id)->first();
+        $data = json_decode($data->payment_data);
+        $user = User::where('id', auth('sanctum')->user()->id)->first();
+
+        Stripe::setApiKey(env('STRIPE_TEST_API_KEY'));
+        try {
+            $pi = \Stripe\PaymentIntent::create([
+              'amount' => $request->total_budget,
+              'currency' => 'usd',
+              'customer' => $user->customer_id,
+              'payment_method' => $data[0][0],
+              'description' => $request->campaign_name,
+              'off_session' => true,
+              'confirm' => true,
+            ]);
+
+            return response()->json([
+                'message' => 'Payment Successful',
+                'receipt_url' => $pi['charges']['data'][0]['receipt_url']
+            ], 200);
+
+          } catch (\Stripe\Exception\CardException $e) {
+            // Error code will be authentication_required if authentication is needed
+            echo 'Error code is:' . $e->getError()->code;
+            $payment_intent_id = $e->getError()->payment_intent->id;
+            $payment_intent = \Stripe\PaymentIntent::retrieve($payment_intent_id);
+
+            return response()->json([
+                'message' => 'Payment Failed',
+                'error' => $e->getError()->message
+            ], 500);
+          }
+
+         
+    }
+
+
+
 }
