@@ -303,6 +303,7 @@ class StripeController extends Controller
         $data = json_decode($data->payment_data);
         $user = User::where('id', auth('sanctum')->user()->id)->first();
 
+        //charge saved payment
         Stripe::setApiKey(env('STRIPE_TEST_API_KEY'));
         try {
             $pi = \Stripe\PaymentIntent::create([
