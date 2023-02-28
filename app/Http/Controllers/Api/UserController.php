@@ -26,7 +26,7 @@ class UserController extends Controller
 {
     public function show()
     {
-        $user = User::with('photo')->find(auth('sanctum')->user()->id);
+        $user = User::with('photo','payment')->find(auth('sanctum')->user()->id);
         $payment = User_payment::where('user_id', auth('sanctum')->user()->id)->first();
 
         if (!$user) {
