@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Jobs\DeleteSnoozeRecord;
 use App\Models\StripePayment;
+use App\Models\User_payment;
 use Carbon\Carbon;
 use Contentful\Management\Resource\Entry;
 use Illuminate\Support\Facades\Http;
@@ -25,7 +26,8 @@ class UserController extends Controller
 {
     public function show()
     {
-        $user = User::with('photo', 'payment')->find(auth('sanctum')->user()->id);
+        $user = User::with('photo')->find(auth('sanctum')->user()->id);
+        $payment = User_payment::where('user_id', auth('sanctum')->user()->id)->first();
 
         if (!$user) {
             return response()->json([
@@ -36,7 +38,8 @@ class UserController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'data' => $user
+            'data' => $user,
+            'payment' => json_decode($payment->payment_data),
         ], 200);
     }
 

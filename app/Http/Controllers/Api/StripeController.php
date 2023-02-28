@@ -242,20 +242,25 @@ class StripeController extends Controller
                 $user->customer_id,
                 ['type' => 'card']
             );
-
-            $data[] = [$stripe->data[0]['id'], $stripe->data[0]['card']['brand'], $stripe->data[0]['card']['last4'], $stripe->data[0]['card']['exp_month'], $stripe->data[0]['card']['exp_year']];
+            
+            $data = [];
+            $data['id'] = $stripe->data[0]['id'];
+            $data['brand'] = $stripe->data[0]['card']['brand'];
+            $data['last4'] = $stripe->data[0]['card']['last4'];
+            $data['exp_month'] = $stripe->data[0]['card']['exp_month'];
+            $data['exp_year'] = $stripe->data[0]['card']['exp_year'];
 
             $new = User_payment::where('user_id', auth('sanctum')->user()->id)->first();
 
             if ($new) {
                 $new->payment_method = 1;
-                $new->payment_data = $data;
+                $new->payment_data = json_encode($data, JSON_UNESCAPED_SLASHES);
                 $new->save();
             } else {
                 $new = new User_payment();
                 $new->user_id = auth('sanctum')->user()->id;
                 $new->payment_method = 1;
-                $new->payment_data = $data;
+                $new->payment_data = json_encode($data, JSON_UNESCAPED_SLASHES);
                 $new->save();
             }
 
