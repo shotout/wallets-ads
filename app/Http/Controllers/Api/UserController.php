@@ -81,23 +81,23 @@ class UserController extends Controller
         $user->update();
 
         //update contentfull data
-        $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
-        $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
+        // $client = new Client(env('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'));
+        // $environment = $client->getEnvironmentProxy(env('CONTENTFUL_SPACE_ID'), 'master');
 
-        $updateuser = User::find(auth('sanctum')->user()->id);
+        // $updateuser = User::find(auth('sanctum')->user()->id);
 
-        $entry = $environment->getEntry($updateuser->entry_id);
-        $entry->setField('companyName', 'en-US', $updateuser->company_name);
-        $entry->setField('taxId', 'en-US', $updateuser->tax_id);
-        $entry->setField('firstName', 'en-US', $updateuser->first_name);
-        $entry->setField('lastName', 'en-US', $updateuser->last_name);
-        $entry->setField('street', 'en-US', $updateuser->street);
-        $entry->setField('postCode', 'en-US', $updateuser->post_code);
-        $entry->setField('city', 'en-US', $updateuser->city);
-        $entry->setField('country', 'en-US', $updateuser->country);
-        $entry->setField('email', 'en-US', $updateuser->email);
-        $entry->setField('phone', 'en-US', $updateuser->phone);
-        $entry->update();
+        // $entry = $environment->getEntry($updateuser->entry_id);
+        // $entry->setField('companyName', 'en-US', $updateuser->company_name);
+        // $entry->setField('taxId', 'en-US', $updateuser->tax_id);
+        // $entry->setField('firstName', 'en-US', $updateuser->first_name);
+        // $entry->setField('lastName', 'en-US', $updateuser->last_name);
+        // $entry->setField('street', 'en-US', $updateuser->street);
+        // $entry->setField('postCode', 'en-US', $updateuser->post_code);
+        // $entry->setField('city', 'en-US', $updateuser->city);
+        // $entry->setField('country', 'en-US', $updateuser->country);
+        // $entry->setField('email', 'en-US', $updateuser->email);
+        // $entry->setField('phone', 'en-US', $updateuser->phone);
+        // $entry->update();
 
 
         if ($request->hasFile('photo')) {
