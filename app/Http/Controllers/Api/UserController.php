@@ -102,13 +102,10 @@ class UserController extends Controller
 
         if ($request->hasFile('photo')) {
             $media = Media::where('owner_id', $user->id)->where('type', 'user_photo')->first();
-            if ($media) {
-                unlink(public_path() . $media->url);
-            } else {
-                $media = new Media;
-                $media->owner_id = auth('sanctum')->user()->id;
-                $media->type = "user_photo";
-            }
+            
+            $media = new Media;
+            $media->owner_id = auth('sanctum')->user()->id;
+            $media->type = "user_photo";
 
             $filename = uniqid();
             $fileExt = $request->photo->getClientOriginalExtension();
@@ -266,7 +263,7 @@ class UserController extends Controller
 
             $snoozed = Blacklisted::where('walletaddress', $request->wallet_address)->where('is_subscribe', 2)->first();
 
-            if($snoozed->entry_id){
+            if ($snoozed->entry_id) {
                 $entry_snoozed = $environment->getEntry($snoozed->entry_id);
                 $entry_snoozed->setField('snoozeEnd', 'en-US', $snoozeend);
                 $entry_snoozed->setField('campaignId', 'en-US', $snoozed->campaign_id);
