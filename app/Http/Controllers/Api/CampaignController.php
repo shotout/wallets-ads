@@ -486,15 +486,15 @@ class CampaignController extends Controller
                         }
                         $adc->save();
 
-                        $oldaud = Audience::where('selected_fe_id', $audience->selected_fe_id)->where('fe_id', 0)->first();
-                        if ($oldaud) {
-                            //update media id
-                            $media = Media::where('owner_id', $oldaud->id)->where('type', 'audience_file')->first();
-                            if ($media) {
-                                $media->owner_id = $adc->id;
-                                $media->save();
-                            }
-                        }
+                        // $oldaud = Audience::where('selected_fe_id', $audience->selected_fe_id)->where('fe_id', 0)->first();
+                        // if ($oldaud) {
+                        //     //update media id
+                        //     $media = Media::where('owner_id', $oldaud->id)->where('type', 'audience_file')->first();
+                        //     if ($media) {
+                        //         $media->owner_id = $adc->id;
+                        //         $media->save();
+                        //     }
+                        // }
 
                         // $optimizeTarget = new OptimizeTarget;
                         // $optimizeTarget->audience_id = $adc->id;
@@ -559,14 +559,19 @@ class CampaignController extends Controller
                         //     $detailTarget->nft_purchases = $audience->detailed_targeting_nft_purchases;
                         // }
                         // $detailTarget->save();
+                        
+                        $oldaud = Audience::where('selected_fe_id', $audience->selected_fe_id)->where('fe_id', 0)->first();
+                        $newaud = Audience::where('selected_fe_id', $audience->selected_fe_id)->where('fe_id', $campaign->id)->first();
 
                         if (isset($audience->file) && $audience->file != '') {
-                            $media = Media::where('owner_id', $adc->id)
+                            $media = Media::where('owner_id', $oldaud->id)
                                 ->where('type', 'audience_file')
                                 ->first();
 
                             if ($media) {
-                                unlink(public_path() . $media->url);
+                                // unlink(public_path() . $media->url);
+                                $media->owner_id = $adc->id;
+                                $media->save();
                             } else {
                                 $media = new Media;
                                 $media->owner_id = $adc->id;
