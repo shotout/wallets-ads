@@ -724,6 +724,7 @@ class CampaignController extends Controller
                             } else {
 
                                 foreach ($request->campaign_audience as $newaud) {
+                                    $newaud = (object) $newaud;
 
                                     $checkaudience = Audience::where('campaign_id', $oldAds->campaign_id)
                                         ->where('selected_fe_id', $newaud->selected_fe_id)
