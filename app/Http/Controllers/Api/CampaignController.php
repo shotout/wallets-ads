@@ -714,38 +714,38 @@ class CampaignController extends Controller
                     $oldAds->description = $ads->description;
                     $oldAds->save();
 
-                    if (isset($ads->audience_id) && count($ads->audience_id) > 0) {
-                        foreach ($ads->audience_id as $adc_id) {
-                            $audience = Audience::find($adc_id);
+                    // if (isset($ads->audience_id) && count($ads->audience_id) > 0) {
+                    //     foreach ($ads->audience_id as $adc_id) {
+                    //         $audience = Audience::find($adc_id);
 
-                            if ($audience) {
-                                $audience->ads_id = $oldAds->id;
-                                $audience->update();
-                            } else {
+                    //         if ($audience) {
+                    //             $audience->ads_id = $oldAds->id;
+                    //             $audience->update();
+                    //         } else {
 
-                                foreach ($request->campaign_audiences as $newaud) {
-                                    $newaud = (object) $newaud;
-                                    $checkaudience = Audience::where('campaign_id', $oldAds->campaign_id)
-                                        ->where('selected_fe_id', $newaud->selected_fe_id)
-                                        ->first();
+                    //             foreach ($request->campaign_audiences as $newaud) {
+                    //                 $newaud = (object) $newaud;
+                    //                 $checkaudience = Audience::where('campaign_id', $oldAds->campaign_id)
+                    //                     ->where('selected_fe_id', $newaud->selected_fe_id)
+                    //                     ->first();
 
-                                    $checkaudname = Audience::where('campaign_id', $oldAds->campaign_id)->orderBy('id', 'desc')->first();
+                    //                 $checkaudname = Audience::where('campaign_id', $oldAds->campaign_id)->orderBy('id', 'desc')->first();
 
-                                    if ($checkaudience)
-                                        //create new aud
-                                        $newAudience = new Audience;
-                                        $newAudience->campaign_id = $oldAds->campaign_id;
-                                        $newAudience->ads_id = $oldAds->id;
-                                        $newAudience->fe_id = $id;
-                                        $newAudience->name = 'Audience ' . (substr($checkaudname->name, -1) + 1);
-                                        $newAudience->price_airdrop = $newaud->price_airdrop;
-                                        $newAudience->total_user = $newaud->total_user;
-                                        $newAudience->selected_fe_id = $newaud->selected_fe_id;
-                                        $newAudience->save();
-                                }
-                            }
-                        }
-                    }
+                    //                 if ($checkaudience)
+                    //                     //create new aud
+                    //                     $newAudience = new Audience;
+                    //                     $newAudience->campaign_id = $oldAds->campaign_id;
+                    //                     $newAudience->ads_id = $oldAds->id;
+                    //                     $newAudience->fe_id = $id;
+                    //                     $newAudience->name = 'Audience ' . (substr($checkaudname->name, -1) + 1);
+                    //                     $newAudience->price_airdrop = $newaud->price_airdrop;
+                    //                     $newAudience->total_user = $newaud->total_user;
+                    //                     $newAudience->selected_fe_id = $newaud->selected_fe_id;
+                    //                     $newAudience->save();
+                    //             }
+                    //         }
+                    //     }
+                    // }
 
 
                     if (isset($ads->image_url) && $ads->image_url != '') {
