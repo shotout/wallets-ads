@@ -486,7 +486,7 @@ class CampaignController extends Controller
                         }
                         $adc->save();
 
-                        $oldaud = Audience::where('fe_id', $audience->fe_id)->first();
+                        $oldaud = Audience::where('selected_fe_id', $audience->selected_fe_id)->where('fe_id', 0)->first();
                         if ($oldaud) {
                             //update media id
                             $media = Media::where('owner_id', $oldaud->id)->where('type', 'audience')->first();
