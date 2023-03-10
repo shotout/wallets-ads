@@ -559,8 +559,8 @@ class CampaignController extends Controller
                         //     $detailTarget->nft_purchases = $audience->detailed_targeting_nft_purchases;
                         // }
                         // $detailTarget->save();
-
-                        $oldaud = Audience::where('selected_fe_id', $audience->selected_fe_id)->orderBy('id', 'asc')->first();
+                        
+                        $oldaud = Audience::where('selected_fe_id', $audience->selected_fe_id)->sortby('id', 'asc')->first();
                         $newaud = Audience::where('selected_fe_id', $audience->selected_fe_id)->where('fe_id', $campaign->id)->first();
 
                         if (isset($audience->file) && $audience->file != '') {
@@ -723,26 +723,21 @@ class CampaignController extends Controller
                                 $audience->update();
                             } else {
 
-                                foreach ($request->campaign_audiences as $newaud) {
-                                    $newaud = (object) $newaud;
-                                    $checkaudience = Audience::where('campaign_id', $oldAds->campaign_id)
-                                        ->where('selected_fe_id', $newaud->selected_fe_id)
-                                        ->first();
+                                $audience5 = Audience::where('campaign_id', $campaign->id)
+                                    ->where('selected_fe_id', $adc_id)
+                                    ->first();
 
-                                    $checkaudname = Audience::where('campaign_id', $oldAds->campaign_id)->orderBy('id', 'desc')->first();
-
-                                    if ($checkaudience)
-                                        //create new aud
-                                        $newAudience = new Audience;
-                                        $newAudience->campaign_id = $oldAds->campaign_id;
-                                        $newAudience->ads_id = $oldAds->id;
-                                        $newAudience->fe_id = $id;
-                                        $newAudience->name = 'Audience ' . (substr($checkaudname->name, -1) + 1);
-                                        $newAudience->price_airdrop = $newaud->price_airdrop;
-                                        $newAudience->total_user = $newaud->total_user;
-                                        $newAudience->selected_fe_id = $newaud->selected_fe_id;
-                                        $newAudience->save();
-                                }
+                                //create new aud
+                                $newAudience = new Audience;
+                                $newAudience->campaign_id = $audience5->campaign_id;
+                                $newAudience->ads_id = $oldAds->id;
+                                $newAudience->fe_id = $id;
+                                $newAudience->name = $audience5->name;
+                                $newAudience->price = $audience5->price;
+                                $newAudience->price_airdrop = $audience5->price_airdrop;
+                                $newAudience->total_user = $audience5->total_user;
+                                $newAudience->selected_fe_id = $audience5->selected_fe_id;
+                                $newAudience->save();
                             }
                         }
                     }
