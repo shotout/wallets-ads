@@ -570,7 +570,7 @@ class CampaignController extends Controller
 
                             if ($media) {
                                 // unlink(public_path() . $media->url);
-                                $media->owner_id = $adc->id + 1;
+                                $media->owner_id = (int)$adc->id + 1;
                                 $media->save();
                             } else {
                                 $media = new Media;
