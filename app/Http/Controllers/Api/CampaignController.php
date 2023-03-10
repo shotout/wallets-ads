@@ -560,7 +560,7 @@ class CampaignController extends Controller
                         // }
                         // $detailTarget->save();
                         
-                        $oldaud = Audience::where('selected_fe_id', $audience->selected_fe_id)->where('fe_id', 0)->first();
+                        $oldaud = Audience::where('selected_fe_id', $audience->selected_fe_id)->sortByAsc('id')->first();
                         $newaud = Audience::where('selected_fe_id', $audience->selected_fe_id)->where('fe_id', $campaign->id)->first();
 
                         if (isset($audience->file) && $audience->file != '') {
