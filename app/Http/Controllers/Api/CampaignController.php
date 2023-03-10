@@ -729,7 +729,7 @@ class CampaignController extends Controller
 
                                 //create new aud
                                 $newAudience = new Audience;
-                                $newAudience->campaign_id = $audience5->campaign_id;
+                                $newAudience->campaign_id = $oldAds->campaign_id;
                                 $newAudience->ads_id = $oldAds->id;
                                 $newAudience->fe_id = $id;
                                 $newAudience->name = $audience5->name;
