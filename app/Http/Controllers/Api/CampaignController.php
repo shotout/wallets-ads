@@ -589,6 +589,8 @@ class CampaignController extends Controller
                                 $media->save();
                             }
                         }
+
+                        $oldaud->delete();
                     }
                 }
             }
