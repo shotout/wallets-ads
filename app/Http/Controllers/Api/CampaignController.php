@@ -459,7 +459,7 @@ class CampaignController extends Controller
             $campaign->update();
 
             if ($request->has('campaign_audiences') && count($request->campaign_audiences) > 0) {
-                
+                // Audience::where('campaign_id', $campaign->id)->delete();
 
                 foreach ($request->campaign_audiences as $i => $audience) {
                     $audience = (object) $audience;
@@ -485,7 +485,17 @@ class CampaignController extends Controller
                             $adc->selected_fe_id = $audience->selected_fe_id;
                         }
                         $adc->save();
-                        
+
+                        $oldaud = Audience::where('fe_id', $audience->fe_id)->first();
+                        if ($oldaud) {
+                            //update media id
+                            $media = Media::where('owner_id', $oldaud->id)->where('type', 'audience')->first();
+                            if ($media) {
+                                $media->owner_id = $adc->id;
+                                $media->save();
+                            }
+                        }
+
                         // $optimizeTarget = new OptimizeTarget;
                         // $optimizeTarget->audience_id = $adc->id;
                         // $optimizeTarget->price = $audience->optimized_targeting_price;
@@ -550,28 +560,32 @@ class CampaignController extends Controller
                         // }
                         // $detailTarget->save();
 
-                        $oldaud = Audience::where('fe_id', $audience->fe_id)->first();
-                        $oldfile = Media::where('owner_id', $oldaud->id)->first();
-                        if ($oldfile) {
-                            $oldfile->owner_id = $adc->id;
-                            $oldfile->save();
-                        }
+                        if (isset($audience->file) && $audience->file != '') {
+                            $media = Media::where('owner_id', $adc->id)
+                                ->where('type', 'audience_file')
+                                ->first();
 
-                        if (isset($audience->file) && $audience->file != '' && gettype($audience->file) != 'string') {
-                            $filename = uniqid();
-                            $fileExt = $audience->file->getClientOriginalExtension();
-                            $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
-                            $audience->file->move(public_path() . '/assets/files/audience/', $fileNameToStore);
+                            if ($media) {
+                                unlink(public_path() . $media->url);
+                            } else {
+                                $media = new Media;
+                                $media->owner_id = $adc->id;
+                                $media->type = "audience_file";
+                            }
 
-                            $media = new Media;
-                            $media->name = $fileNameToStore;
-                            $media->url = '/assets/files/audience/' . $fileNameToStore;
-                            $media->save();
+                            if (gettype($audience->file) != 'string') {
+                                $filename = uniqid();
+                                $fileExt = $audience->file->getClientOriginalExtension();
+                                $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
+                                $audience->file->move(public_path() . '/assets/files/audience/', $fileNameToStore);
+
+                                $media->name = $fileNameToStore;
+                                $media->url = '/assets/files/audience/' . $fileNameToStore;
+                                $media->save();
+                            }
                         }
                     }
                 }
-
-                Audience::where('campaign_id', $campaign->id)->delete();
             }
 
             $adsPage = AdsPage::where('campaign_id', $campaign->id)->first();
