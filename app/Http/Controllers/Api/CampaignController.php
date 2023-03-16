@@ -466,25 +466,73 @@ class CampaignController extends Controller
 
                     if (isset($audience->price) && isset($audience->price_airdrop) && isset($audience->total_user)) {
 
-                        $adc = new Audience;
-                        $adc->campaign_id = $campaign->id;
-                        if (isset($audience->fe_id)) {
-                            $adc->fe_id = $audience->fe_id;
+                        $checkaud = Audience::where('selected_fe_id', $audience->selected_fe_id)->first();
+                        if ($checkaud) {
+                            $checkaud->price = $audience->price;
+                            $checkaud->price_airdrop = $audience->price_airdrop;
+                            $checkaud->total_user = $audience->total_user;
+                            $checkaud->update();
+
+                            $media = Media::where('owner_id', $checkaud->id)
+                                ->where('type', 'audience_file')
+                                ->first();
+
+                            if ($media) {
+                                $media->owner_id = $checkaud->id;
+                                $media->save();
+                            }
+
+                            if (isset($audience->file) && $audience->file != '' && gettype($audience->file) == 'object') {
+                                $media = new Media;
+                                $media->owner_id = $checkaud->id;
+                                $media->type = "audience_file";
+
+                                $filename = uniqid();
+                                $fileExt = $audience->file->getClientOriginalExtension();
+                                $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
+                                $audience->file->move(public_path() . '/assets/files/audience/', $fileNameToStore);
+
+                                $media->name = $fileNameToStore;
+                                $media->url = '/assets/files/audience/' . $fileNameToStore;
+                                $media->save();
+                            }
+                        } else {
+
+                            $adc = new Audience;
+                            $adc->campaign_id = $campaign->id;
+                            if (isset($audience->fe_id)) {
+                                $adc->fe_id = $audience->fe_id;
+                            }
+                            $adc->name = "Audience " . $i + 1;
+                            if (isset($audience->price)) {
+                                $adc->price = $audience->price;
+                            }
+                            if (isset($audience->price_airdrop)) {
+                                $adc->price_airdrop = $audience->price_airdrop;
+                            }
+                            if (isset($audience->total_user)) {
+                                $adc->total_user = $audience->total_user;
+                            }
+                            if (isset($audience->selected_fe_id)) {
+                                $adc->selected_fe_id = $audience->selected_fe_id;
+                            }
+                            $adc->save();
+
+                            if (isset($audience->file) && $audience->file != '') {
+                                $media = new Media;
+                                $media->owner_id = $adc->id;
+                                $media->type = "audience_file";
+
+                                $filename = uniqid();
+                                $fileExt = $audience->file->getClientOriginalExtension();
+                                $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
+                                $audience->file->move(public_path() . '/assets/files/audience/', $fileNameToStore);
+
+                                $media->name = $fileNameToStore;
+                                $media->url = '/assets/files/audience/' . $fileNameToStore;
+                                $media->save();
+                            }
                         }
-                        $adc->name = "Audience " . $i + 1;
-                        if (isset($audience->price)) {
-                            $adc->price = $audience->price;
-                        }
-                        if (isset($audience->price_airdrop)) {
-                            $adc->price_airdrop = $audience->price_airdrop;
-                        }
-                        if (isset($audience->total_user)) {
-                            $adc->total_user = $audience->total_user;
-                        }
-                        if (isset($audience->selected_fe_id)) {
-                            $adc->selected_fe_id = $audience->selected_fe_id;
-                        }
-                        $adc->save();
 
                         // $oldaud = Audience::where('selected_fe_id', $audience->selected_fe_id)->where('fe_id', 0)->first();
                         // if ($oldaud) {
@@ -559,38 +607,38 @@ class CampaignController extends Controller
                         //     $detailTarget->nft_purchases = $audience->detailed_targeting_nft_purchases;
                         // }
                         // $detailTarget->save();
-                        
-                        $oldaud = Audience::where('selected_fe_id', $audience->selected_fe_id)->orderby('id', 'asc')->first();
-                        $newaud = Audience::where('selected_fe_id', $audience->selected_fe_id)->where('fe_id', $campaign->id)->first();
 
-                        if (isset($audience->file) && $audience->file != '') {
-                            $media = Media::where('owner_id', $oldaud->id)
-                                ->where('type', 'audience_file')
-                                ->first();
+                        // $oldaud = Audience::where('selected_fe_id', $audience->selected_fe_id)->orderby('id', 'asc')->first();
+                        // $newaud = Audience::where('selected_fe_id', $audience->selected_fe_id)->where('fe_id', $campaign->id)->first();
 
-                            if ($media) {
-                                // unlink(public_path() . $media->url);
-                                $media->owner_id = (int)$adc->id + 1;
-                                $media->save();
-                            } else {
-                                $media = new Media;
-                                $media->owner_id = $adc->id;
-                                $media->type = "audience_file";
-                            }
+                        // if (isset($audience->file) && $audience->file != '') {
+                        //     $media = Media::where('owner_id', $oldaud->id)
+                        //         ->where('type', 'audience_file')
+                        //         ->first();
 
-                            if (gettype($audience->file) != 'string') {
-                                $filename = uniqid();
-                                $fileExt = $audience->file->getClientOriginalExtension();
-                                $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
-                                $audience->file->move(public_path() . '/assets/files/audience/', $fileNameToStore);
+                        //     if ($media) {
+                        //         // unlink(public_path() . $media->url);
+                        //         $media->owner_id = (int)$adc->id + 1;
+                        //         $media->save();
+                        //     } else {
+                        //         $media = new Media;
+                        //         $media->owner_id = $adc->id;
+                        //         $media->type = "audience_file";
+                        //     }
 
-                                $media->name = $fileNameToStore;
-                                $media->url = '/assets/files/audience/' . $fileNameToStore;
-                                $media->save();
-                            }
-                        }
+                        //     if (gettype($audience->file) != 'string') {
+                        //         $filename = uniqid();
+                        //         $fileExt = $audience->file->getClientOriginalExtension();
+                        //         $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
+                        //         $audience->file->move(public_path() . '/assets/files/audience/', $fileNameToStore);
 
-                        $oldaud->delete();
+                        //         $media->name = $fileNameToStore;
+                        //         $media->url = '/assets/files/audience/' . $fileNameToStore;
+                        //         $media->save();
+                        //     }
+                        // }
+
+                        // $oldaud->delete();
                     }
                 }
             }
@@ -714,33 +762,40 @@ class CampaignController extends Controller
                     $oldAds->description = $ads->description;
                     $oldAds->save();
 
-                    if (isset($ads->audience_id) && count($ads->audience_id) > 0) {
-                        foreach ($ads->audience_id as $adc_id) {
-                            $audience = Audience::find($adc_id);
+                    // if (isset($ads->audience_id) && count($ads->audience_id) > 0) {
+                    //     foreach ($ads->audience_id as $adc_id) {
+                    //         $audience = Audience::find($adc_id);
 
-                            if ($audience) {
-                                $audience->ads_id = $oldAds->id;
-                                $audience->update();
-                            } else {
+                    //         if ($audience) {
+                    //             $audience->ads_id = $oldAds->id;
+                    //             $audience->update();
+                    //         } 
+                    //         // else {
 
-                                $audience5 = Audience::where('campaign_id', $campaign->id)
-                                    ->where('selected_fe_id', $adc_id)
-                                    ->first();
+                    //         //     $audience5 = Audience::where('campaign_id', $campaign->id)
+                    //         //         ->where('selected_fe_id', $adc_id)
+                    //         //         ->first();
 
-                                //create new aud
-                                $newAudience = new Audience;
-                                $newAudience->campaign_id = $audience5->campaign_id;
-                                $newAudience->ads_id = $oldAds->id;
-                                $newAudience->fe_id = $id;
-                                $newAudience->name = $audience5->name;
-                                $newAudience->price = $audience5->price;
-                                $newAudience->price_airdrop = $audience5->price_airdrop;
-                                $newAudience->total_user = $audience5->total_user;
-                                $newAudience->selected_fe_id = $audience5->selected_fe_id;
-                                $newAudience->save();
-                            }
-                        }
-                    }
+                    //         //     //create new aud
+                    //         //     $newAudience = new Audience;
+                    //         //     $newAudience->campaign_id = $audience5->campaign_id;
+                    //         //     $newAudience->ads_id = $oldAds->id;
+                    //         //     $newAudience->fe_id = $id;
+                    //         //     $newAudience->name = $audience5->name;
+                    //         //     $newAudience->price = $audience5->price;
+                    //         //     $newAudience->price_airdrop = $audience5->price_airdrop;
+                    //         //     $newAudience->total_user = $audience5->total_user;
+                    //         //     $newAudience->selected_fe_id = $audience5->selected_fe_id;
+                    //         //     $newAudience->save();
+                    //         // }
+
+                    //         $media = Media::where('owner_id', $adc_id)->where('type', 'audience_file')->first();
+                    //         if ($media) {
+                    //             $media->owner_id = $adc_id;
+                    //             $media->save();
+                    //         }
+                    //     }
+                    // }
 
 
                     if (isset($ads->image_url) && $ads->image_url != '') {
