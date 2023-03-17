@@ -460,7 +460,7 @@ class CampaignController extends Controller
 
             if ($request->has('campaign_audiences') && count($request->campaign_audiences) > 0) {
                 // Audience::where('campaign_id', $campaign->id)->delete();
-                
+
                 foreach ($request->campaign_audiences as $i => $audience) {
                     $audience = (object) $audience;
 
@@ -483,11 +483,11 @@ class CampaignController extends Controller
                             }
 
                             if (isset($audience->file) && $audience->file != '' && gettype($audience->file) != 'string') {
-                                
-                                if($media){
+
+                                if ($media) {
                                     $media->delete();
                                 }
-                                
+
                                 $media = new Media;
                                 $media->owner_id = $checkaud->id;
                                 $media->type = "audience_file";
@@ -502,9 +502,7 @@ class CampaignController extends Controller
                                 $media->url = '/assets/files/audience/' . $fileNameToStore;
                                 $media->save();
                             }
-                        }
-
-                        else{
+                        } else {
                             //adding new audience
                             $adc = new Audience;
                             $adc->campaign_id = $campaign->id;
@@ -761,35 +759,33 @@ class CampaignController extends Controller
 
                     if (isset($ads->id)) {
                         $oldAds = Ads::find($ads->id);
-                        $oldAds->name = $ads->name;
-                        $oldAds->description = $ads->description;
-                        $oldAds->save();
-                    } else {
-                        $newads = new Ads;
-                        $newads->campaign_id = $campaign->id;
-                        $newads->name = $ads->name;
-                        $newads->description = $ads->description;
-                        $newads->save();
+                        if ($oldAds) {
+                            $oldAds->name = $ads->name;
+                            $oldAds->description = $ads->description;
+                            $oldAds->save();
+                        } else {
+                            $newads = new Ads;
+                            $newads->campaign_id = $campaign->id;
+                            $newads->name = $ads->name;
+                            $newads->description = $ads->description;
+                            $newads->save();
 
-                        // $audcheck = Audience::where('selected_fe_id', $ads->audience_id)->first();
+                            $audcheck = Audience::where('selected_fe_id', $ads->audience_id)->first();
 
-                        // $newaud = new Audience;
-                        // $newaud->campaign_id = $campaign->id;
-                        // $newaud->ads_id = $newads->id;
-                        // $newaud->fe_id = $audcheck->fe_id;
-                        // $newaud->selected_fe_id = $ads->audience_id;
-                        // $newaud->name = $audcheck->name;
-                        // $newaud->description = $audcheck->description;
-                        // $newaud->price = $audcheck->price;
-                        // $newaud->price_airdrop = $audcheck->price_airdrop;
-                        // $newaud->total_user = $audcheck->total_user;
-                        // $newaud->save();
-
+                            $newaud = new Audience;
+                            $newaud->campaign_id = $campaign->id;
+                            $newaud->ads_id = $newads->id;
+                            $newaud->fe_id = $audcheck->fe_id;
+                            $newaud->selected_fe_id = $ads->audience_id;
+                            $newaud->name = $audcheck->name;
+                            $newaud->description = $audcheck->description;
+                            $newaud->price = $audcheck->price;
+                            $newaud->price_airdrop = $audcheck->price_airdrop;
+                            $newaud->total_user = $audcheck->total_user;
+                            $newaud->save();
+                        }
                     }
 
-                    $oldAds->name = $ads->name;
-                    $oldAds->description = $ads->description;
-                    $oldAds->save();
 
                     // if (isset($ads->audience_id) && count($ads->audience_id) > 0) {
                     //     foreach ($ads->audience_id as $adc_id) {
