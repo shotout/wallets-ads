@@ -779,7 +779,6 @@ class CampaignController extends Controller
                                     }
                                 }
                             }
-                            
                         } else {
                             $newads = new Ads;
                             $newads->campaign_id = $campaign->id;
@@ -797,22 +796,23 @@ class CampaignController extends Controller
                                 $media->url = "/assets/images/nft/$fileNameToStore";
                                 $media->save();
                             }
-                        }
 
-                        foreach ($ads->audience_id as $adc_id) {
 
-                            $audcheck = Audience::where('selected_fe_id', $adc_id)->first();
+                            foreach ($ads->audience_id as $adc_id) {
 
-                            $newaud = new Audience;
-                            $newaud->campaign_id = $campaign->id;
-                            $newaud->ads_id = $newads->id;
-                            $newaud->fe_id = $audcheck->fe_id;
-                            $newaud->selected_fe_id = $adc_id;
-                            $newaud->name = $audcheck->name;
-                            $newaud->price = $audcheck->price;
-                            $newaud->price_airdrop = $audcheck->price_airdrop;
-                            $newaud->total_user = $audcheck->total_user;
-                            $newaud->save();
+                                $audcheck = Audience::where('selected_fe_id', $adc_id)->first();
+
+                                $newaud = new Audience;
+                                $newaud->campaign_id = $campaign->id;
+                                $newaud->ads_id = $newads->id;
+                                $newaud->fe_id = $audcheck->fe_id;
+                                $newaud->selected_fe_id = $adc_id;
+                                $newaud->name = $audcheck->name;
+                                $newaud->price = $audcheck->price;
+                                $newaud->price_airdrop = $audcheck->price_airdrop;
+                                $newaud->total_user = $audcheck->total_user;
+                                $newaud->save();
+                            }
                         }
                     }
 
