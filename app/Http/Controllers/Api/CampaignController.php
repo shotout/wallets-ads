@@ -504,7 +504,7 @@ class CampaignController extends Controller
                             }
                         }
 
-                        if ($checkaud == null) {
+                        else{
 
                             $adc = new Audience;
                             $adc->campaign_id = $campaign->id;
