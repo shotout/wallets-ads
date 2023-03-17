@@ -496,7 +496,9 @@ class CampaignController extends Controller
                                 $media->url = '/assets/files/audience/' . $fileNameToStore;
                                 $media->save();
                             }
-                        } else {
+                        }
+
+                        if (!$checkaud) {
 
                             $adc = new Audience;
                             $adc->campaign_id = $campaign->id;
