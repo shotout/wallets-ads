@@ -764,11 +764,22 @@ class CampaignController extends Controller
                             $oldAds->description = $ads->description;
                             $oldAds->save();
 
-                            $media = Media::where('url', $ads->image_url)->first();
-                            if ($media) {
-                                $media->owner_id = $oldAds->id;
-                                $media->save();
+                            if (isset($ads->image_url) && $ads->image_url != '') {
+                                $media = Media::where('owner_id', $oldAds->id)
+                                    ->where('type', 'ads_nft')
+                                    ->first();
+
+                                if ($media) {
+                                    unlink(public_path() . $media->url);
+                                } else {
+                                    $media = Media::where('url', $ads->image_url)->first();
+                                    if ($media) {
+                                        $media->owner_id = $oldAds->id;
+                                        $media->save();
+                                    }
+                                }
                             }
+                            
                         } else {
                             $newads = new Ads;
                             $newads->campaign_id = $campaign->id;
