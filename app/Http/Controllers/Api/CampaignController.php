@@ -763,27 +763,27 @@ class CampaignController extends Controller
                             $oldAds->name = $ads->name;
                             $oldAds->description = $ads->description;
                             $oldAds->save();
-                        } else {
-                            $newads = new Ads;
-                            $newads->campaign_id = $campaign->id;
-                            $newads->name = $ads->name;
-                            $newads->description = $ads->description;
-                            $newads->save();
-
-                            $audcheck = Audience::where('selected_fe_id', $ads->audience_id)->first();
-
-                            $newaud = new Audience;
-                            $newaud->campaign_id = $campaign->id;
-                            $newaud->ads_id = $newads->id;
-                            $newaud->fe_id = $audcheck->fe_id;
-                            $newaud->selected_fe_id = $ads->audience_id;
-                            $newaud->name = $audcheck->name;
-                            $newaud->description = $audcheck->description;
-                            $newaud->price = $audcheck->price;
-                            $newaud->price_airdrop = $audcheck->price_airdrop;
-                            $newaud->total_user = $audcheck->total_user;
-                            $newaud->save();
                         }
+                    } else {
+                        $newads = new Ads;
+                        $newads->campaign_id = $campaign->id;
+                        $newads->name = $ads->name;
+                        $newads->description = $ads->description;
+                        $newads->save();
+
+                        $audcheck = Audience::where('selected_fe_id', $ads->audience_id)->first();
+
+                        $newaud = new Audience;
+                        $newaud->campaign_id = $campaign->id;
+                        $newaud->ads_id = $newads->id;
+                        $newaud->fe_id = $audcheck->fe_id;
+                        $newaud->selected_fe_id = $ads->audience_id;
+                        $newaud->name = $audcheck->name;
+                        $newaud->description = $audcheck->description;
+                        $newaud->price = $audcheck->price;
+                        $newaud->price_airdrop = $audcheck->price_airdrop;
+                        $newaud->total_user = $audcheck->total_user;
+                        $newaud->save(); 
                     }
 
 
