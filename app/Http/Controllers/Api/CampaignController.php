@@ -781,7 +781,6 @@ class CampaignController extends Controller
                             $newaud->fe_id = $audcheck->fe_id;
                             $newaud->selected_fe_id = $adc_id;
                             $newaud->name = $audcheck->name;
-                            $newaud->description = $audcheck->description;
                             $newaud->price = $audcheck->price;
                             $newaud->price_airdrop = $audcheck->price_airdrop;
                             $newaud->total_user = $audcheck->total_user;
