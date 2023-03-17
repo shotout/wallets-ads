@@ -482,7 +482,7 @@ class CampaignController extends Controller
                                 $media->save();
                             }
 
-                            if (isset($audience->file) && $audience->file != '' && gettype($audience->file) == 'object') {
+                            if (isset($audience->file) && $audience->file != '' && gettype($audience->file) != 'string') {
                                 $media = new Media;
                                 $media->owner_id = $checkaud->id;
                                 $media->type = "audience_file";
