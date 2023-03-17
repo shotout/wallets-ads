@@ -505,7 +505,7 @@ class CampaignController extends Controller
                         }
 
                         else{
-
+                            //adding new audience
                             $adc = new Audience;
                             $adc->campaign_id = $campaign->id;
                             if (isset($audience->fe_id)) {
