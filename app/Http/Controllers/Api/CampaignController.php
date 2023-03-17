@@ -483,6 +483,11 @@ class CampaignController extends Controller
                             }
 
                             if (isset($audience->file) && $audience->file != '' && gettype($audience->file) != 'string') {
+                                
+                                if($media){
+                                    $media->delete();
+                                }
+                                
                                 $media = new Media;
                                 $media->owner_id = $checkaud->id;
                                 $media->type = "audience_file";
