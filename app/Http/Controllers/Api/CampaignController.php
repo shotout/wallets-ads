@@ -773,13 +773,13 @@ class CampaignController extends Controller
 
                         foreach ($ads->audience_id as $adc_id) {
 
-                            $audcheck = Audience::where('selected_fe_id', $ads->audience_id)->first();
+                            $audcheck = Audience::where('selected_fe_id', $adc_id)->first();
 
                             $newaud = new Audience;
                             $newaud->campaign_id = $campaign->id;
                             $newaud->ads_id = $newads->id;
                             $newaud->fe_id = $audcheck->fe_id;
-                            $newaud->selected_fe_id = $ads->audience_id;
+                            $newaud->selected_fe_id = $adc_id;
                             $newaud->name = $audcheck->name;
                             $newaud->description = $audcheck->description;
                             $newaud->price = $audcheck->price;
