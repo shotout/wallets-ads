@@ -492,6 +492,7 @@ class CampaignController extends Controller
                                 $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
                                 $audience->file->move(public_path() . '/assets/files/audience/', $fileNameToStore);
 
+                                $media->original_name = $audience->file->getClientOriginalName();
                                 $media->name = $fileNameToStore;
                                 $media->url = '/assets/files/audience/' . $fileNameToStore;
                                 $media->save();
