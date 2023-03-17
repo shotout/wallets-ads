@@ -763,13 +763,30 @@ class CampaignController extends Controller
                             $oldAds->name = $ads->name;
                             $oldAds->description = $ads->description;
                             $oldAds->save();
+
+                            $media = Media::where('url', $ads->image_url)->first();
+                            if ($media) {
+                                $media->owner_id = $oldAds->id;
+                                $media->save();
+                            }
+                        } else {
+                            $newads = new Ads;
+                            $newads->campaign_id = $campaign->id;
+                            $newads->name = $ads->name;
+                            $newads->description = $ads->description;
+                            $newads->save();
+
+                            if (gettype($ads->image) != 'string') {
+                                $filename = uniqid();
+                                $fileExt = $ads->image->getClientOriginalExtension();
+                                $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
+                                $ads->image->move(public_path() . '/assets/images/nft/', $fileNameToStore);
+
+                                $media->name = $fileNameToStore;
+                                $media->url = "/assets/images/nft/$fileNameToStore";
+                                $media->save();
+                            }
                         }
-                    } else {
-                        $newads = new Ads;
-                        $newads->campaign_id = $campaign->id;
-                        $newads->name = $ads->name;
-                        $newads->description = $ads->description;
-                        $newads->save();
 
                         foreach ($ads->audience_id as $adc_id) {
 
