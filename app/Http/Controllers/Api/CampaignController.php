@@ -779,12 +779,17 @@ class CampaignController extends Controller
                                     }
                                 }
                             }
-                        } else {
+                        }
+                     } else {
                             $newads = new Ads;
                             $newads->campaign_id = $campaign->id;
                             $newads->name = $ads->name;
                             $newads->description = $ads->description;
                             $newads->save();
+
+                            $media = new Media;
+                            $media->owner_id = $newads->id;
+                            $media->type = "ads_nft";
 
                             if (gettype($ads->image) != 'string') {
                                 $filename = uniqid();
@@ -813,7 +818,7 @@ class CampaignController extends Controller
                                 $newaud->total_user = $audcheck->total_user;
                                 $newaud->save();
                             }
-                        }
+                        
                     }
 
 
@@ -853,40 +858,40 @@ class CampaignController extends Controller
                     // }
 
 
-                    if (isset($ads->image_url) && $ads->image_url != '') {
-                        $media = Media::where('owner_id', $oldAds->id)
-                            ->where('type', 'ads_nft')
-                            ->first();
+                    // if (isset($ads->image_url) && $ads->image_url != '') {
+                    //     $media = Media::where('owner_id', $oldAds->id)
+                    //         ->where('type', 'ads_nft')
+                    //         ->first();
 
-                        if ($media) {
-                            unlink(public_path() . $media->url);
-                        } else {
-                            $media = Media::where('url', $ads->image_url)->first();
-                            if ($media) {
-                                $media->owner_id = $oldAds->id;
-                                $media->save();
-                            }
-                        }
-                    } elseif (isset($ads->image) && $ads->image != '') {
-                        $media = Media::where('owner_id', $oldAds->id)->where('type', 'ads_nft')->first();
-                        if ($media) {
-                            // unlink(public_path() . $media->url);
-                        } else {
-                            $media = new Media;
-                            $media->owner_id = $oldAds->id;
-                            $media->type = "ads_nft";
-                        }
-                        if (gettype($ads->image) != 'string') {
-                            $filename = uniqid();
-                            $fileExt = $ads->image->getClientOriginalExtension();
-                            $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
-                            $ads->image->move(public_path() . '/assets/images/nft/', $fileNameToStore);
+                    //     if ($media) {
+                    //         unlink(public_path() . $media->url);
+                    //     } else {
+                    //         $media = Media::where('url', $ads->image_url)->first();
+                    //         if ($media) {
+                    //             $media->owner_id = $oldAds->id;
+                    //             $media->save();
+                    //         }
+                    //     }
+                    // } elseif (isset($ads->image) && $ads->image != '') {
+                    //     $media = Media::where('owner_id', $oldAds->id)->where('type', 'ads_nft')->first();
+                    //     if ($media) {
+                    //         // unlink(public_path() . $media->url);
+                    //     } else {
+                    //         $media = new Media;
+                    //         $media->owner_id = $oldAds->id;
+                    //         $media->type = "ads_nft";
+                    //     }
+                    //     if (gettype($ads->image) != 'string') {
+                    //         $filename = uniqid();
+                    //         $fileExt = $ads->image->getClientOriginalExtension();
+                    //         $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
+                    //         $ads->image->move(public_path() . '/assets/images/nft/', $fileNameToStore);
 
-                            $media->name = $fileNameToStore;
-                            $media->url = "/assets/images/nft/$fileNameToStore";
-                            $media->save();
-                        }
-                    }
+                    //         $media->name = $fileNameToStore;
+                    //         $media->url = "/assets/images/nft/$fileNameToStore";
+                    //         $media->save();
+                    //     }
+                    // }
                 }
             }
 
