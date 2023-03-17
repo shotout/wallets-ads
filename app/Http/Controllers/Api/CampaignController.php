@@ -507,7 +507,7 @@ class CampaignController extends Controller
                         if ($checkaud == null) {
 
                             $adc = new Audience;
-                            $adc->campaign_id = $campaign->id;
+                            $adc->campaign_id = $request->campaign_id;
                             if (isset($audience->fe_id)) {
                                 $adc->fe_id = $audience->fe_id;
                             }
