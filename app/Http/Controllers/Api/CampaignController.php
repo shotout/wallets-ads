@@ -320,7 +320,7 @@ class CampaignController extends Controller
                     $newAds = new Ads;
                     $newAds->campaign_id = $campaign->id;
                     if (isset($ads->headlines)) {
-                        $newAds->headlines = $ads->headlines;
+                        $newAds->name = $ads->headlines;
                     }
                     if (isset($ads->description)) {
                         $newAds->description = $ads->description;
