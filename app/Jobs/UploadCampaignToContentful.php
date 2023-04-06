@@ -234,6 +234,7 @@ class UploadCampaignToContentful implements ShouldQueue
                 $adtext1 = json_decode($adtext1[0]['description'], true);
                 $adtext1[0]['adtext'];
 
+                $adname1 = ads::where('id', $ad->id)->get()->toArray();
                 $adname1 = json_decode($adtext1[0]['name'], true);
                 $adname1 = $adtext1[0]['adname'];
                 $i = 1;
