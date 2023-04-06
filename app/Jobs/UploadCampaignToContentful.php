@@ -233,24 +233,29 @@ class UploadCampaignToContentful implements ShouldQueue
                 $adtext1 = ads::where('id', $ad->id)->get()->toArray();
                 $adtext1 = json_decode($adtext1[0]['description'], true);
                 $adtext1[0]['adtext'];
+                $adname1 = $adtext1[0]['adname'];
                 $i = 1;
 
                 foreach ($adtext1 as $key => $value) {
                     $multiple[] = '|||Ad text' . $i . ': </br>' . $value['adtext'] . '</br></br></br>';
+                    $adname_arr[] = $value['adname']; 
                     $i++;
                 }
 
+
+
                 $ad_text = implode(" ", $multiple);
+                $adname = implode(" ", $adname_arr);
 
                 $checkaudienceupload = Audience::where('campaign_id', $campaign->id)->where('fe_id', $aud->fe_id)->where('id', '!=', $aud->id)->first();
 
                 $entry_ads = new Entry('adsCreation');
                 $entry_ads->setField('userEmail', 'en-US', $user->email);
-                $entry_ads->setField('adsCreation', 'en-US', $campaign->name . ' - ' . $aud->name . ' - ' . $ad->name);
+                $entry_ads->setField('adsCreation', 'en-US', $campaign->name . ' - ' . $aud->name . ' - ' . $adname1);
                 $entry_ads->setField('campaignName', 'en-US', $campaign->name);
                 $entry_ads->setField('campaignAvailability', 'en-US', $campaign->availability);
                 $entry_ads->setField('campaignStartDate', 'en-US', $campaign->start_date);
-                $entry_ads->setField('adsName', 'en-US', $ad->name);
+                $entry_ads->setField('adsName', 'en-US', $adname);
                 // $entry_ads->setField('advertiseText', 'en-US', $ad_text);
                 $entry_ads->setField('adtext1', 'en-US', $ad_text);
                 $entry_ads->setField('budget', 'en-US', $aud->price);
