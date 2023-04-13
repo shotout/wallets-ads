@@ -550,28 +550,28 @@ class CampaignController extends Controller
                         }
                         $detailTarget->save();
 
-                        if (isset($audience->file) && $audience->file != '') {
-                            $media = Media::where('owner_id', $adc->id)
-                                ->where('type', 'audience_file')
-                                ->first();
+                        // if (isset($audience->file) && $audience->file != '') {
+                        //     $media = Media::where('owner_id', $adc->id)
+                        //         ->where('type', 'audience_file')
+                        //         ->first();
 
-                            if ($media) {
-                                unlink(public_path() . $media->url);
-                            } else {
-                                $media = new Media;
-                                $media->owner_id = $adc->id;
-                                $media->type = "audience_file";
-                            }
+                        //     if ($media) {
+                        //         unlink(public_path() . $media->url);
+                        //     } else {
+                        //         $media = new Media;
+                        //         $media->owner_id = $adc->id;
+                        //         $media->type = "audience_file";
+                        //     }
 
-                            $filename = uniqid();
-                            $fileExt = $audience->file->getClientOriginalExtension();
-                            $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
-                            $audience->file->move(public_path() . '/assets/files/audience/', $fileNameToStore);
+                        //     $filename = uniqid();
+                        //     $fileExt = $audience->file->getClientOriginalExtension();
+                        //     $fileNameToStore = $filename . '_' . time() . '.' . $fileExt;
+                        //     $audience->file->move(public_path() . '/assets/files/audience/', $fileNameToStore);
 
-                            $media->name = $fileNameToStore;
-                            $media->url = '/assets/files/audience/' . $fileNameToStore;
-                            $media->save();
-                        }
+                        //     $media->name = $fileNameToStore;
+                        //     $media->url = '/assets/files/audience/' . $fileNameToStore;
+                        //     $media->save();
+                        // }
                     }
                 }
             }
